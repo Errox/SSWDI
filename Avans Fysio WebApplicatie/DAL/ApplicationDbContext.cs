@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Avans_Fysio_WebApplicatie.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
