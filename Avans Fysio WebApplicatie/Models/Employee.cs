@@ -9,11 +9,12 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Avans_Fysio_WebApplicatie.Models
 {
-    public class Employee
+    public class Employee : IdentityUser
     {
         public int Id { get; set; }
 
         public string FirstName { get; set; }
+
         public string SurName { get; set; }
 
         public string Email { get; set; }

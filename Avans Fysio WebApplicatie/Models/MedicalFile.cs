@@ -35,7 +35,7 @@ namespace Avans_Fysio_WebApplicatie.Models
         [Required]
         public DateTime? DateOfDischarge { get; set; }
 
-        public Notes? Notes { get; set; }
+        public Note? Notes { get; set; }
 
     }
 }

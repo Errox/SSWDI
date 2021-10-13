@@ -9,7 +9,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Avans Fysio WebService", "A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MainLibrary", "MainLibrary\MainLibrary.csproj", "{17232329-B91C-4100-A4BD-AFE81571CED2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Avans Fysio WebService Tests", "Avans Fysio WebService Tests\Avans Fysio WebService Tests.csproj", "{AB726407-C3C3-4C79-AA44-0831AF4C1476}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Avans Fysio WebService Tests", "Avans Fysio WebService Tests\Avans Fysio WebService Tests.csproj", "{AB726407-C3C3-4C79-AA44-0831AF4C1476}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{96154366-56FF-4922-97E1-F9ECEAAF5AA6}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

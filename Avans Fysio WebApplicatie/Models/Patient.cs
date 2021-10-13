@@ -42,7 +42,7 @@ namespace Avans_Fysio_WebApplicatie.Models
         public EnumGender.Gender Gender { get; set; }
 
         [Required]
-        public int IsStudent { get; set; }
+        public bool IsStudent { get; set; }
 
         public MedicalFile? MedicalFile { get; set; }
     }
