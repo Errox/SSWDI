@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Avans_Fysio_WebApplicatie.Models
 {
@@ -7,7 +8,9 @@ namespace Avans_Fysio_WebApplicatie.Models
         [Key]
         public int Id { get; set; }
 
-        [MaxLength(250), Required]
+        [MaxLength(250)]
         public string Name { get; set; }
+
+        public ICollection<TreatmentPlan> TreatmentPlans { get; set; }
     }
 }

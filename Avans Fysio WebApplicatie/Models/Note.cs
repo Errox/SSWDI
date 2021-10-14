@@ -9,15 +9,17 @@ namespace Avans_Fysio_WebApplicatie.Models
         [Key]
         public int Id { get; set; }
         
-        [MaxLength(250), Required]
+        [MaxLength(250)]
         public string Description { get; set; }
         
-        [Required, DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime CreatedUtc { get; set; }
 
         public Therapist Therapist {get; set;}
 
-        public Boolean OpenForPatient { get; set; }
+        public bool OpenForPatient { get; set; }
+
+        public MedicalFile MedicalFile { get; set; }
     }
     
 }

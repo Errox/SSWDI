@@ -27,9 +27,12 @@ namespace Avans_Fysio_WebApplicatie
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<WebApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<WebApplicationDbContext>(opts =>
+            {
+                opts.UseSqlServer(
+                    Configuration["ConnectionStrings:AvansFysioWebApplicatieConnection"]);
+            });
+
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<WebApplicationDbContext>();
             services.AddControllersWithViews();

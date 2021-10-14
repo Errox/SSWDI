@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Policy;
 using Newtonsoft.Json;
 
 namespace Avans_Fysio_WebApplicatie.Models
@@ -12,30 +13,25 @@ namespace Avans_Fysio_WebApplicatie.Models
     {
         [Key]
         public int Id { get; set; }
-
-        [Required]
-        public Patient patient { get; set; }
-
         
-        [MaxLength(250), Required]
-        [Display(Name ="Beschrijving")]
+        [MaxLength(250)]
+        //[Display(Name ="Beschrijving")]
         public string Description { get; set; }
-
-        [Required]
-        [Display(Name ="Diagnose Code")]
+        
+        //[Display(Name ="Diagnose Code")]
         public int DiagnosisCode { get; set; }
 
         public int IntakeTherapistId { get; set; }// Behandeld door //UserID That is either a student or therapist?
 
-        public int IntakeSupervision { get; set; }// ondertoezicht
+        public int IntakeSupervision { get; set; }// ondertoezicht, Also a UserId from Identity
 
-        [DataType(DataType.DateTime), DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}"), Required]
         public DateTime DateOfCreation { get; set; }
-
-        [Required]
+        
         public DateTime? DateOfDischarge { get; set; }
 
-        public Note? Notes { get; set; }
+        public ICollection<Note> Notes { get; set; }
+
+        public ICollection<TreatmentPlan> TreatmentPlans { get; set; }
 
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Avans_Fysio_WebApplicatie.Abstract;
@@ -10,25 +11,23 @@ namespace Avans_Fysio_WebApplicatie.Models
         [Key]
         public int PatientId { get; set; }
         
-        [MaxLength(250), Required]
+        [MaxLength(250)]
         public string FirstName { get; set; }
         
-        [MaxLength(250), Required]
+        [MaxLength(250)]
         public string SurName { get; set; }
 
-        [DataType(DataType.PhoneNumber), Required]
-        public PhoneAttribute PhoneNumber { get; set; }
+        [DataType(DataType.PhoneNumber)]
+        public int PhoneNumber { get; set; }
 
-        [DataType(DataType.EmailAddress), Required]
+        [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
         //http://binaryintellect.net/articles/2f55345c-1fcb-4262-89f4-c4319f95c5bd.aspx
         public byte[]? ImgData { get; set; }
-
-        [Required]
+        
         public int IdNumber { get; set; }
-
-        [DataType(DataType.DateTime), DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}"), Required]
+        
         public DateTime DateOfBirth { get; set; }
 
         [Column("Gender")]
@@ -41,9 +40,13 @@ namespace Avans_Fysio_WebApplicatie.Models
         [NotMapped]
         public EnumGender.Gender Gender { get; set; }
 
-        [Required]
+        
         public bool IsStudent { get; set; }
 
         public MedicalFile? MedicalFile { get; set; }
+
+        public ICollection<Appointment> Appointments { get; set; }
+
+
     }
 }

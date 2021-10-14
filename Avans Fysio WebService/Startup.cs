@@ -36,8 +36,9 @@ namespace Avans_Fysio_WebService
                     Configuration["ConnectionStrings:AvansFysioWebServiceConnection"]);
             });
 
-            services.AddTransient<IDiagnosesRepository, EFDiagnosesRepository>();
-            services.AddTransient<ITreatmentRepository, EFTreatmentRepository>();
+            // Dependency injection 
+            //services.AddTransient<IDiagnosesRepository, EFDiagnoseRepository>();
+            //services.AddTransient<ITreatmentRepository, EFTreatmentRepository>();
 
             // Register the swagger generator
             services.AddSwaggerGen(c =>

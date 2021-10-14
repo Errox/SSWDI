@@ -9,8 +9,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Avans_Fysio_WebApplicatie.Models
 {
-    public class Employee : IdentityUser
+    public class Employee
     {
+        [Key]
         public int Id { get; set; }
 
         public string FirstName { get; set; }
@@ -19,8 +20,10 @@ namespace Avans_Fysio_WebApplicatie.Models
 
         public string Email { get; set; }
 
-        [DataType(DataType.PhoneNumber), Required]
-        public PhoneAttribute PhoneNumber { get; set; }
+        [DataType(DataType.PhoneNumber)]
+        public int PhoneNumber { get; set; }
+
+        private ICollection<Appointment> Appointments { get; set; }
 
 
     }

@@ -9,7 +9,7 @@ namespace Avans_Fysio_WebApplicatie.Models
 {
     public class Therapist : Employee
     {
-        [Range(1000000000, 99999999999), Required]
+        [Range(1000000000, 99999999999)]
         public int BigNumber { get; set; }
     }
 }

@@ -14,14 +14,19 @@ namespace Avans_Fysio_WebApplicatie.Data
         {
         }
 
-        public DbSet<Student> Students { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+           
+        }
 
-        public DbSet<Therapist> Therapists{ get; set; }
-
+        //public DbSet<Student> Students { get; set; }
+        //public DbSet<Therapist> Therapists { get; set; }
         public DbSet<MedicalFile> MedicalFiles { get; set; }
-
         public DbSet<Note> Notes { get; set; }
-
         public DbSet<Patient> Patients { get; set; }
+        public DbSet<TreatmentPlan> TreatmentPlans { get; set; }
+        public DbSet<PracticeRoom> PracticeRooms { get; set; }
+        public DbSet<Appointment> Appointments { get; set; }
+
     }
 }
