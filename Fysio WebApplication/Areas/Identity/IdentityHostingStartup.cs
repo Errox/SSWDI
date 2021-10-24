@@ -20,21 +20,23 @@ namespace Fysio_WebApplication.Areas.Identity
                     options.UseSqlServer(
                         context.Configuration.GetConnectionString("IdentityConnection")));
 
-                services.AddDefaultIdentity<Employee>(options => options.SignIn.RequireConfirmedAccount = true)
-                    .AddEntityFrameworkStores<AppIdentityDbContext>();
+                services.AddDefaultIdentity<Employee>(options => {
+                    //Signin
+                    options.SignIn.RequireConfirmedAccount = false;
+                    options.SignIn.RequireConfirmedPhoneNumber = false;
+
+                    //Password
+                    options.Password.RequireDigit = false;
+                    options.Password.RequiredLength = 4;
+
+                    //LockOut
+                    options.Lockout.MaxFailedAccessAttempts = 99;
+
+                }).AddEntityFrameworkStores<AppIdentityDbContext>();
 
 
                 //services.AddDefaultIdentity<IdentityUser>(options => {
-                //                // Signin
-                //                options.SignIn.RequireConfirmedAccount = false;
-                //                options.SignIn.RequireConfirmedPhoneNumber = false;
-
-                //                //Password
-                //                options.Password.RequireDigit = false;
-                //                options.Password.RequiredLength = 4;
-
-                //                //LockOut
-                //                options.Lockout.MaxFailedAccessAttempts = 99;
+                //                
                 //            })
                 //.AddEntityFrameworkStores<AppIdentityDbContext>();
             });
