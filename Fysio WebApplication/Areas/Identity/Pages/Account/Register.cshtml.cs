@@ -63,22 +63,23 @@ namespace Fysio_WebApplication.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
 
             [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [DataType(DataType.PhoneNumber)]
+            [Display(Name = "PhoneNumber")]
+            public string PhoneNumber { get; set; }
+
+            [Required]
+            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
             [Display(Name = "First Name")]
             public string FirstName { get; set; }
 
             [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
             [Display(Name = "Sur Name")]
             public string SurName { get; set; }
 
-            [Range(1000000, 9999999, ErrorMessage = "Your BIG Number can only be 7 Numbers long. That means a number between 1000000, 9999999")]
-            [Display(Name = "BIG Number")]
-            public int BIGNumber { get; set; }
-
-            [Range(1000000, 9999999, ErrorMessage = "Your Student Number can only be 7 Numbers long. That means a number between 1000000, 9999999")]
-            [Display(Name = "Student Number")]
-            public int StudentNumber { get; set; }
+            [Range(1000000, 9999999, ErrorMessage = "Your Registration Number can only be 7 Numbers long. That means a number between 1000000, 9999999")]
+            [Display(Name = "Registration Number")]
+            public int StudentBIGNumber { get; set; }
 
             [Required]
             [Display(Name = "Is student")]
@@ -99,16 +100,16 @@ namespace Fysio_WebApplication.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 Random rnd = new Random();
-                var user = new Employee { UserName = Input.Email, Email = Input.Email, FirstName = Input.FirstName, SurName = Input.SurName, IsStudent = Input.IsStudent };
-                user.WorkerNumber = rnd.Next(25);
+                var user = new Employee { UserName = Input.Email, Email = Input.Email, PhoneNumber = Input.PhoneNumber, FirstName = Input.FirstName, SurName = Input.SurName, IsStudent = Input.IsStudent };
+                user.WorkerNumber = rnd.Next(1000, 9999999);
 
-                if (Input.StudentNumber == 0 || Input.StudentNumber == null)
+                if (Input.IsStudent)
                 {
-                    user.BIGNumber = Input.BIGNumber;
+                    user.StudentNumber = Input.StudentBIGNumber;
                 }
                 else
                 {
-                    user.StudentNumber = Input.StudentNumber;
+                    user.BIGNumber = Input.StudentBIGNumber;
                 }
 
 
