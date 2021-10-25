@@ -4,6 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>aspnet-Fysio_WebApplication-0656052D-A62C-40D0-8871-A8E62FD1B43E</UserSecretsId>
     <RootNamespace>Fysio_WebApplication</RootNamespace>
+    <MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
+    <Nullable></Nullable>
   </PropertyGroup>
 
   <ItemGroup>
