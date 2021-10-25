@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Avans Fysio WebService", "A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MainLibrary", "MainLibrary\MainLibrary.csproj", "{17232329-B91C-4100-A4BD-AFE81571CED2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Avans Fysio WebService Tests", "Avans Fysio WebService Tests\Avans Fysio WebService Tests.csproj", "{AB726407-C3C3-4C79-AA44-0831AF4C1476}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{96154366-56FF-4922-97E1-F9ECEAAF5AA6}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
@@ -30,10 +28,6 @@ Global
 		{17232329-B91C-4100-A4BD-AFE81571CED2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17232329-B91C-4100-A4BD-AFE81571CED2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17232329-B91C-4100-A4BD-AFE81571CED2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AB726407-C3C3-4C79-AA44-0831AF4C1476}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AB726407-C3C3-4C79-AA44-0831AF4C1476}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AB726407-C3C3-4C79-AA44-0831AF4C1476}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AB726407-C3C3-4C79-AA44-0831AF4C1476}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AD0B20DD-EB59-4AE3-9853-2F50606EF102}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AD0B20DD-EB59-4AE3-9853-2F50606EF102}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD0B20DD-EB59-4AE3-9853-2F50606EF102}.Release|Any CPU.ActiveCfg = Release|Any CPU
