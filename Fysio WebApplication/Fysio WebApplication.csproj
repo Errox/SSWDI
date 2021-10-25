@@ -4,7 +4,6 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>Fysio_WebApplication</RootNamespace>
     <MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
-    <Nullable></Nullable>
   </PropertyGroup>
 
   <ItemGroup>
