@@ -4,14 +4,16 @@ using Fysio_WebApplication.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Fysio_WebApplication.Migrations
 {
     [DbContext(typeof(AppIdentityDbContext))]
-    partial class AppIdentityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211026140513_AddIdenttSeed")]
+    partial class AddIdenttSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -107,16 +109,15 @@ namespace Fysio_WebApplication.Migrations
                             Id = "b74ddd14-6340-4840-95c2-db12554843e5",
                             AccessFailedCount = 0,
                             BIGNumber = 1000052,
-                            ConcurrencyStamp = "7530fc90-82dd-407f-a20e-4b5bd5bd1925",
+                            ConcurrencyStamp = "6efd4929-e827-4acb-ba38-1be5ec2beb07",
                             Email = "ryangroenewold@hotmail.com",
                             EmailConfirmed = false,
                             FirstName = "Ryan",
                             IsStudent = false,
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAEAACcQAAAAEEPVg5cwhwcpglvaTEnek4Stm3+Nj8BFXKfXcviSNvrKK19mqQY3OYzdVDAifJAVig==",
                             PhoneNumber = "+3163173150",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "cbf8e236-d7ba-4274-bae0-24f2b5d7c187",
+                            SecurityStamp = "cd997430-c066-43ea-ab9b-098b073f6667",
                             SurName = "Groenewold",
                             TwoFactorEnabled = false,
                             UserName = "ryangroenewold@hotmail.com",
@@ -126,16 +127,15 @@ namespace Fysio_WebApplication.Migrations
                         {
                             Id = "e74ddd12-6340-4840-95c2-db12254843e5",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a21c2b5b-9e8d-4f09-9a11-62816843346f",
+                            ConcurrencyStamp = "a6b20124-b3eb-46b0-b3c0-0cc22a16b81b",
                             Email = "Student@student.nl",
                             EmailConfirmed = false,
                             FirstName = "Ida",
                             IsStudent = true,
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAEAACcQAAAAEChnmAihXsXiVKfNukQ15B5UpKXaBuOVMxD5xcgQoF3BmRItPYYQhGJuQvyQs/mp8A==",
                             PhoneNumber = "+3163173150",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d0a6e8c3-9c9f-4d9a-8bf6-043a7fe6d7b9",
+                            SecurityStamp = "5fe81cbc-1033-4a54-9836-8c5710a09006",
                             StudentNumber = 1000052,
                             SurName = "Jones",
                             TwoFactorEnabled = false,

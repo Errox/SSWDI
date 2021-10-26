@@ -4,14 +4,16 @@ using Fysio_WebApplication.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Fysio_WebApplication.Migrations.ApplicationDb
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211026144933_RemovalOfDoubleEntity2")]
+    partial class RemovalOfDoubleEntity2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,10 +31,15 @@ namespace Fysio_WebApplication.Migrations.ApplicationDb
                     b.Property<string>("EmployeeId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PatientId")
+                    b.Property<string>("PatientId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PatientId1")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PatientId1");
 
                     b.ToTable("Appointments");
                 });
@@ -191,8 +198,8 @@ namespace Fysio_WebApplication.Migrations.ApplicationDb
                     b.Property<string>("TreatmentPerformedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -201,6 +208,13 @@ namespace Fysio_WebApplication.Migrations.ApplicationDb
                     b.HasIndex("PracticeRoomId");
 
                     b.ToTable("TreatmentPlans");
+                });
+
+            modelBuilder.Entity("Fysio_WebApplication.Models.Appointment", b =>
+                {
+                    b.HasOne("Fysio_WebApplication.Models.Patient", null)
+                        .WithMany("Appointments")
+                        .HasForeignKey("PatientId1");
                 });
 
             modelBuilder.Entity("Fysio_WebApplication.Models.Note", b =>

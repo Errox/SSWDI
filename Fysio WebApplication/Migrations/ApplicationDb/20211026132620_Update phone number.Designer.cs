@@ -4,14 +4,16 @@ using Fysio_WebApplication.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Fysio_WebApplication.Migrations.ApplicationDb
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211026132620_Update phone number")]
+    partial class Updatephonenumber
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,10 +31,15 @@ namespace Fysio_WebApplication.Migrations.ApplicationDb
                     b.Property<string>("EmployeeId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PatientId")
+                    b.Property<string>("PatientId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PatientId1")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PatientId1");
 
                     b.ToTable("Appointments");
                 });
@@ -61,6 +68,9 @@ namespace Fysio_WebApplication.Migrations.ApplicationDb
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IntakeTherapistId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PatientId")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -191,8 +201,8 @@ namespace Fysio_WebApplication.Migrations.ApplicationDb
                     b.Property<string>("TreatmentPerformedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -203,9 +213,16 @@ namespace Fysio_WebApplication.Migrations.ApplicationDb
                     b.ToTable("TreatmentPlans");
                 });
 
+            modelBuilder.Entity("Fysio_WebApplication.Models.Appointment", b =>
+                {
+                    b.HasOne("Fysio_WebApplication.Models.Patient", null)
+                        .WithMany("Appointments")
+                        .HasForeignKey("PatientId1");
+                });
+
             modelBuilder.Entity("Fysio_WebApplication.Models.Note", b =>
                 {
-                    b.HasOne("Fysio_WebApplication.Models.MedicalFile", null)
+                    b.HasOne("Fysio_WebApplication.Models.MedicalFile", "MedicalFile")
                         .WithMany("Notes")
                         .HasForeignKey("MedicalFileId");
                 });
@@ -224,7 +241,7 @@ namespace Fysio_WebApplication.Migrations.ApplicationDb
                         .HasForeignKey("MedicalFileId");
 
                     b.HasOne("Fysio_WebApplication.Models.PracticeRoom", "PracticeRoom")
-                        .WithMany()
+                        .WithMany("TreatmentPlans")
                         .HasForeignKey("PracticeRoomId");
                 });
 #pragma warning restore 612, 618
