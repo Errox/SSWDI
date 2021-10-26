@@ -12,7 +12,7 @@ namespace Fysio_WebApplication.Models
         [Key] 
         public int Id { get; set; }
 
-        public string PatientId { get; set; }
+        public int PatientId { get; set; }
 
         public string EmployeeId { get; set; }
     }

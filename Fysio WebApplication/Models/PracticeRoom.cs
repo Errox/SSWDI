@@ -12,6 +12,5 @@ namespace Fysio_WebApplication.Models
         [MaxLength(250)]
         public string Name { get; set; }
 
-        public ICollection<TreatmentPlan> TreatmentPlans { get; set; }
     }
 }

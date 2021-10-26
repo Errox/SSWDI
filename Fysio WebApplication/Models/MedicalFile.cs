@@ -13,8 +13,6 @@ namespace Fysio_WebApplication.Models
     {
         [Key]
         public int Id { get; set; }
-
-        public string PatientId { get; set; }
         
         [MaxLength(250)]
         //[Display(Name ="Beschrijving")]
