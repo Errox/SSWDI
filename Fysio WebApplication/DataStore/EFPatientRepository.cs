@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Fysio_WebApplication.Abstract.Repositories;
-using Fysio_WebApplication.DAL;
 using Fysio_WebApplication.Data;
 using Fysio_WebApplication.Models;
 

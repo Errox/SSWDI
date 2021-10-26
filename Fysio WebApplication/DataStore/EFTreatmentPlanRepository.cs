@@ -7,13 +7,13 @@ using Fysio_WebApplication.Abstract.Repositories;
 using Fysio_WebApplication.Data;
 using Fysio_WebApplication.Models;
 
-namespace Fysio_WebApplication.DAL
+namespace Fysio_WebApplication.DataStore
 {
-    public class EFTreatmentPlansRepository : ITreatmentRepository
+    public class EFTreatmentPlanRepository : ITreatmentPlanRepository
     {
         private readonly ApplicationDbContext _context;
 
-        public EFTreatmentPlansRepository(ApplicationDbContext ctx)
+        public EFTreatmentPlanRepository(ApplicationDbContext ctx)
         {
             _context = ctx;
         }

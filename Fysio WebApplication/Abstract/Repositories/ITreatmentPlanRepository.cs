@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Fysio_WebApplication.Abstract.Repositories
 {
-    public interface ITreatmentRepository
+    public interface ITreatmentPlanRepository
     {
         IQueryable<TreatmentPlan> TreatmentPlans { get; }
         IEnumerable<TreatmentPlan> FindAll();
