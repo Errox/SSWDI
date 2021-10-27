@@ -18,7 +18,7 @@ namespace Fysio_WebApplication.Models
         public string SurName { get; set; }
 
         [DataType(DataType.PhoneNumber)]
-        public int PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
 
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
@@ -44,9 +44,5 @@ namespace Fysio_WebApplication.Models
         public bool IsStudent { get; set; }
 
         public MedicalFile? MedicalFile { get; set; }
-
-        public ICollection<Appointment> Appointments { get; set; }
-
-
     }
 }

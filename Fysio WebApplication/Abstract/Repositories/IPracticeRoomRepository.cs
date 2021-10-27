@@ -13,7 +13,7 @@ namespace Fysio_WebApplication.Abstract.Repositories
         IQueryable<PracticeRoom> PracticeRooms { get; }
         IEnumerable<PracticeRoom> FindAll();
         PracticeRoom GetPracticeRoom(int id);
-        void UpdatePracticeRoom(PracticeRoom practiceRoom);
+        void UpdatePracticeRoom(int id, PracticeRoom practiceRoom);
         void AddPracticeRoom(PracticeRoom practiceRoom);
     }
 }

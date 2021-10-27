@@ -1,0 +1,83 @@
+﻿@model Fysio_WebApplication.Models.Patient
+
+@{
+    ViewData["Title"] = "View";
+}
+
+<h1>View</h1>
+
+<div>
+    <h4>Patient</h4>
+    <hr />
+    <div class="card" style="width: 18rem;">
+        <img class="card-img-top" src="@ViewBag.ImageDataUrl" alt="Card image cap">
+        <div class="card-body">
+            <h5 class="card-title">@Html.DisplayFor(model => model.FirstName) @Html.DisplayFor(model => model.SurName)</h5>
+        <dl class="row">
+            <dt class="col-sm-6">
+                @Html.DisplayNameFor(model => model.PatientId)
+            </dt>
+            <dd class="col-sm-6">
+                @Html.DisplayFor(model => model.PatientId)
+            </dd>
+            <dt class="col-sm-6">
+                @Html.DisplayNameFor(model => model.FirstName)
+            </dt>
+            <dd class="col-sm-6">
+                @Html.DisplayFor(model => model.FirstName)
+            </dd>
+            <dt class="col-sm-6">
+                @Html.DisplayNameFor(model => model.SurName)
+            </dt>
+            <dd class="col-sm-6">
+                @Html.DisplayFor(model => model.SurName)
+            </dd>
+            <dt class="col-sm-6">
+                @Html.DisplayNameFor(model => model.PhoneNumber)
+            </dt>
+            <dd class="col-sm-6">
+                @Html.DisplayFor(model => model.PhoneNumber)
+            </dd>
+            <dt class="col-sm-6">
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+            <dd class="col-sm-6">
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+            <dt class="col-sm-6">
+                @Html.DisplayNameFor(model => model.IdNumber)
+            </dt>
+            <dd class="col-sm-6">
+                @Html.DisplayFor(model => model.IdNumber)
+            </dd>
+            <dt class="col-sm-6">
+                @Html.DisplayNameFor(model => model.DateOfBirth)
+            </dt>
+            <dd class="col-sm-6">
+                @Html.DisplayFor(model => model.DateOfBirth)
+            </dd>
+            <dt class="col-sm-6">
+                @Html.DisplayNameFor(model => model.GenderString)
+            </dt>
+            <dd class="col-sm-6">
+                @Html.DisplayFor(model => model.GenderString)
+            </dd>
+            <dt class="col-sm-6">
+                @Html.DisplayNameFor(model => model.Gender)
+            </dt>
+            <dd class="col-sm-6">
+                @Html.DisplayFor(model => model.Gender)
+            </dd>
+            <dt class="col-sm-6">
+                @Html.DisplayNameFor(model => model.IsStudent)
+            </dt>
+            <dd class="col-sm-6">
+                @Html.DisplayFor(model => model.IsStudent)
+            </dd>
+        </dl>
+            @Html.ActionLink("Edit", "Edit", new { id = Model.PatientId}) |
+            <a asp-action="Index">Back to List</a>
+        </div>
+    </div>
+    
+</div>

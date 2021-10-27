@@ -1,4 +1,7 @@
+using Fysio_WebApplication.Abstract.Repositories;
 using Fysio_WebApplication.Data;
+using Fysio_WebApplication.DataStore;
+using Fysio_WebApplication.Models.SeedData;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,11 +31,22 @@ namespace Fysio_WebApplication
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(
-                Configuration.GetConnectionString("FysioWebApplicatieConnection")));
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("FysioWebApplicatieConnection")));
 
             services.AddControllersWithViews();
-            services.AddRazorPages();//.AddRazorRuntimeCompilation();
+            services.AddRazorPages().AddRazorRuntimeCompilation();
+
+
+            // Dependency injection 
+            services.AddTransient<IAppointmentsRepository, EFAppointmentRepository>();
+            services.AddTransient<ITreatmentPlanRepository, EFTreatmentPlanRepository>();
+            services.AddTransient<IPracticeRoomRepository, EFPracticeRoomRepository>();
+            services.AddTransient<IPatientRepository, EFPatientRepository>();
+            services.AddTransient<INotesRepository, EFNotesRepository>();
+            services.AddTransient<IMedicalFileRepository, EFMedicalFileRepository>();
+            services.AddTransient<IAppointmentsRepository, EFAppointmentRepository>();
+            services.AddTransient<IEmployeeRepository, EFEmployeeRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,6 +78,9 @@ namespace Fysio_WebApplication
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+
+
+            SeedData.EnsurePopulatedApplication(app);
         }
     }
 }

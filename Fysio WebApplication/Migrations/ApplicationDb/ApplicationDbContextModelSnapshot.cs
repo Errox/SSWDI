@@ -26,18 +26,16 @@ namespace Fysio_WebApplication.Migrations.ApplicationDb
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("EmployeeId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PatientId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("PatientId1")
+                    b.Property<int>("PatientId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PatientId1");
 
                     b.ToTable("Appointments");
                 });
@@ -68,9 +66,6 @@ namespace Fysio_WebApplication.Migrations.ApplicationDb
                     b.Property<string>("IntakeTherapistId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PatientId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.ToTable("MedicalFiles");
@@ -84,7 +79,6 @@ namespace Fysio_WebApplication.Migrations.ApplicationDb
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreatedUtc")
-                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
@@ -140,8 +134,8 @@ namespace Fysio_WebApplication.Migrations.ApplicationDb
                     b.Property<int?>("MedicalFileId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PhoneNumber")
-                        .HasColumnType("int");
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SurName")
                         .HasColumnType("nvarchar(250)")
@@ -199,8 +193,8 @@ namespace Fysio_WebApplication.Migrations.ApplicationDb
                     b.Property<string>("TreatmentPerformedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Type")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -211,16 +205,9 @@ namespace Fysio_WebApplication.Migrations.ApplicationDb
                     b.ToTable("TreatmentPlans");
                 });
 
-            modelBuilder.Entity("Fysio_WebApplication.Models.Appointment", b =>
-                {
-                    b.HasOne("Fysio_WebApplication.Models.Patient", null)
-                        .WithMany("Appointments")
-                        .HasForeignKey("PatientId1");
-                });
-
             modelBuilder.Entity("Fysio_WebApplication.Models.Note", b =>
                 {
-                    b.HasOne("Fysio_WebApplication.Models.MedicalFile", "MedicalFile")
+                    b.HasOne("Fysio_WebApplication.Models.MedicalFile", null)
                         .WithMany("Notes")
                         .HasForeignKey("MedicalFileId");
                 });
@@ -239,7 +226,7 @@ namespace Fysio_WebApplication.Migrations.ApplicationDb
                         .HasForeignKey("MedicalFileId");
 
                     b.HasOne("Fysio_WebApplication.Models.PracticeRoom", "PracticeRoom")
-                        .WithMany("TreatmentPlans")
+                        .WithMany()
                         .HasForeignKey("PracticeRoomId");
                 });
 #pragma warning restore 612, 618

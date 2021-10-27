@@ -30,9 +30,10 @@ namespace Fysio_WebApplication.DataStore
             return _context.Appointments.FirstOrDefault(i => i.Id == id);
         }
 
-        public void DeleteAppointment(Appointment appointment)
+        public void DeleteAppointment(int id)
         {
-            _context.Remove(Appointments);
+            Appointment appointment = _context.Appointments.FirstOrDefault(i => i.Id == id);
+            _context.Remove(appointment);
             _context.SaveChanges();
         }
 

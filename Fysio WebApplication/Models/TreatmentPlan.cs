@@ -13,7 +13,7 @@ namespace Fysio_WebApplication.Models
         public int Id { get; set; }
 
         //This is the type of treatment from the Vektis list
-        public string Type { get; set; }
+        public int Type { get; set; }
         [MaxLength(500)]
         public string Description { get; set; }
 

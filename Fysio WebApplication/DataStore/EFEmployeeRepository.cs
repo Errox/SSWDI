@@ -1,5 +1,4 @@
 ﻿using Fysio_WebApplication.Areas.Identity.Data;
-using Fysio_WebApplication.DAL;
 using Fysio_WebApplication.Data;
 using Fysio_WebApplication.Models;
 using System;
