@@ -25,11 +25,19 @@ namespace Fysio_WebApplication.DataStore
 
         public Patient GetPatient(int id)
         {
-            return _context.Patients.FirstOrDefault(i => i.IdNumber == id);
+            return _context.Patients.FirstOrDefault(i => i.PatientId == id);
         }
 
         public void UpdatePatient(int id, Patient patient)
         {
+            Patient pre_patient = _context.Patients.FirstOrDefault(i => i.PatientId == id);
+            pre_patient.FirstName = patient.FirstName;
+            pre_patient.SurName = patient.SurName;
+            pre_patient.PhoneNumber = patient.PhoneNumber;
+            pre_patient.Email = patient.Email;
+            pre_patient.Gender = patient.Gender;
+            pre_patient.IsStudent = patient.IsStudent;
+            pre_patient.ImgData = patient.ImgData;
             _context.SaveChanges();
         }
 

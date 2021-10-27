@@ -37,8 +37,10 @@ namespace Fysio_WebApplication.DataStore
             return _context.PracticeRooms.FirstOrDefault(i => i.Id == id);
         }
 
-        public void UpdatePracticeRoom(PracticeRoom practiceRoom)
+        public void UpdatePracticeRoom(int id, PracticeRoom practiceRoom)
         {
+            PracticeRoom practice = _context.PracticeRooms.FirstOrDefault(i => i.Id == id);
+            practice.Name = practiceRoom.Name;
             _context.SaveChanges();
         }
 
