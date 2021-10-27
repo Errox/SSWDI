@@ -13,7 +13,7 @@ namespace Fysio_WebApplication.Abstract.Repositories
         IQueryable<TreatmentPlan> TreatmentPlans { get; }
         IEnumerable<TreatmentPlan> FindAll();
         TreatmentPlan GetTreatmentPlan(int id);
-        void UpdateTreatmentPlan(TreatmentPlan treatmentPlan);
+        void UpdateTreatmentPlan(int id, TreatmentPlan treatmentPlan);
         void AddTreatmentPlan(TreatmentPlan treatmentPlan);
     }
 }

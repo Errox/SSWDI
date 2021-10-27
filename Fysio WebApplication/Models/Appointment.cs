@@ -15,5 +15,6 @@ namespace Fysio_WebApplication.Models
         public int PatientId { get; set; }
 
         public string EmployeeId { get; set; }
+        public DateTime Date { get; set; }
     }
 }

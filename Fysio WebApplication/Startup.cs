@@ -44,7 +44,7 @@ namespace Fysio_WebApplication
             services.AddTransient<IPracticeRoomRepository, EFPracticeRoomRepository>();
             services.AddTransient<IPatientRepository, EFPatientRepository>();
             services.AddTransient<INotesRepository, EFNotesRepository>();
-            services.AddTransient<IMedicalFile, EFMedicalFileRepository>();
+            services.AddTransient<IMedicalFileRepository, EFMedicalFileRepository>();
             services.AddTransient<IAppointmentsRepository, EFAppointmentRepository>();
             services.AddTransient<IEmployeeRepository, EFEmployeeRepository>();
         }

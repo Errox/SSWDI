@@ -13,7 +13,7 @@ namespace Fysio_WebApplication.Abstract.Repositories
         IQueryable<Appointment> Appointments { get; }
         IEnumerable<Appointment> FindAll();
         Appointment GetAppointment(int id);
-        void DeleteAppointment(Appointment appointment);
+        void DeleteAppointment(int id);
         void UpdateAppointment(Appointment appointment);
         void AddAppointment(Appointment appointment);
     }

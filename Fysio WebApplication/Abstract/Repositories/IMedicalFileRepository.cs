@@ -8,12 +8,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Fysio_WebApplication.Abstract.Repositories
 {
-    public interface IMedicalFile
+    public interface IMedicalFileRepository
     {
         IQueryable<MedicalFile> MedicalFiles { get; }
         IEnumerable<MedicalFile> FindAll();
         MedicalFile GetMedicalFile(int id);
-        void UpdateMedicalFile(Patient patient);
+        void UpdateMedicalFile(int id, MedicalFile medicalFile);
         void AddMedicalFile(MedicalFile medicalFile);
     }
 }

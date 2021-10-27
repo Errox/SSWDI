@@ -9,7 +9,7 @@ using Fysio_WebApplication.Models;
 
 namespace Fysio_WebApplication.DataStore
 {
-    public class EFMedicalFileRepository : IMedicalFile
+    public class EFMedicalFileRepository : IMedicalFileRepository
     {
         private readonly ApplicationDbContext _context;
 
@@ -30,8 +30,12 @@ namespace Fysio_WebApplication.DataStore
             return _context.MedicalFiles.FirstOrDefault(i => i.Id == id);
         }
 
-        public void UpdateMedicalFile(Patient patient)
+        public void UpdateMedicalFile(int id, MedicalFile medicalFile)
         {
+            MedicalFile file = _context.MedicalFiles.FirstOrDefault(i => i.Id == id);
+            file.Description = medicalFile.Description;
+            file.DiagnosisCode = medicalFile.DiagnosisCode;
+            file.DateOfDischarge = medicalFile.DateOfDischarge;
             _context.SaveChanges();
         }
 

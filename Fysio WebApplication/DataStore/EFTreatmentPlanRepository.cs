@@ -36,8 +36,14 @@ namespace Fysio_WebApplication.DataStore
             return _context.TreatmentPlans.FirstOrDefault(i => i.Id == id);
         }
 
-        public void UpdateTreatmentPlan(TreatmentPlan treatmentPlan)
+        public void UpdateTreatmentPlan(int id, TreatmentPlan treatmentPlan)
         {
+            TreatmentPlan _treatmentplan = _context.TreatmentPlans.FirstOrDefault(i => i.Id == id);
+            _treatmentplan.Type = treatmentPlan.Type;
+            _treatmentplan.Description = treatmentPlan.Description;
+            _treatmentplan.Particularities = treatmentPlan.Particularities;
+            _treatmentplan.TreatmentDate = treatmentPlan.TreatmentDate;
+            _treatmentplan.AmountOfTreatmentsPerWeek = treatmentPlan.AmountOfTreatmentsPerWeek;
             _context.SaveChanges();
         }
     }
