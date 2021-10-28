@@ -19,9 +19,11 @@ namespace Fysio_WebApplication.Models.SeedData
         {
             ApplicationDbContext context = app.ApplicationServices
                 .CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
+            //string userId = User;
             string Employee = "b74ddd14-6340-4840-95c2-db12554843e5";
             string Student = "e74ddd12-6340-4840-95c2-db12254843e5";
+
+
 
             if (context.Database.GetPendingMigrations().Any())
             {
@@ -201,14 +203,14 @@ namespace Fysio_WebApplication.Models.SeedData
 
                 Appointment appointment1 = new Appointment
                 {
-                    PatientId = Laura.IdNumber,
+                    PatientId = Laura.PatientId,
                     EmployeeId = Student
                 };
                 context.Add(appointment1);
 
                 Appointment appointment2 = new Appointment
                 {
-                    PatientId = Hans.IdNumber,
+                    PatientId = Hans.PatientId,
                     EmployeeId = Student
                 };
                 context.Add(appointment2);

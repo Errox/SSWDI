@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace Fysio_WebApplication.Models
 {
-    public class Appointment
+    public class Availabilty
     {
-        [Key] 
+        [Key]
         public int Id { get; set; }
 
-        public int PatientId { get; set; }
+        public string EmployeeKey { get; set; }
 
-        public string EmployeeId { get; set; }
+        public DateTime StartAvailability { get; set; }
 
-        public DateTime Date { get; set; }
+        public DateTime StopAvailability { get; set; }
     }
 }
