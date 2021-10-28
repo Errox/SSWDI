@@ -27,7 +27,7 @@ namespace Avans_Fysio_WebService.Controllers
         }
 
         // GET: DiagnosisController/5
-        [HttpGet("{id}")]
+        [HttpGet("{code}")]
         public Diagnosis GetById(int code)
         {
             //return just the found int
