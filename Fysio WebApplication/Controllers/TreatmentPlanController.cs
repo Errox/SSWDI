@@ -1,9 +1,15 @@
-﻿using Fysio_WebApplication.Abstract.Repositories;
+﻿using Avans_Fysio_WebService.Models;
+using Fysio_WebApplication.Abstract.Repositories;
 using Fysio_WebApplication.Areas.Identity.Data;
+using Fysio_WebApplication.DataStore;
 using Fysio_WebApplication.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,15 +18,16 @@ using System.Threading.Tasks;
 
 namespace Fysio_WebApplication.Controllers
 {
+    [Authorize]
     public class TreatmentPlanController : Controller
     {
         private ITreatmentPlanRepository _repo;
-        private UserManager<Employee> _usermanager;
+        private IEmployeeRepository _employeeRepo;
 
-        public TreatmentPlanController(ITreatmentPlanRepository repo, UserManager<Employee> UserManager)
+        public TreatmentPlanController(ITreatmentPlanRepository repo,  IEmployeeRepository employee)
         {
             _repo = repo;
-            _usermanager = UserManager;
+            _employeeRepo = employee;
         }
 
         // GET: TreatmentController
@@ -30,9 +37,23 @@ namespace Fysio_WebApplication.Controllers
         }
 
         // GET: TreatmentController/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> DetailsAsync(int id)
         {
-            return View(_repo.GetTreatmentPlan(id));
+            TreatmentPlan treatmentPlan = _repo.TreatmentPlans.Include(c1 => c1.PracticeRoom).FirstOrDefault(i => i.Id == id);
+
+            var client = new RestClient($"https://avansfysioservice.azurewebsites.net/api/Treatment/" + treatmentPlan.Type);
+            var request = new RestRequest(Method.GET);
+            IRestResponse response = await client.ExecuteAsync(request);
+            Treatment treatment = JsonConvert.DeserializeObject<Treatment>(response.Content);
+
+
+            //Fetch all the employee's working on this file.
+            Employee TreatmentPerformedBy = _employeeRepo.GetEmployee(treatmentPlan.TreatmentPerformedBy);
+
+            ViewBag.Description = treatment.Description;
+            ViewBag.Performed = TreatmentPerformedBy.FirstName + " " + TreatmentPerformedBy.SurName;
+
+            return View(treatmentPlan);
         }
 
         // GET: TreatmentController/Create

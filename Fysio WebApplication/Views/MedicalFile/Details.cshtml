@@ -10,41 +10,67 @@
     <h4>MedicalFile</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Description)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Description)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.DiagnosisCode)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.DiagnosisCode)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IntakeTherapistId)
+        <dt class="col-sm-2">
+            Body Location
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IntakeTherapistId)
+        <dd class="col-sm-10">
+            @Html.Raw(ViewBag.BodyLocation)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IntakeSupervision)
+        <dt class="col-sm-2">
+            Pathology
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IntakeSupervision)
+        <dd class="col-sm-10">
+            @Html.Raw(ViewBag.Pathology)
         </dd>
-        <dt class = "col-sm-2">
+        @*Maybe in the future the therapist can be linked towards his viewable acocunt?*@
+        <dt class="col-sm-2">
+            Therapist
+        </dt>
+        <dd class="col-sm-10">
+            @Html.Raw(ViewBag.Therapist)
+        </dd>
+        <dt class="col-sm-2">
+            Supervision
+        </dt>
+        @*Maybe in the future the Superivsion can be linked towards his viewable acocunt?*@
+        <dd class="col-sm-10">
+            @Html.Raw(ViewBag.Supervision)
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.DateOfCreation)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.DateOfCreation)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.DateOfDischarge)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.DateOfDischarge)
+        </dd>
+        <dt class="col-sm-2">
+            Notes
+        </dt>
+        <dd class="col-sm-10">
+            @Html.ActionLink("All Notes", "Notes", new { id = Model.Id }) | @Html.ActionLink("Add Note", "NotesNew", new { id = Model.Id })
+        </dd>
+        <dt class="col-sm-2">
+            TreatmentPlan
+        </dt>
+        <dd class="col-sm-10">
+            @Html.ActionLink("All Treatmentplans", "Treatmentplan", new { id = Model.Id }) | @Html.ActionLink("Add treatmentplan", "TreatmentplanNew", new { id = Model.Id })
         </dd>
     </dl>
 </div>

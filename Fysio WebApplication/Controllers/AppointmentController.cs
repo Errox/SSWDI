@@ -1,5 +1,6 @@
 ﻿using Fysio_WebApplication.Abstract.Repositories;
 using Fysio_WebApplication.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Fysio_WebApplication.Controllers
 {
+    [Authorize]
     public class AppointmentController : Controller
     {
         private IAppointmentsRepository _repo;

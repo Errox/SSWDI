@@ -1,0 +1,50 @@
+﻿@model Fysio_WebApplication.Models.MedicalFile
+
+@{
+    ViewData["Title"] = "CreateMedicalFile";
+}
+
+<h1>CreateMedicalFile</h1>
+
+<h4>MedicalFile</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form action="@Html.Raw(ViewBag.Url)" method="post" novalidate="novalidate">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DiagnosisCode" class="control-label"></label>
+                <input asp-for="DiagnosisCode" class="form-control" />
+                <span asp-validation-for="DiagnosisCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IntakeTherapistId" class="control-label"></label>
+                <input asp-for="IntakeTherapistId" class="form-control" />
+                <span asp-validation-for="IntakeTherapistId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IntakeSupervision" class="control-label"></label>
+                <input asp-for="IntakeSupervision" class="form-control" />
+                <span asp-validation-for="IntakeSupervision" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DateOfDischarge" class="control-label"></label>
+                <input asp-for="DateOfDischarge" class="form-control" />
+                <span asp-validation-for="DateOfDischarge" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
