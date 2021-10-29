@@ -14,9 +14,11 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Fysio_WebApplication.Controllers
 {
+    [Authorize]
     public class MedicalFileController : Controller
     {
         private IMedicalFileRepository _repo;

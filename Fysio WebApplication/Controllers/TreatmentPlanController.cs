@@ -3,6 +3,7 @@ using Fysio_WebApplication.Abstract.Repositories;
 using Fysio_WebApplication.Areas.Identity.Data;
 using Fysio_WebApplication.DataStore;
 using Fysio_WebApplication.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,7 @@ using System.Threading.Tasks;
 
 namespace Fysio_WebApplication.Controllers
 {
+    [Authorize]
     public class TreatmentPlanController : Controller
     {
         private ITreatmentPlanRepository _repo;

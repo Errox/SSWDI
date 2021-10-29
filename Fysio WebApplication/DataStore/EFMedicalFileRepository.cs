@@ -42,6 +42,7 @@ namespace Fysio_WebApplication.DataStore
 
         public void AddMedicalFile(MedicalFile medicalFile)
         {
+            medicalFile.DateOfCreation = DateTime.Now;
             _context.Add(medicalFile);
             _context.SaveChanges();
         }

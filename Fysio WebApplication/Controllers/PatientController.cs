@@ -3,10 +3,12 @@ using Fysio_WebApplication.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -16,21 +18,24 @@ namespace Fysio_WebApplication.Controllers
     public class PatientController : Controller
     {
         private IPatientRepository _repo;
+        private IMedicalFileRepository _medicalFileRepo;
 
-        public PatientController(IPatientRepository repo)
+        public PatientController(IPatientRepository repo, IMedicalFileRepository medicalFile)
         {
             _repo = repo;
+            _medicalFileRepo = medicalFile;
         }
 
         public ActionResult Index()
         {
-            return View(_repo.FindAll());
+            return View(_repo.Patients.Include(c1 => c1.MedicalFile));
         }
 
         // GET: PatientController/Details/5
         public ActionResult Details(int id)
         {
-            Patient patient = _repo.GetPatient(id);
+            Patient patient = _repo.Patients.Include(c1 => c1.MedicalFile).FirstOrDefault(i => i.PatientId == id);
+            MedicalFile medical = patient.MedicalFile;
             string imageDataURL;
             if (patient.ImgData == null)
             {
@@ -40,8 +45,13 @@ namespace Fysio_WebApplication.Controllers
             {
                 imageDataURL = string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(patient.ImgData));
             }
-            
+
             ViewBag.ImageDataUrl = imageDataURL;
+            if(medical != null)
+            {
+                ViewBag.MedicalId = medical.Id;
+            }
+            
             return View(patient);
         }
 
@@ -119,6 +129,35 @@ namespace Fysio_WebApplication.Controllers
             {
                 return View();
             }
+        }
+
+
+        [HttpGet]
+        [Route("[Controller]/MedicalFileNew/{id}")]
+        public ActionResult MedicalFileNew(int id)
+        {
+            ViewBag.Url = "/Patient/MedicalFileNew/" + id;
+            return View("CreateMedicalFile");
+        }
+
+        [HttpPost]
+        [Route("[Controller]/MedicalFileNew/{id}")]
+        public ActionResult MedicalFileNew(int id, MedicalFile file)
+        {
+            // Get the current logged in.
+            string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            //Create new plan because somehow it'll take the medicalFile ID and places it in the model instead of keeping it empty to insert in the DB
+            MedicalFile medicalFile = new MedicalFile { Description = file.Description, DiagnosisCode = file.DiagnosisCode, IntakeSupervision = file.IntakeSupervision, IntakeTherapistId = file.IntakeTherapistId, DateOfDischarge = file.DateOfDischarge };
+            _medicalFileRepo.AddMedicalFile(medicalFile);
+            
+            //Add the Treatmentplan to the medicalFile
+            Patient patient  = _repo.Patients.Include(i => i.MedicalFile).FirstOrDefault(i => i.PatientId == id);
+            patient.MedicalFile = medicalFile;
+            _repo.UpdatePatient(id, patient);
+
+            //Return view
+            return Redirect("/MedicalFile/Details/" + medicalFile.Id);
         }
 
     }

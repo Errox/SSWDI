@@ -70,7 +70,14 @@
                 @Html.DisplayFor(modelItem => item.IsStudent)
             </td>
             <td>
-                <a asp-controller="MedicalFile">MedicalFiles</a>
+                @if (item.MedicalFile != null)
+                {
+                    @Html.ActionLink("MedicalFile", "Details", "MedicalFile", new { id = item.MedicalFile.Id })
+                }
+                else
+                {
+                    @Html.ActionLink("Add File", "MedicalFileNew", new { id = item.PatientId})
+                }
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id=item.PatientId }) |
