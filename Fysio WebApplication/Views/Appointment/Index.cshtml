@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Fysio_WebApplication.Models.Appointment>
+﻿@model IEnumerable<Library.core.Model.Appointment>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,10 +13,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.PatientId)
+                @Html.DisplayNameFor(model => model.Patient.IdNumber)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EmployeeId)
+                @Html.DisplayNameFor(model => model.Employee.Id)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Date)
@@ -28,10 +28,10 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.PatientId)
+                @Html.DisplayFor(modelItem => item.Patient.IdNumber)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.EmployeeId)
+                @Html.DisplayFor(modelItem => item.Employee.Id)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Date)

@@ -1,4 +1,4 @@
-﻿using Fysio_WebApplication.Models;
+﻿using Library.core.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

@@ -1,7 +1,5 @@
-using Fysio_WebApplication.Abstract.Repositories;
-using Fysio_WebApplication.Data;
-using Fysio_WebApplication.DataStore;
-using Fysio_WebApplication.Models.SeedData;
+using Library.DAL;
+using Library.core.Model.SeedData;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -15,6 +13,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Library.Domain.Repositories;
+using Library.Data;
+using Fysio_WebApplication.Seed;
 
 namespace Fysio_WebApplication
 {
@@ -32,7 +33,11 @@ namespace Fysio_WebApplication
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("FysioWebApplicatieConnection")));
+                    Configuration.GetConnectionString("ApplicationConnection")));
+
+            services.AddDbContext<PatientPortalDbContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("PatientPortalDbContextConnection")));
 
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();
@@ -79,6 +84,7 @@ namespace Fysio_WebApplication
                 endpoints.MapRazorPages();
             });
 
+            IdentitySeedData.EnsurePopulatedAsync(app);
 
             SeedData.EnsurePopulatedApplication(app);
         }

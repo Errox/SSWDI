@@ -1,8 +1,5 @@
 ﻿using Avans_Fysio_WebService.Models;
-using Fysio_WebApplication.Abstract.Repositories;
-using Fysio_WebApplication.Areas.Identity.Data;
-using Fysio_WebApplication.DataStore;
-using Fysio_WebApplication.Models;
+using Library.core.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +12,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Authorization;
+using Library.Domain.Repositories;
 
 namespace Fysio_WebApplication.Controllers
 {
@@ -39,26 +37,26 @@ namespace Fysio_WebApplication.Controllers
         // GET: MedicalFile
         public ActionResult Index()
         {
-            return View(_repo.FindAll());
+            return View(_repo.MedicalFiles.Include(i => i.IntakeSupervision).Include(i => i.IntakeTherapistId));
         }
 
         public ActionResult IndexPersonalSupervise()
         {
             string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return View(_repo.MedicalFiles.Where(i => i.IntakeSupervision == userId));
+            return View(_repo.MedicalFiles.Include(i => i.IntakeSupervision).Include(i => i.IntakeTherapistId).Where(i => i.IntakeSupervision == _employeeRepo.GetEmployee(userId)));
         }
 
         public ActionResult IndexPersonalTherapist()
         {
             string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return View(_repo.MedicalFiles.Where(i => i.IntakeTherapistId == userId));
+            return View(_repo.MedicalFiles.Include(i => i.IntakeSupervision).Include(i => i.IntakeTherapistId).Where(i => i.IntakeTherapistId == _employeeRepo.GetEmployee(userId)));
         }
 
         // GET: MedicalFile/Details/5
         public async Task<ActionResult> DetailsAsync(int id)
         {
             // Get the detailed medical File
-            MedicalFile medical = _repo.GetMedicalFile(id);
+            MedicalFile medical = _repo.MedicalFiles.Include(i => i.IntakeSupervision).Include(i => i.IntakeTherapistId).FirstOrDefault(i => i.Id == id);
 
             //Fetch the diagnosis containing the code
             var client = new RestClient($"https://avansfysioservice.azurewebsites.net/api/Diagnosis/"+medical.DiagnosisCode);
@@ -66,17 +64,11 @@ namespace Fysio_WebApplication.Controllers
             IRestResponse response = await client.ExecuteAsync(request);
             Diagnosis diagnosis = JsonConvert.DeserializeObject<Diagnosis>(response.Content);
 
-
-            //Fetch all the employee's working on this file.
-            Employee supervision = _employeeRepo.GetEmployee(medical.IntakeSupervision);
-            Employee therapist = _employeeRepo.GetEmployee(medical.IntakeTherapistId);
-
-
             //Send them towards the view
             ViewBag.BodyLocation = diagnosis.BodyLocation;
             ViewBag.Pathology = diagnosis.Pathology;
-            ViewBag.Supervision = supervision.FirstName + " " + supervision.SurName;
-            ViewBag.Therapist = therapist.FirstName + " " + therapist.SurName;
+            ViewBag.Supervision = medical.IntakeSupervision.FirstName + " " + medical.IntakeSupervision.SurName;
+            ViewBag.Therapist = medical.IntakeTherapistId.FirstName + " " + medical.IntakeTherapistId.SurName;
             return View(_repo.GetMedicalFile(id));
         }
 
@@ -124,15 +116,14 @@ namespace Fysio_WebApplication.Controllers
         public ActionResult NotesnNew(int id, Note newNote)
         {
             // Get the current logged in.
-            string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             //Create new plan because somehow it'll take the medicalFile ID and places it in the model instead of keeping it empty to insert in the DB
-            Note note = new Note { IdEmployee = userId, Description = newNote.Description, CreatedUtc = DateTime.Now, OpenForPatient = newNote.OpenForPatient };
+            Note note = new Note { Employee = _employeeRepo.GetEmployee(this.User.FindFirstValue(ClaimTypes.NameIdentifier)), Description = newNote.Description, CreatedUtc = DateTime.Now, OpenForPatient = newNote.OpenForPatient };
             
             _notesRepository.AddNote(note);
 
             //Add the Treatmentplan to the medicalFile
-            MedicalFile medicalFile = _repo.MedicalFiles.Include(i => i.Notes).FirstOrDefault(i => i.Id == id);
+            MedicalFile medicalFile = _repo.MedicalFiles.Include(i => i.Notes).Include(i => i.IntakeSupervision).Include(i => i.IntakeTherapistId).FirstOrDefault(i => i.Id == id);
             medicalFile.Notes.Add(note);
             _repo.UpdateMedicalFile(id, medicalFile);
 
@@ -162,10 +153,9 @@ namespace Fysio_WebApplication.Controllers
         public ActionResult TreatmentPlanNew(int id, TreatmentPlan plan)
         {
             // Get the current logged in.
-            string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-
             //Create new plan because somehow it'll take the medicalFile ID and places it in the model instead of keeping it empty to insert in the DB
-            TreatmentPlan NewPlan = new TreatmentPlan { Type = plan.Type, Description = plan.Description, Particularities = plan.Particularities, TreatmentPerformedBy = userId, TreatmentDate = plan.TreatmentDate, AmountOfTreatmentsPerWeek = plan.AmountOfTreatmentsPerWeek };
+            Employee employee = _employeeRepo.GetEmployee(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            TreatmentPlan NewPlan = new TreatmentPlan { Type = plan.Type, Description = plan.Description, Particularities = plan.Particularities, TreatmentPerformedBy = employee, TreatmentDate = plan.TreatmentDate, AmountOfTreatmentsPerWeek = plan.AmountOfTreatmentsPerWeek };
             _treatmentPlanRepository.AddTreatmentPlan(NewPlan);
 
             //Add the Treatmentplan to the medicalFile

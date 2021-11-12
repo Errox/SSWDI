@@ -1,8 +1,6 @@
 ﻿using Avans_Fysio_WebService.Models;
-using Fysio_WebApplication.Abstract.Repositories;
-using Fysio_WebApplication.Areas.Identity.Data;
-using Fysio_WebApplication.DataStore;
-using Fysio_WebApplication.Models;
+using Library.core.Model;
+using Library.Domain.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -39,19 +37,17 @@ namespace Fysio_WebApplication.Controllers
         // GET: TreatmentController/Details/5
         public async Task<ActionResult> DetailsAsync(int id)
         {
-            TreatmentPlan treatmentPlan = _repo.TreatmentPlans.Include(c1 => c1.PracticeRoom).FirstOrDefault(i => i.Id == id);
+            TreatmentPlan treatmentPlan = _repo.TreatmentPlans.Include(c1 => c1.PracticeRoom).Include(c1=>c1.TreatmentPerformedBy).FirstOrDefault(i => i.Id == id);
 
             var client = new RestClient($"https://avansfysioservice.azurewebsites.net/api/Treatment/" + treatmentPlan.Type);
             var request = new RestRequest(Method.GET);
             IRestResponse response = await client.ExecuteAsync(request);
             Treatment treatment = JsonConvert.DeserializeObject<Treatment>(response.Content);
 
-
-            //Fetch all the employee's working on this file.
-            Employee TreatmentPerformedBy = _employeeRepo.GetEmployee(treatmentPlan.TreatmentPerformedBy);
+            //Fetch all the employee's working on this file
 
             ViewBag.Description = treatment.Description;
-            ViewBag.Performed = TreatmentPerformedBy.FirstName + " " + TreatmentPerformedBy.SurName;
+            ViewBag.Performed = treatmentPlan.TreatmentPerformedBy.FirstName + " " + treatmentPlan.TreatmentPerformedBy.SurName;
 
             return View(treatmentPlan);
         }
@@ -70,7 +66,10 @@ namespace Fysio_WebApplication.Controllers
             try
             {
                 string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-                collection.TreatmentPerformedBy = userId;
+                Employee employee = _employeeRepo.Employees.FirstOrDefault(i => i.Id == userId);
+
+                collection.TreatmentPerformedBy = employee;
+
                 _repo.AddTreatmentPlan(collection);
                 return RedirectToAction(nameof(Index));
             }

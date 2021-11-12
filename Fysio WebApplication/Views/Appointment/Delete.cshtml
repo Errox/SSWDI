@@ -1,4 +1,4 @@
-﻿@model Fysio_WebApplication.Models.Appointment
+﻿@model Library.core.Model.Appointment
 
 @{
     ViewData["Title"] = "Delete";
@@ -18,16 +18,16 @@
             @Html.DisplayFor(model => model.Id)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PatientId)
+            @Html.DisplayNameFor(model => model.Patient.IdNumber)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PatientId)
+            @Html.DisplayFor(model => model.Patient.IdNumber)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EmployeeId)
+            @Html.DisplayNameFor(model => model.Employee.Id)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EmployeeId)
+            @Html.DisplayFor(model => model.Employee.Id)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Date)

@@ -1,5 +1,5 @@
-﻿using Fysio_WebApplication.Abstract.Repositories;
-using Fysio_WebApplication.Models;
+﻿using Library.core.Model;
+using Library.Domain.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,11 +19,13 @@ namespace Fysio_WebApplication.Controllers
     {
         private IPatientRepository _repo;
         private IMedicalFileRepository _medicalFileRepo;
+        private IEmployeeRepository _employeeRepo;
 
-        public PatientController(IPatientRepository repo, IMedicalFileRepository medicalFile)
+        public PatientController(IPatientRepository repo, IMedicalFileRepository medicalFile, IEmployeeRepository employeeRepository)
         {
             _repo = repo;
             _medicalFileRepo = medicalFile;
+            _employeeRepo = employeeRepository;
         }
 
         public ActionResult Index()
@@ -34,7 +36,7 @@ namespace Fysio_WebApplication.Controllers
         // GET: PatientController/Details/5
         public ActionResult Details(int id)
         {
-            Patient patient = _repo.Patients.Include(c1 => c1.MedicalFile).FirstOrDefault(i => i.PatientId == id);
+            Patient patient = _repo.Patients.Include(c1 => c1.MedicalFile).FirstOrDefault(i => i.IdNumber == id);
             MedicalFile medical = patient.MedicalFile;
             string imageDataURL;
             if (patient.ImgData == null)
@@ -58,7 +60,7 @@ namespace Fysio_WebApplication.Controllers
         // GET: PatientController/Create
         public ActionResult Create()
         {
-            return View();
+            return View(_employeeRepo.Employees);
         }
 
         // POST: PatientController/Create
@@ -77,7 +79,6 @@ namespace Fysio_WebApplication.Controllers
                     ms.Close();
                     ms.Dispose();
                 }
-
                 _repo.AddPatient(pool);
                 return RedirectToAction(nameof(Index));
             }
@@ -148,11 +149,30 @@ namespace Fysio_WebApplication.Controllers
             string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             //Create new plan because somehow it'll take the medicalFile ID and places it in the model instead of keeping it empty to insert in the DB
-            MedicalFile medicalFile = new MedicalFile { Description = file.Description, DiagnosisCode = file.DiagnosisCode, IntakeSupervision = file.IntakeSupervision, IntakeTherapistId = file.IntakeTherapistId, DateOfDischarge = file.DateOfDischarge };
+            MedicalFile medicalFile = new MedicalFile { Description = file.Description, DiagnosisCode = file.DiagnosisCode, DateOfDischarge = file.DateOfDischarge };
+
+
+            Employee employee = _employeeRepo.GetEmployee(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            if (employee.IsStudent)
+            {
+                //First employee that's not a student. This is just the stage begeleider
+                medicalFile.IntakeSupervision = _employeeRepo.Employees.FirstOrDefault(i => i.IsStudent == false);
+                medicalFile.IntakeTherapistId = employee;
+            }
+            else
+            {
+                medicalFile.IntakeSupervision = employee;
+                medicalFile.IntakeTherapistId = employee;
+            }
+
+
             _medicalFileRepo.AddMedicalFile(medicalFile);
+
+
             
             //Add the Treatmentplan to the medicalFile
-            Patient patient  = _repo.Patients.Include(i => i.MedicalFile).FirstOrDefault(i => i.PatientId == id);
+            Patient patient  = _repo.Patients.Include(i => i.MedicalFile).FirstOrDefault(i => i.IdNumber == id);
             patient.MedicalFile = medicalFile;
             _repo.UpdatePatient(id, patient);
 

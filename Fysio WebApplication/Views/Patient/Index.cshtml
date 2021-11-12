@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Fysio_WebApplication.Models.Patient>
+﻿@model IEnumerable<Library.core.Model.Patient>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,7 +13,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.PatientId)
+                @Html.DisplayNameFor(model => model.IdNumber)
             </th>
             <th>
                 Name
@@ -46,7 +46,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.PatientId)
+                @Html.DisplayFor(modelItem => item.IdNumber)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.SurName)
@@ -76,12 +76,12 @@
                 }
                 else
                 {
-                    @Html.ActionLink("Add File", "MedicalFileNew", new { id = item.PatientId})
+                    @Html.ActionLink("Add File", "MedicalFileNew", new { id = item.IdNumber})
                 }
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.PatientId }) |
-                @Html.ActionLink("Details", "Details", new { id = item.PatientId })
+                @Html.ActionLink("Edit", "Edit", new { id=item.IdNumber }) |
+                @Html.ActionLink("Details", "Details", new { id = item.IdNumber})
             </td>
         </tr>
 }

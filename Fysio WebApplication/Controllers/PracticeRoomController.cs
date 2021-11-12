@@ -1,5 +1,5 @@
-﻿using Fysio_WebApplication.Abstract.Repositories;
-using Fysio_WebApplication.Models;
+﻿using Library.core.Model;
+using Library.Domain.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

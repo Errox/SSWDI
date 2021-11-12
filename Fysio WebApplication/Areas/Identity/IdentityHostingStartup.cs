@@ -1,6 +1,6 @@
 ﻿using System;
-using Fysio_WebApplication.Areas.Identity.Data;
-using Fysio_WebApplication.Data;
+using Library.core.Model;
+using Library.DAL;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
@@ -33,12 +33,6 @@ namespace Fysio_WebApplication.Areas.Identity
                     options.Lockout.MaxFailedAccessAttempts = 99;
 
                 }).AddEntityFrameworkStores<AppIdentityDbContext>();
-
-
-                //services.AddDefaultIdentity<IdentityUser>(options => {
-                //                
-                //            })
-                //.AddEntityFrameworkStores<AppIdentityDbContext>();
             });
         }
     }
