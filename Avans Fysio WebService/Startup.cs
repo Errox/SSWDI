@@ -1,18 +1,14 @@
+using Avans_Fysio_WebService.GraphQL;
+using Avans_Fysio_WebService.GraphQL.Mutations;
+using Avans_Fysio_WebService.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
-using Avans_Fysio_WebService.Models;
-using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Avans_Fysio_WebService
 {
@@ -30,7 +26,7 @@ namespace Avans_Fysio_WebService
         {
             services.AddControllers();
 
-            services.AddDbContext<WebServiceDbContext>(opts =>
+            services.AddPooledDbContextFactory<WebServiceDbContext>(opts =>
             {
                 opts.UseSqlServer(
                     Configuration["ConnectionStrings:AvansFysioWebServiceConnection"]);
@@ -39,6 +35,12 @@ namespace Avans_Fysio_WebService
             // Dependency injection 
             services.AddTransient<IDiagnosesRepository, EFDiagnoseRepository>();
             services.AddTransient<ITreatmentRepository, EFTreatmentRepository>();
+
+            //GraphQL 
+            services
+                .AddGraphQLServer()
+                .AddQueryType<Query>();
+                //.AddMutationType<Mutation>();
 
             // Register the swagger generator
             services.AddSwaggerGen(c =>
@@ -85,6 +87,7 @@ namespace Avans_Fysio_WebService
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapGraphQL();
             });
 
             SeedData.EnsurePopulated(app);

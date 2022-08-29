@@ -1,10 +1,7 @@
 ﻿using Avans_Fysio_WebService.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
+using MainLibrary.DomainModel;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Avans_Fysio_WebService.Controllers
 {

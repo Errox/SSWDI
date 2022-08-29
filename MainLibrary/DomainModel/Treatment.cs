@@ -10,9 +10,12 @@ namespace MainLibrary.DomainModel
     public class Treatment
     {
         [Key]
-        public int Id { get; set; }
-        public string Code { get; set; }
-        public string Description { get; set; }
-        public bool ExplanationRequired { get; set; }
+        public int? Id { get; set; }
+        [StringLength(50), Required]
+        public string? Code { get; set; }
+        [StringLength(255), Required]
+        public string? Description { get; set; }
+        [Required]
+        public bool? ExplanationRequired { get; set; }
     }
 }

@@ -10,9 +10,12 @@ namespace MainLibrary.DomainModel
     public class Diagnosis
     {
         [Key]
-        public int Id { get; set; }
-        public int Code { get; set; }
-        public string BodyLocation { get; set; }
-        public string Pathology { get; set; }
+        public int? Id { get; set; }
+        [Range(1000, 9999), Required]
+        public int? Code { get; set; }
+        [StringLength(255), Required]
+        public string? BodyLocation { get; set; }
+        [StringLength(255), Required]
+        public string? Pathology { get; set; }
     }
 }

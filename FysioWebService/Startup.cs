@@ -2,7 +2,6 @@ using FysioWebService.Database;
 using FysioWebService.GraphQL;
 using HotChocolate;
 using HotChocolate.AspNetCore;
-using HotChocolate.AspNetCore.Playground;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -35,17 +34,29 @@ namespace FysioWebService
             services
              .AddGraphQLServer()
              .AddQueryType<Query>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.)
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Avans Fysio WebService V1");
+            });
+            
+            app.UseHttpsRedirection();
+
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
                 //TODO: Make the normal controllers from old project. 
-                //endpoints.MapControllers(); 
+                endpoints.MapControllers(); 
                 
                 endpoints.MapGraphQL();
             });

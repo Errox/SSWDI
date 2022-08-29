@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using MainLibrary.DomainModel;
 
 namespace Avans_Fysio_WebService.Models
 {

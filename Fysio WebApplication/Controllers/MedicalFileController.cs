@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Authorization;
 using Library.Domain.Repositories;
+using MainLibrary.DomainModel;
 
 namespace Fysio_WebApplication.Controllers
 {
@@ -60,7 +61,7 @@ namespace Fysio_WebApplication.Controllers
 
             //Fetch the diagnosis containing the code
             var client = new RestClient($"https://avansfysioservice.azurewebsites.net/api/Diagnosis/"+medical.DiagnosisCode);
-            var request = new RestRequest(Method.GET);
+            var request = new RestRequest(Method.Get);
             IRestResponse response = await client.ExecuteAsync(request);
             Diagnosis diagnosis = JsonConvert.DeserializeObject<Diagnosis>(response.Content);
 

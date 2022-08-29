@@ -1,17 +1,11 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using CsvHelper;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CsvHelper;
-using System.Threading.Tasks;
-using EFCore.Seeder;
-using EFCore.Seeder.Extensions;
-using EFCore.Seeder.Configuration;
-using System.IO;
 using System.Globalization;
+using System.IO;
+using System.Linq;
+using MainLibrary.DomainModel;
 
 namespace Avans_Fysio_WebService.Models
 {
@@ -38,9 +32,9 @@ namespace Avans_Fysio_WebService.Models
 
                     while (csv.Read())
                     {
-                        context.Add(new Diagnosis { Code = int.Parse(csv.GetField(0)),  BodyLocation = csv.GetField(1), Pathology =  csv.GetField(2)});
+                        context.Add(new Diagnosis { Code = int.Parse(csv.GetField(0)), BodyLocation = csv.GetField(1), Pathology = csv.GetField(2) });
                     }
-                    
+
                 }
                 context.SaveChanges();
             }

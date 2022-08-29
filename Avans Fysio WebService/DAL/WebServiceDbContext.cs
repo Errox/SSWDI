@@ -1,9 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MainLibrary.DomainModel;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace Avans_Fysio_WebService.Models
@@ -13,8 +9,8 @@ namespace Avans_Fysio_WebService.Models
         public WebServiceDbContext(DbContextOptions<WebServiceDbContext> options)
             : base(options) { }
 
-        public DbSet<Diagnosis> Diagnoses { get; set; }
+        public DbSet<Diagnosis> Diagnoses { get; set; } = default!;
 
-        public DbSet<Treatment> Treatments { get; set; }
+        public DbSet<Treatment> Treatments { get; set; } = default!;
     }
 }
