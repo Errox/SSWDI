@@ -1,16 +1,19 @@
-﻿using Avans_Fysio_WebService.GraphQL.Mutations.Payloads;
+﻿using Avans_Fysio_WebService.GraphQL.Extensions;
+using Avans_Fysio_WebService.GraphQL.Mutations.Payloads;
 using Avans_Fysio_WebService.Models;
+using Fysio_Codes.DAL;
+using Fysio_Codes.Models;
 using HotChocolate;
-using MainLibrary.DomainModel;
 using System.Threading.Tasks;
 
 namespace Avans_Fysio_WebService.GraphQL.Mutations
 {
     public class Mutation
     {
+        [UseApplicationDbContext]
         public async Task<AddDiagnosisPayload> AddDiagnosisAsync(
             AddDiagnosisPayload input,
-            [Service] WebServiceDbContext context)
+            [Service] FysioCodeDbContext context)
         {
             var diagnosis = new Diagnosis
             {

@@ -1,19 +1,28 @@
 ﻿using Avans_Fysio_WebService.Models;
+using Fysio_Codes.DAL;
 using HotChocolate;
 using HotChocolate.Types;
-using MainLibrary.DomainModel;
+using Fysio_Codes.Models;
 using System.Linq;
+using Avans_Fysio_WebService.GraphQL.Extensions;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Avans_Fysio_WebService.GraphQL
 {
     public class Query
     {
         //[UsePaging]
-        public IQueryable<Diagnosis> GetDiagnoses([Service] WebServiceDbContext context) =>
-            context.Diagnoses.OrderBy(t => t.Id);
+        // Using this annotation we're essentially applying a middleware to the field resolver.
+        [UseApplicationDbContext]
+        public Task<List<Diagnosis>> GetDiagnoses([ScopedService] FysioCodeDbContext context) =>
+            context.Diagnoses.ToListAsync();
         //[UsePaging]
-        public IQueryable<Treatment> GetTreatments([Service] WebServiceDbContext context) =>
-            context.Treatments.OrderBy(t => t.Id);
+        // Using this annotation we're essentially applying a middleware to the field resolver.
+        [UseApplicationDbContext]
+        public Task<List<Treatment>> GetTreatments([ScopedService] FysioCodeDbContext context) =>
+            context.Treatments.ToListAsync();
     }
 
 }

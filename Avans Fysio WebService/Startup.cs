@@ -1,14 +1,22 @@
-using Avans_Fysio_WebService.GraphQL;
-using Avans_Fysio_WebService.GraphQL.Mutations;
-using Avans_Fysio_WebService.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
+using Fysio_Codes.SeedData;
+using Fysio_Codes.DAL;
+using Fysio_Codes.Abstract;
+using Fysio_Codes.DataStore;
+using Avans_Fysio_WebService.GraphQL;
 
 namespace Avans_Fysio_WebService
 {
@@ -26,11 +34,13 @@ namespace Avans_Fysio_WebService
         {
             services.AddControllers();
 
-            services.AddPooledDbContextFactory<WebServiceDbContext>(opts =>
+            services.AddDbContextFactory<FysioCodeDbContext>(opts =>
             {
                 opts.UseSqlServer(
                     Configuration["ConnectionStrings:AvansFysioWebServiceConnection"]);
             });
+
+
 
             // Dependency injection 
             services.AddTransient<IDiagnosesRepository, EFDiagnoseRepository>();
@@ -40,7 +50,7 @@ namespace Avans_Fysio_WebService
             services
                 .AddGraphQLServer()
                 .AddQueryType<Query>();
-                //.AddMutationType<Mutation>();
+            //.AddMutationType<Mutation>();
 
             // Register the swagger generator
             services.AddSwaggerGen(c =>

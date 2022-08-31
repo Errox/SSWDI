@@ -1,11 +1,12 @@
 ﻿using CsvHelper;
+using Fysio_Codes.DAL;
+using Fysio_Codes.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using MainLibrary.DomainModel;
 
 namespace Avans_Fysio_WebService.Models
 {
@@ -14,8 +15,8 @@ namespace Avans_Fysio_WebService.Models
         public static void EnsurePopulated(IApplicationBuilder app)
         {
 
-            WebServiceDbContext context = app.ApplicationServices
-                .CreateScope().ServiceProvider.GetRequiredService<WebServiceDbContext>();
+            FysioCodeDbContext context = app.ApplicationServices
+                .CreateScope().ServiceProvider.GetRequiredService<FysioCodeDbContext>();
 
             if (context.Database.GetPendingMigrations().Any())
             {

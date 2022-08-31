@@ -1,6 +1,6 @@
 ﻿using System;
+using Fysio_Identity;
 using Library.core.Model;
-using Library.DAL;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
@@ -20,7 +20,7 @@ namespace Fysio_WebApplication.Areas.Identity
                     options.UseSqlServer(
                         context.Configuration.GetConnectionString("IdentityConnection")));
 
-                services.AddDefaultIdentity<Employee>(options => {
+                services.AddDefaultIdentity<ApplicationUser>(options => {
                     //Signin
                     options.SignIn.RequireConfirmedAccount = false;
                     options.SignIn.RequireConfirmedPhoneNumber = false;

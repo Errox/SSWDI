@@ -1,4 +1,4 @@
-﻿using MainLibrary.DomainModel;
+﻿using Fysio_Codes.Models;
 
 namespace Avans_Fysio_WebService.GraphQL.Mutations.Payloads
 {

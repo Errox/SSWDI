@@ -8,8 +8,14 @@ using Microsoft.AspNetCore.Identity;
 namespace Library.core.Model
 {
     // Add profile data for application users by adding properties to the Employee class
-    public class Employee : IdentityUser
+    public class Employee
     {
+        [Key]
+        public int ID { get; set; }
+
+        [Required]
+        public string Email { get; set; }
+
         public string FirstName { get; set; }
 
         public string SurName { get; set; }

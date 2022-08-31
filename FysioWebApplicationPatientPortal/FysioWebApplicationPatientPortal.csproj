@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp6</TargetFramework>
@@ -27,13 +27,8 @@
     <ProjectReference Include="..\Avans Fysio WebService\AvansFysioWebService.csproj" />
     <ProjectReference Include="..\Fysio WebApplication\FysioWebApplication.csproj" />
     <ProjectReference Include="..\Library.core\Library.core.csproj" />
-    <ProjectReference Include="..\Library.DAL\Library.DAL.csproj" />
     <ProjectReference Include="..\Library.Data\Library.Data.csproj" />
     <ProjectReference Include="..\Library.Domain\Library.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Areas\Identity\Data\" />
   </ItemGroup>
 
 </Project>

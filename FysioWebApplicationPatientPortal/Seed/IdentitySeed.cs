@@ -15,6 +15,8 @@ namespace FysioWebApplicationPatientPortal.Seed
 
         public static async Task EnsurePopulatedAsync(IApplicationBuilder app)
         {
+            // TODO: Temp disabled Patient creation on Identity bias; should also be moved -W
+            /*
             Patient Hans = new Patient
             {
                 UserName = "HansPeterson@geenmail.nl",
@@ -51,6 +53,7 @@ namespace FysioWebApplicationPatientPortal.Seed
             UserManager<Patient> userManagerPatient = app.ApplicationServices.CreateScope().ServiceProvider.GetRequiredService<UserManager<Patient>>();
             await userManagerPatient.CreateAsync(Laura, "Laura*123");
             await userManagerPatient.CreateAsync(Hans, "Hans*123");
+            */
         }
     }
 }

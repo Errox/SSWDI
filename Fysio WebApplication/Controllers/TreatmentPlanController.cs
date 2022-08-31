@@ -1,4 +1,4 @@
-﻿using Avans_Fysio_WebService.Models;
+﻿using Fysio_Codes.Models;
 using Library.core.Model;
 using Library.Domain.Repositories;
 using Microsoft.AspNetCore.Authorization;
@@ -13,7 +13,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using MainLibrary.DomainModel;
 
 namespace Fysio_WebApplication.Controllers
 {
@@ -41,13 +40,13 @@ namespace Fysio_WebApplication.Controllers
             TreatmentPlan treatmentPlan = _repo.TreatmentPlans.Include(c1 => c1.PracticeRoom).Include(c1=>c1.TreatmentPerformedBy).FirstOrDefault(i => i.Id == id);
 
             var client = new RestClient($"https://avansfysioservice.azurewebsites.net/api/Treatment/" + treatmentPlan.Type);
-            var request = new RestRequest(Method.GET);
-            IRestResponse response = await client.ExecuteAsync(request);
-            Treatment treatment = JsonConvert.DeserializeObject<Treatment>(response.Content);
+            //var request = new RestRequest(Method.GET);
+            //IRestResponse response = await client.ExecuteAsync(request);
+            //Treatment treatment = JsonConvert.DeserializeObject<Treatment>(response.Content);
 
             //Fetch all the employee's working on this file
 
-            ViewBag.Description = treatment.Description;
+            //ViewBag.Description = treatment.Description;
             ViewBag.Performed = treatmentPlan.TreatmentPerformedBy.FirstName + " " + treatmentPlan.TreatmentPerformedBy.SurName;
 
             return View(treatmentPlan);
@@ -67,7 +66,7 @@ namespace Fysio_WebApplication.Controllers
             try
             {
                 string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-                Employee employee = _employeeRepo.Employees.FirstOrDefault(i => i.Id == userId);
+                Employee employee = _employeeRepo.Employees.FirstOrDefault(i => i.ID.ToString() == userId);
 
                 collection.TreatmentPerformedBy = employee;
 

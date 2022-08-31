@@ -9,8 +9,14 @@ using Microsoft.AspNetCore.Identity;
 namespace Library.core.Model
 {
     // Add profile data for application users by adding properties to the Patient class
-    public class Patient : IdentityUser
+    public class Patient
     {
+        [Key]
+        public int ID { get; set; }
+
+        [Required]
+        public string Email { get; set; }
+
         [MaxLength(250)]
         public string FirstName { get; set; }
 

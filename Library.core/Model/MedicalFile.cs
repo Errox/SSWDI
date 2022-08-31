@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Policy;
-using Newtonsoft.Json;
 
 namespace Library.core.Model
 {

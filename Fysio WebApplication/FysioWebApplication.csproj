@@ -27,11 +27,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Avans Fysio WebService\AvansFysioWebService.csproj" />
+    <ProjectReference Include="..\Fysio_Identity\Fysio_Identity.csproj" />
     <ProjectReference Include="..\Library.core\Library.core.csproj" />
-    <ProjectReference Include="..\Library.DAL\Library.DAL.csproj" />
     <ProjectReference Include="..\Library.Data\Library.Data.csproj" />
     <ProjectReference Include="..\Library.Domain\Library.Domain.csproj" />
-    <ProjectReference Include="..\MainLibrary\MainLibrary.csproj" />
   </ItemGroup>
 
 </Project>
