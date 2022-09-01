@@ -182,7 +182,7 @@ namespace Library.core.Model.SeedData
                     TreatmentPlans = treatmentplans2
                 };
                 context.Add(medicalFile2);
-
+                // TODO: Patient is not created yet.
                 patient1.MedicalFile = medicalFile1;
                 context.Patients.Update(patient1);
 
