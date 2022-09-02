@@ -29,7 +29,7 @@ namespace Library.Data.Repositories
         {
             // TODO: Temporarily added a toString on the new Id -W
 
-            return _context.Employees.FirstOrDefault(i => i.ID.ToString() == id);
+            return _context.Employees.FirstOrDefault(i => i.Id.ToString() == id);
         }
     }
 }

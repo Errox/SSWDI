@@ -15,11 +15,10 @@ namespace Fysio_WebApplication.Seed
     {
         public static async Task EnsurePopulatedAsync(IApplicationBuilder app)
         {
-            // TODO: Temp disabled this code to fix later -W
-            /*
             //Setup Therapist
             Employee employee = new Employee()
             {
+
                 UserName = "ryangroenewold@hotmail.com",
                 NormalizedEmail = "RYANGROENEWOLD@HOTMAIL.COM",
                 Email = "ryangroenewold@hotmail.com",
@@ -52,7 +51,7 @@ namespace Fysio_WebApplication.Seed
             UserManager<Employee> userManager = app.ApplicationServices.CreateScope().ServiceProvider.GetRequiredService<UserManager<Employee>>();
             await userManager.CreateAsync(employee, "Ryan*123");
             await userManager.CreateAsync(student, "Student*123");
-            */
+            
 
         }
     }

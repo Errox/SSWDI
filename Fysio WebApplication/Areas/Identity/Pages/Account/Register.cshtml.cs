@@ -7,28 +7,26 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Library.core.Model;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using Fysio_Identity;
 
 namespace Fysio_WebApplication.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<IdentityUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
         public RegisterModel(
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
+            UserManager<IdentityUser> userManager,
+            SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {
@@ -62,30 +60,6 @@ namespace Fysio_WebApplication.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
-
-            [Required]
-            [DataType(DataType.PhoneNumber)]
-            [Display(Name = "PhoneNumber")]
-            public string PhoneNumber { get; set; }
-
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
-            [Display(Name = "First Name")]
-            public string FirstName { get; set; }
-
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
-            [Display(Name = "Sur Name")]
-            public string SurName { get; set; }
-
-            [Range(1000000, 9999999, ErrorMessage = "Your Registration Number can only be 7 Numbers long. That means a number between 1000000, 9999999")]
-            [Display(Name = "Registration Number")]
-            public int StudentBIGNumber { get; set; }
-
-            [Required]
-            [Display(Name = "Is student")]
-            public bool IsStudent { get; set; }
-
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -96,28 +70,11 @@ namespace Fysio_WebApplication.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
+            returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                Random rnd = new Random();
-                // TODO: You might need to change up some code here for proper generation -W
-                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, PhoneNumber = Input.PhoneNumber, /* FirstName = Input.FirstName, SurName = Input.SurName, IsStudent = Input.IsStudent */ };
-
-                /*
-                user.WorkerNumber = rnd.Next(1000, 9999999);
-
-                if (Input.IsStudent)
-                {
-                    user.StudentNumber = Input.StudentBIGNumber;
-                }
-                else
-                {
-                    user.BIGNumber = Input.StudentBIGNumber;
-                }
-                */
-
-
+                var user = new IdentityUser { UserName = Input.Email, Email = Input.Email };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

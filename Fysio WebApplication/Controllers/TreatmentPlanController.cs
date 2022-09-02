@@ -66,7 +66,7 @@ namespace Fysio_WebApplication.Controllers
             try
             {
                 string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-                Employee employee = _employeeRepo.Employees.FirstOrDefault(i => i.ID.ToString() == userId);
+                Employee employee = _employeeRepo.Employees.FirstOrDefault(i => i.Id.ToString() == userId);
 
                 collection.TreatmentPerformedBy = employee;
 

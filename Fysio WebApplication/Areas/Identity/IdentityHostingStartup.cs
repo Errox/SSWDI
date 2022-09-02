@@ -1,6 +1,5 @@
 ﻿using System;
 using Fysio_Identity;
-using Library.core.Model;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
@@ -18,21 +17,10 @@ namespace Fysio_WebApplication.Areas.Identity
             builder.ConfigureServices((context, services) => {
                 services.AddDbContext<AppIdentityDbContext>(options =>
                     options.UseSqlServer(
-                        context.Configuration.GetConnectionString("IdentityConnection")));
+                        context.Configuration.GetConnectionString("AppIdentityDbContextConnection")));
 
-                services.AddDefaultIdentity<ApplicationUser>(options => {
-                    //Signin
-                    options.SignIn.RequireConfirmedAccount = false;
-                    options.SignIn.RequireConfirmedPhoneNumber = false;
-
-                    //Password
-                    options.Password.RequireDigit = false;
-                    options.Password.RequiredLength = 4;
-
-                    //LockOut
-                    options.Lockout.MaxFailedAccessAttempts = 99;
-
-                }).AddEntityFrameworkStores<AppIdentityDbContext>();
+                services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                    .AddEntityFrameworkStores<AppIdentityDbContext>();
             });
         }
     }
