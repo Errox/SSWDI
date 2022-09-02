@@ -14,20 +14,21 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Fysio_Identity;
 
 namespace Fysio_WebApplication.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
-        private readonly SignInManager<Employee> _signInManager;
-        private readonly UserManager<Employee> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
         public RegisterModel(
-            UserManager<Employee> userManager,
-            SignInManager<Employee> signInManager,
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {
@@ -100,7 +101,10 @@ namespace Fysio_WebApplication.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 Random rnd = new Random();
-                var user = new Employee { UserName = Input.Email, Email = Input.Email, PhoneNumber = Input.PhoneNumber, FirstName = Input.FirstName, SurName = Input.SurName, IsStudent = Input.IsStudent };
+                // TODO: You might need to change up some code here for proper generation -W
+                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, PhoneNumber = Input.PhoneNumber, /* FirstName = Input.FirstName, SurName = Input.SurName, IsStudent = Input.IsStudent */ };
+
+                /*
                 user.WorkerNumber = rnd.Next(1000, 9999999);
 
                 if (Input.IsStudent)
@@ -111,6 +115,7 @@ namespace Fysio_WebApplication.Areas.Identity.Pages.Account
                 {
                     user.BIGNumber = Input.StudentBIGNumber;
                 }
+                */
 
 
                 var result = await _userManager.CreateAsync(user, Input.Password);

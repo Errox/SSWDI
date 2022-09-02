@@ -1,6 +1,6 @@
 ﻿using System;
+using Fysio_Identity;
 using Library.core.Model;
-using Library.DAL;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
@@ -16,11 +16,11 @@ namespace FysioWebApplicationPatientPortal.Areas.Identity
         public void Configure(IWebHostBuilder builder)
         {
             builder.ConfigureServices((context, services) => {
-                services.AddDbContext<PatientPortalDbContext>(options =>
+                services.AddDbContext<AppIdentityDbContext>(options =>
                     options.UseSqlServer(
-                        context.Configuration.GetConnectionString("PatientPortalDbContextConnection")));
+                        context.Configuration.GetConnectionString("IdentityConnection")));
 
-                services.AddDefaultIdentity<Patient>(options => {
+                services.AddDefaultIdentity<ApplicationUser>(options => {
                     //Signin
                     options.SignIn.RequireConfirmedAccount = false;
                     options.SignIn.RequireConfirmedPhoneNumber = false;
@@ -32,7 +32,7 @@ namespace FysioWebApplicationPatientPortal.Areas.Identity
                     //LockOut
                     options.Lockout.MaxFailedAccessAttempts = 99;
 
-                }).AddEntityFrameworkStores<PatientPortalDbContext>();
+                }).AddEntityFrameworkStores<AppIdentityDbContext>();
             });
         }
     }

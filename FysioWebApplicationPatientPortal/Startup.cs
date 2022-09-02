@@ -1,6 +1,8 @@
+using Fysio_Identity;
 using FysioWebApplicationPatientPortal.Seed;
-using Library.DAL;
 using Library.Data;
+using Library.Data.Dal;
+using Library.Data.Repositories;
 using Library.Domain.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,7 +33,7 @@ namespace FysioWebApplicationPatientPortal
             services.AddDbContext<ApplicationDbContext>(options =>
                    options.UseSqlServer(
                        Configuration.GetConnectionString("ApplicationConnection")));
-
+            
             services.AddDbContext<AppIdentityDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("IdentityConnection")));

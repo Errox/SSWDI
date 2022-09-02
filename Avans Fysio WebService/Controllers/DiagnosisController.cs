@@ -1,4 +1,5 @@
-﻿using Avans_Fysio_WebService.Models;
+﻿using Fysio_Codes.Abstract;
+using Fysio_Codes.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,6 +14,7 @@ namespace Avans_Fysio_WebService.Controllers
     public class DiagnosisController : ControllerBase
     {
         private readonly IDiagnosesRepository _diagnosesRepository;
+
         public DiagnosisController(IDiagnosesRepository diagnosesRepository)
         {
             _diagnosesRepository = diagnosesRepository;

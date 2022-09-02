@@ -1,5 +1,5 @@
 ﻿using Library.core.Model;
-using Library.DAL;
+using Library.Data.Dal;
 using Library.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Fysio_Identity;
 
 namespace Library.core.Model.SeedData
 {
@@ -22,19 +23,20 @@ namespace Library.core.Model.SeedData
             ApplicationDbContext context = app.ApplicationServices
                 .CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-            PatientPortalDbContext contextPatient = app.ApplicationServices
-                .CreateScope().ServiceProvider.GetRequiredService<PatientPortalDbContext>();
+            // PatientPortalDbContext contextPatient = app.ApplicationServices
+            //    .CreateScope().ServiceProvider.GetRequiredService<PatientPortalDbContext>();
 
             AppIdentityDbContext contextEmployee = app.ApplicationServices
                 .CreateScope().ServiceProvider.GetRequiredService<AppIdentityDbContext>();
-            
+     
             // Fetch employee's
-            Employee employee = contextEmployee.Users.FirstOrDefault(i => i.Email == "ryangroenewold@hotmail.com");
-            Employee student = contextEmployee.Users.FirstOrDefault(i => i.Email == "Student@student.nl");
+            // TODO: Changed Identity Context to Domain Context -W
+            Employee employee = context.Employees.FirstOrDefault(i => i.Email == "ryangroenewold@hotmail.com");
+            Employee student = context.Employees.FirstOrDefault(i => i.Email == "Student@student.nl");
 
             // Fetch Patients
-            Patient patient1 = contextPatient.Users.FirstOrDefault(i => i.Email == "HansPeterson@geenmail.nl");
-            Patient patient2 = contextPatient.Users.FirstOrDefault(i => i.Email == "LauraSok@geenmail.nl");
+            Patient patient1 = context.Patients.FirstOrDefault(i => i.Email == "HansPeterson@geenmail.nl");
+            Patient patient2 = context.Patients.FirstOrDefault(i => i.Email == "LauraSok@geenmail.nl");
 
             if (context.Database.GetPendingMigrations().Any())
             {
@@ -180,12 +182,12 @@ namespace Library.core.Model.SeedData
                     TreatmentPlans = treatmentplans2
                 };
                 context.Add(medicalFile2);
-
+                // TODO: Patient is not created yet.
                 patient1.MedicalFile = medicalFile1;
-                contextPatient.Users.Update(patient1);
+                context.Patients.Update(patient1);
 
                 patient2.MedicalFile = medicalFile2;
-                contextPatient.Users.Update(patient2);
+                context.Patients.Update(patient2);
 
                 Appointment appointment1 = new Appointment
                 {

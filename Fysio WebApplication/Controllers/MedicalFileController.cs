@@ -1,5 +1,4 @@
-﻿using Avans_Fysio_WebService.Models;
-using Library.core.Model;
+﻿using Library.core.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Authorization;
 using Library.Domain.Repositories;
+using Fysio_Codes.Models;
 
 namespace Fysio_WebApplication.Controllers
 {
@@ -59,16 +59,16 @@ namespace Fysio_WebApplication.Controllers
             MedicalFile medical = _repo.MedicalFiles.Include(i => i.IntakeSupervision).Include(i => i.IntakeTherapistId).FirstOrDefault(i => i.Id == id);
 
             //Fetch the diagnosis containing the code
-            var client = new RestClient($"https://avansfysioservice.azurewebsites.net/api/Diagnosis/"+medical.DiagnosisCode);
-            var request = new RestRequest(Method.GET);
-            IRestResponse response = await client.ExecuteAsync(request);
-            Diagnosis diagnosis = JsonConvert.DeserializeObject<Diagnosis>(response.Content);
+            //var client = new RestClient($"https://avansfysioservice.azurewebsites.net/api/Diagnosis/"+medical.DiagnosisCode);
+            //var request = new RestRequest(Method.GET);
+            //IRestResponse response = await client.ExecuteAsync(request);
+            //Diagnosis diagnosis = JsonConvert.DeserializeObject<Diagnosis>(response.Content);
 
-            //Send them towards the view
-            ViewBag.BodyLocation = diagnosis.BodyLocation;
-            ViewBag.Pathology = diagnosis.Pathology;
-            ViewBag.Supervision = medical.IntakeSupervision.FirstName + " " + medical.IntakeSupervision.SurName;
-            ViewBag.Therapist = medical.IntakeTherapistId.FirstName + " " + medical.IntakeTherapistId.SurName;
+            ////Send them towards the view
+            //ViewBag.BodyLocation = diagnosis.BodyLocation;
+            //ViewBag.Pathology = diagnosis.Pathology;
+            //ViewBag.Supervision = medical.IntakeSupervision.FirstName + " " + medical.IntakeSupervision.SurName;
+            //ViewBag.Therapist = medical.IntakeTherapistId.FirstName + " " + medical.IntakeTherapistId.SurName;
             return View(_repo.GetMedicalFile(id));
         }
 
