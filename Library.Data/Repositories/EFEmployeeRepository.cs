@@ -1,6 +1,7 @@
 ﻿using Library.core.Model;
 using Library.Data.Dal;
 using Library.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,12 @@ namespace Library.Data.Repositories
 
         public IQueryable<Employee> Employees => _context.Employees;
 
+        public void AddEmployee(Employee employee)
+        {
+            _context.Employees.Add(employee);
+            _context.SaveChanges();
+        }
+
         public IEnumerable<Employee> FindAll()
         {
             return _context.Employees;
@@ -28,8 +35,13 @@ namespace Library.Data.Repositories
         public Employee GetEmployee(string id)
         {
             // TODO: Temporarily added a toString on the new Id -W
-
             return _context.Employees.FirstOrDefault(i => i.Id.ToString() == id);
+        }
+
+        public void UpdateEmployee(Employee employee)
+        {
+            // Update Employee
+            _context.SaveChanges();
         }
     }
 }

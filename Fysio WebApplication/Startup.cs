@@ -18,6 +18,7 @@ using Fysio_WebApplication.Seed;
 using Library.Data.Repositories;
 using Library.Data.Dal;
 using Fysio_Identity;
+using Library.core.Model;
 
 namespace Fysio_WebApplication
 {
@@ -36,16 +37,37 @@ namespace Fysio_WebApplication
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("ApplicationConnection")));
-            /*
-            services.AddDbContext<PatientPortalDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("PatientPortalDbContextConnection")));
-            */
-
+            
             services.AddDbContext<AppIdentityDbContext>(options =>
-            options.UseSqlServer(
-                Configuration.GetConnectionString("IdentityConnection")));
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("IdentityConnection")));
 
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<AppIdentityDbContext>();
+
+
+            // Setup Identity
+            //services.AddIdentityCore<ApplicationUser>(options =>
+            //{
+            //    options.SignIn.RequireConfirmedAccount = false;
+            //    options.SignIn.RequireConfirmedEmail = false;
+            //    options.SignIn.RequireConfirmedPhoneNumber = false;
+            //    options.Password.RequireDigit = false;
+            //    options.Password.RequireLowercase = false;
+            //    options.Password.RequireNonAlphanumeric = false;
+            //    options.Password.RequireUppercase = false;
+            //    options.Password.RequiredLength = 6;
+            //    options.Password.RequiredUniqueChars = 0;
+            //})
+            //    .AddRoles<IdentityRole>()
+            //    .AddEntityFrameworkStores<AppIdentityDbContext>()
+            //    .AddDefaultTokenProviders();//ApplicationRole
+
+
+
+
+
+            // Setup Controller and Razor pages
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();
 
@@ -91,9 +113,13 @@ namespace Fysio_WebApplication
                 endpoints.MapRazorPages();
             });
 
-            IdentitySeedData.EnsurePopulatedAsync(app);
 
-            SeedData.EnsurePopulatedApplication(app);
+            //SeedData.EnsurePopulatedApplication(app);
+
+            // ensure identity populated function
+            IdentitySeedData.EnsurePopulated(app);
+
+
         }
     }
 }

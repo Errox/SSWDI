@@ -9,8 +9,12 @@ using Microsoft.AspNetCore.Identity;
 namespace Library.core.Model
 {
     // Add profile data for application users by adding properties to the Patient class
-    public class Patient : GeneralUser
+    public class Patient : ApplicationUser
     {
+        [ForeignKey("ApplicationUser")]
+        public string PatientId { get; set; }
+
+        public string CustomerType { get; set; }
 
         //http://binaryintellect.net/articles/2f55345c-1fcb-4262-89f4-c4319f95c5bd.aspx
         public byte[]? ImgData { get; set; }
@@ -24,5 +28,7 @@ namespace Library.core.Model
         public bool IsStudent { get; set; }
 
         public MedicalFile? MedicalFile { get; set; }
+        
+        public virtual ApplicationUser ApplicationUser { get; set; }
     }
 }

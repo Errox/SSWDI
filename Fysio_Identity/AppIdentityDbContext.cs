@@ -9,21 +9,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Fysio_Identity
 {
-    public class AppIdentityDbContext : IdentityDbContext<GeneralUser>
+    public class AppIdentityDbContext : IdentityDbContext<ApplicationUser>
     {
         public AppIdentityDbContext(DbContextOptions<AppIdentityDbContext> options)
             : base(options)
         {
         }
-        public DbSet<Patient> Patients { get; set; }
-
-        public DbSet<Employee> Employees { get; set; }
-        
         
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            
             //this.SeedUsers(builder);
         }
     }

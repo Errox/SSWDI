@@ -11,7 +11,7 @@ namespace Library.Data.Repositories
 {
     public class EFPatientRepository : IPatientRepository
     {
-        private readonly ApplicationDbContext _context; // TODO: FIX
+        private readonly ApplicationDbContext _context;
 
         public EFPatientRepository(ApplicationDbContext ctx)
         {
@@ -32,18 +32,6 @@ namespace Library.Data.Repositories
 
         public void UpdatePatient(int id, Patient patient)
         {
-            Patient pre_patient = _context.Patients.FirstOrDefault(i => i.IdNumber == id);
-
-            //TODO: Pretty sure that the below code is not needed; but left it just in case -W
-
-            pre_patient.FirstName = patient.FirstName;
-            pre_patient.SurName = patient.SurName;
-            // pre_patient.PhoneNumber = patient.PhoneNumber;
-            pre_patient.Email = patient.Email;
-            pre_patient.Gender = patient.Gender;
-            pre_patient.IsStudent = patient.IsStudent;
-            pre_patient.ImgData = patient.ImgData;
-            pre_patient.MedicalFile = patient.MedicalFile;
             _context.SaveChanges();
         }
 
