@@ -37,26 +37,45 @@ namespace Fysio_WebApplication.Controllers
         // GET: MedicalFile
         public ActionResult Index()
         {
-            return View(_repo.MedicalFiles.Include(i => i.IntakeSupervision).Include(i => i.IntakeTherapistId));
+            return View(_repo.MedicalFiles
+                .Include(i => i.IntakeSupervision)
+                    .ThenInclude(i => i.ApplicationUser)
+                .Include(i => i.IntakeTherapistId)
+                    .ThenInclude(i => i.ApplicationUser));
         }
 
         public ActionResult IndexPersonalSupervise()
         {
             string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return View(_repo.MedicalFiles.Include(i => i.IntakeSupervision).Include(i => i.IntakeTherapistId).Where(i => i.IntakeSupervision == _employeeRepo.GetEmployee(userId)));
+            return View(_repo.MedicalFiles
+                .Include(i => i.IntakeSupervision)
+                    .ThenInclude(i => i.ApplicationUser)
+                .Include(i => i.IntakeTherapistId)
+                    .ThenInclude(i => i.ApplicationUser)
+                .Where(i => i.IntakeSupervision == _employeeRepo.GetEmployee(userId)));
         }
 
         public ActionResult IndexPersonalTherapist()
         {
             string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return View(_repo.MedicalFiles.Include(i => i.IntakeSupervision).Include(i => i.IntakeTherapistId).Where(i => i.IntakeTherapistId == _employeeRepo.GetEmployee(userId)));
+            return View(_repo.MedicalFiles
+                .Include(i => i.IntakeSupervision)
+                    .ThenInclude(i => i.ApplicationUser)
+                .Include(i => i.IntakeTherapistId)
+                    .ThenInclude(i => i.ApplicationUser)
+                .Where(i => i.IntakeTherapistId == _employeeRepo.GetEmployee(userId)));
         }
 
         // GET: MedicalFile/Details/5
         public async Task<ActionResult> DetailsAsync(int id)
         {
             // Get the detailed medical File
-            MedicalFile medical = _repo.MedicalFiles.Include(i => i.IntakeSupervision).Include(i => i.IntakeTherapistId).FirstOrDefault(i => i.Id == id);
+            MedicalFile medical = _repo.MedicalFiles
+                .Include(i => i.IntakeSupervision)
+                    .ThenInclude(i => i.ApplicationUser)
+                .Include(i => i.IntakeTherapistId)
+                    .ThenInclude(i => i.ApplicationUser)
+                .FirstOrDefault(i => i.Id == id);
 
             //Fetch the diagnosis containing the code
             //var client = new RestClient($"https://avansfysioservice.azurewebsites.net/api/Diagnosis/"+medical.DiagnosisCode);
@@ -113,10 +132,8 @@ namespace Fysio_WebApplication.Controllers
 
         [HttpPost]
         [Route("[Controller]/NotesNew/{id}")]
-        public ActionResult NotesnNew(int id, Note newNote)
+        public ActionResult NotesNew(int id, Note newNote)
         {
-            // Get the current logged in.
-
             //Create new plan because somehow it'll take the medicalFile ID and places it in the model instead of keeping it empty to insert in the DB
             Note note = new Note { Employee = _employeeRepo.GetEmployee(this.User.FindFirstValue(ClaimTypes.NameIdentifier)), Description = newNote.Description, CreatedUtc = DateTime.Now, OpenForPatient = newNote.OpenForPatient };
             
@@ -152,7 +169,6 @@ namespace Fysio_WebApplication.Controllers
         [Route("[Controller]/TreatmentPlanNew/{id}")]
         public ActionResult TreatmentPlanNew(int id, TreatmentPlan plan)
         {
-            // Get the current logged in.
             //Create new plan because somehow it'll take the medicalFile ID and places it in the model instead of keeping it empty to insert in the DB
             Employee employee = _employeeRepo.GetEmployee(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
             TreatmentPlan NewPlan = new TreatmentPlan { Type = plan.Type, Description = plan.Description, Particularities = plan.Particularities, TreatmentPerformedBy = employee, TreatmentDate = plan.TreatmentDate, AmountOfTreatmentsPerWeek = plan.AmountOfTreatmentsPerWeek };

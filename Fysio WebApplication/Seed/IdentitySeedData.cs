@@ -16,7 +16,6 @@ namespace Fysio_WebApplication.Seed
 {
     public class IdentitySeedData
     {
-        private const string adminUser = "admin";
         private const string adminPassword = "Secret1234!";
 
         public static async void EnsurePopulated(IApplicationBuilder app)
@@ -24,6 +23,7 @@ namespace Fysio_WebApplication.Seed
             AppIdentityDbContext context = app.ApplicationServices
                 .CreateScope().ServiceProvider
                 .GetRequiredService <AppIdentityDbContext>();
+
             if (context.Database.GetPendingMigrations().Any())
             {
                 context.Database.Migrate();
@@ -73,11 +73,10 @@ namespace Fysio_WebApplication.Seed
                     PhoneNumber = "0612345678",
                     PhoneNumberConfirmed = true,
                 };
-                // add the employee roll to the new user
 
-                // Set role to employee
-                IdentityResult result = await userManager.CreateAsync(user, adminPassword);
-                ApplicationUser userID = userManager.FindByNameAsync("Employee").Result;
+                await userManager.CreateAsync(user, adminPassword);
+
+                ApplicationUser userID = userManager.FindByNameAsync(user.UserName).Result;
                 //await userManager.AddToRoleAsync(user, "Employee");
 
                 Employee employee = new Employee();
@@ -86,7 +85,7 @@ namespace Fysio_WebApplication.Seed
                 employee.IsStudent = false;
                 employee.ApplicationUser = userID;
                 // Save the employee in context
-                var res = appContext.Employees.Add(employee);
+                appContext.Employees.Add(employee);
                 appContext.SaveChanges();
 
 
@@ -98,11 +97,11 @@ namespace Fysio_WebApplication.Seed
             // Create patient user if not exists 
             if (userManager.FindByNameAsync("Patient").Result == null)
             {
-                ApplicationUser user = new ApplicationUser()
+                ApplicationUser userPatient = new ApplicationUser()
                 {
                     // Add the "employee" role to the new "employee" user we just created
                     UserName = "Patient",
-                    FirstName = "Patiencia",
+                    FirstName = "Patientia",
                     SurName = "Beterhorend",
                     Email = "patient@hotmail.com",
                     EmailConfirmed = true,
@@ -111,8 +110,9 @@ namespace Fysio_WebApplication.Seed
                 };
 
                 // Set role to patient
-                await userManager.CreateAsync(user, adminPassword);
-                var result = userManager.FindByNameAsync("Patient").Result;
+                await userManager.CreateAsync(userPatient, adminPassword);
+
+                ApplicationUser result = userManager.FindByNameAsync(userPatient.UserName).Result;
                 //await userManager.AddToRoleAsync(user, "Patient"); // TODO: Get roles working. Follow ebook.
 
                 // Make new patient with the application user we just created
@@ -127,6 +127,10 @@ namespace Fysio_WebApplication.Seed
                 appContext.Patients.Add(patient);
                 appContext.SaveChanges();
             }
+
+
+            // Get first or default employee and patient from the database.
+            appContext.Patients.FirstOrDefault(x => x.UserName == "Patient");
         }
     }
 }

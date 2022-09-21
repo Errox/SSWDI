@@ -14,13 +14,13 @@ namespace Library.core.Model
         public int Id { get; set; }
         
         [MaxLength(250)]
-        //[Display(Name ="Beschrijving")]
+        [Display(Name ="Beschrijving")]
         public string Description { get; set; }
         
-        //[Display(Name ="Diagnose Code")]
+        [Display(Name ="Diagnose Code")]
         public int DiagnosisCode { get; set; }
 
-        public Employee IntakeTherapistId { get; set; }// Behandeld door //UserID That is either a student or therapist?
+        public Employee IntakeTherapistId { get; set; }// Behandeld door //UserID That is either a student or therapist
 
         public Employee IntakeSupervision { get; set; }// ondertoezicht, Also a UserId from Identity
 

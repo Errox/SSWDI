@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 
 namespace Fysio_WebApplication.Controllers
 {
-    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -22,6 +21,13 @@ namespace Fysio_WebApplication.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+       
+        [Authorize]
+        [Route("authcheck")]
+        public string OnlyAuthenticatedUsers()
+        {
+            return "yeet";
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

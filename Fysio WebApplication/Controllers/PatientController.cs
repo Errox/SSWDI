@@ -17,26 +17,26 @@ namespace Fysio_WebApplication.Controllers
     [Authorize]
     public class PatientController : Controller
     {
-        private IPatientRepository _repo;
+        private IPatientRepository _patientRepo;
         private IMedicalFileRepository _medicalFileRepo;
         private IEmployeeRepository _employeeRepo;
 
         public PatientController(IPatientRepository repo, IMedicalFileRepository medicalFile, IEmployeeRepository employeeRepository)
         {
-            _repo = repo;
+            _patientRepo = repo;
             _medicalFileRepo = medicalFile;
             _employeeRepo = employeeRepository;
         }
 
         public ActionResult Index()
         {
-            return View(_repo.Patients.Include(c1 => c1.MedicalFile));
+            return View(_patientRepo.Patients.Include(c1 => c1.MedicalFile));
         }
 
         // GET: PatientController/Details/5
         public ActionResult Details(int id)
         {
-            Patient patient = _repo.Patients.Include(c1 => c1.MedicalFile).FirstOrDefault(i => i.IdNumber == id);
+            Patient patient = _patientRepo.Patients.Include(c1 => c1.MedicalFile).FirstOrDefault(i => i.IdNumber == id);
             MedicalFile medical = patient.MedicalFile;
             string imageDataURL;
             if (patient.ImgData == null)
@@ -60,6 +60,10 @@ namespace Fysio_WebApplication.Controllers
         // GET: PatientController/Create
         public ActionResult Create()
         {
+            // TODO: when creating a patient. We create a patient by just filling in the email and whats needed to fullfill the model.
+            // Then we create a random password for the patient (this must be send to the patient themselves. Maybe policy when creating a account that it should change password when first logged in.) 
+            // And that the password can be printed out / given to the patient so it can login into their own account. 
+
             return View(_employeeRepo.Employees);
         }
 
@@ -79,7 +83,7 @@ namespace Fysio_WebApplication.Controllers
                     ms.Close();
                     ms.Dispose();
                 }
-                _repo.AddPatient(pool);
+                _patientRepo.AddPatient(pool);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -91,7 +95,7 @@ namespace Fysio_WebApplication.Controllers
         // GET: PatientController/Edit/5
         public ActionResult Edit(int id)
         {
-            Patient patient = _repo.GetPatient(id);
+            Patient patient = _patientRepo.GetPatient(id);
             string imageDataURL;
             if (patient.ImgData == null)
             {
@@ -123,21 +127,23 @@ namespace Fysio_WebApplication.Controllers
                     ms.Dispose();
                 }
 
-                _repo.UpdatePatient(id, patient);
-                return RedirectToAction(nameof(Index));
+                _patientRepo.UpdatePatient(id, patient);
+                return RedirectToAction("details", new { id = id });
             }
             catch
             {
-                return View();
+                return View();  
             }
         }
 
 
         [HttpGet]
-        [Route("[Controller]/MedicalFileNew/{id}")]
-        public ActionResult MedicalFileNew(int id)
+        [Route("[Controller]/MedicalFileNew/{patientId}")]
+        public ActionResult MedicalFileNew(int patientId)
         {
-            ViewBag.Url = "/Patient/MedicalFileNew/" + id;
+            // To create a new medical file for the patient. 
+            ViewBag.Url = "/Patient/MedicalFileNew/" + patientId;
+            ViewBag.PatientId = patientId; 
             return View("CreateMedicalFile");
         }
 
@@ -145,6 +151,9 @@ namespace Fysio_WebApplication.Controllers
         [Route("[Controller]/MedicalFileNew/{id}")]
         public ActionResult MedicalFileNew(int id, MedicalFile file)
         {
+            // Fetch PatientId from the form
+            
+            
             // Get the current logged in.
             string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -152,12 +161,13 @@ namespace Fysio_WebApplication.Controllers
             MedicalFile medicalFile = new MedicalFile { Description = file.Description, DiagnosisCode = file.DiagnosisCode, DateOfDischarge = file.DateOfDischarge };
 
 
-            Employee employee = _employeeRepo.GetEmployee(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            Employee employee = _employeeRepo.GetEmployee(userId);
 
             if (employee.IsStudent)
             {
                 //First employee that's not a student. This is just the stage begeleider
                 medicalFile.IntakeSupervision = _employeeRepo.Employees.FirstOrDefault(i => i.IsStudent == false);
+                // Then save the Student into the therapist. Only a employee that supervised over the patient is different when it's a student.
                 medicalFile.IntakeTherapistId = employee;
             }
             else
@@ -172,9 +182,9 @@ namespace Fysio_WebApplication.Controllers
 
             
             //Add the Treatmentplan to the medicalFile
-            Patient patient  = _repo.Patients.Include(i => i.MedicalFile).FirstOrDefault(i => i.IdNumber == id);
+            Patient patient  = _patientRepo.Patients.Include(i => i.MedicalFile).FirstOrDefault(i => i.IdNumber == id);
             patient.MedicalFile = medicalFile;
-            _repo.UpdatePatient(id, patient);
+            _patientRepo.UpdatePatient(id, patient);
 
             //Return view
             return Redirect("/MedicalFile/Details/" + medicalFile.Id);

@@ -19,7 +19,7 @@ namespace Library.Data.Repositories
             _context = ctx;
         }
 
-        public IQueryable<Employee> Employees => _context.Employees;
+        public IQueryable<Employee> Employees => _context.Employees.Include(c1 => c1.ApplicationUser);
 
         public void AddEmployee(Employee employee)
         {
@@ -29,13 +29,13 @@ namespace Library.Data.Repositories
 
         public IEnumerable<Employee> FindAll()
         {
-            return _context.Employees;
+            return _context.Employees.Include(c1 => c1.ApplicationUser);
         }
 
         public Employee GetEmployee(string id)
         {
             // TODO: Temporarily added a toString on the new Id -W
-            return _context.Employees.FirstOrDefault(i => i.Id.ToString() == id);
+            return _context.Employees.Include(c1 => c1.ApplicationUser).FirstOrDefault(i => i.EmployeeId == id);
         }
 
         public void UpdateEmployee(Employee employee)

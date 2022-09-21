@@ -19,25 +19,29 @@ namespace Fysio_WebApplication.Controllers
     [Authorize]
     public class TreatmentPlanController : Controller
     {
-        private ITreatmentPlanRepository _repo;
+        private ITreatmentPlanRepository _treatmentPlanRepo;
         private IEmployeeRepository _employeeRepo;
 
-        public TreatmentPlanController(ITreatmentPlanRepository repo,  IEmployeeRepository employee)
+        public TreatmentPlanController(ITreatmentPlanRepository treatmentPlanRepo,  IEmployeeRepository employee)
         {
-            _repo = repo;
+            _treatmentPlanRepo = treatmentPlanRepo;
             _employeeRepo = employee;
         }
 
         // GET: TreatmentController
         public ActionResult Index()
         {
-            return View(_repo.FindAll());
+            return View(_treatmentPlanRepo.FindAll());
         }
 
         // GET: TreatmentController/Details/5
         public async Task<ActionResult> DetailsAsync(int id)
         {
-            TreatmentPlan treatmentPlan = _repo.TreatmentPlans.Include(c1 => c1.PracticeRoom).Include(c1=>c1.TreatmentPerformedBy).FirstOrDefault(i => i.Id == id);
+            TreatmentPlan treatmentPlan = _treatmentPlanRepo.TreatmentPlans
+                .Include(c1 => c1.PracticeRoom)
+                .Include(c1=>c1.TreatmentPerformedBy)
+                    .ThenInclude(a => a.ApplicationUser)
+                .FirstOrDefault(i => i.Id == id);
 
             var client = new RestClient($"https://avansfysioservice.azurewebsites.net/api/Treatment/" + treatmentPlan.Type);
             //var request = new RestRequest(Method.GET);
@@ -47,7 +51,7 @@ namespace Fysio_WebApplication.Controllers
             //Fetch all the employee's working on this file
 
             //ViewBag.Description = treatment.Description;
-            ViewBag.Performed = treatmentPlan.TreatmentPerformedBy.FirstName + " " + treatmentPlan.TreatmentPerformedBy.SurName;
+            ViewBag.Performed = treatmentPlan.TreatmentPerformedBy.ApplicationUser.FirstName + " " + treatmentPlan.TreatmentPerformedBy.ApplicationUser.SurName;
 
             return View(treatmentPlan);
         }
@@ -70,7 +74,7 @@ namespace Fysio_WebApplication.Controllers
 
                 collection.TreatmentPerformedBy = employee;
 
-                _repo.AddTreatmentPlan(collection);
+                _treatmentPlanRepo.AddTreatmentPlan(collection);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -82,7 +86,7 @@ namespace Fysio_WebApplication.Controllers
         // GET: TreatmentController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View(_repo.GetTreatmentPlan(id));
+            return View(_treatmentPlanRepo.GetTreatmentPlan(id));
         }
 
         // POST: TreatmentController/Edit/5
@@ -92,7 +96,7 @@ namespace Fysio_WebApplication.Controllers
         {
             try
             {
-                _repo.UpdateTreatmentPlan(id, collection);
+                _treatmentPlanRepo.UpdateTreatmentPlan(id, collection);
                 return RedirectToAction(nameof(Index));
             }
             catch

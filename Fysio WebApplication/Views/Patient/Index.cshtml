@@ -46,10 +46,10 @@
                 @Html.DisplayFor(modelItem => item.IdNumber)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.SurName)
+                    @Html.DisplayFor(modelItem => item.ApplicationUser.FirstName) @Html.DisplayFor(modelItem => item.ApplicationUser.SurName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Email)
+                    @Html.DisplayFor(modelItem => item.ApplicationUser.Email)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.IdNumber)
