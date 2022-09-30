@@ -1,18 +1,13 @@
 ﻿using Library.core.Model;
-using Microsoft.AspNetCore.Http;
+using Library.Domain.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using RestSharp;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Authorization;
-using Library.Domain.Repositories;
-using Fysio_Codes.Models;
 
 namespace Fysio_WebApplication.Controllers
 {
@@ -136,7 +131,7 @@ namespace Fysio_WebApplication.Controllers
         {
             //Create new plan because somehow it'll take the medicalFile ID and places it in the model instead of keeping it empty to insert in the DB
             Note note = new Note { Employee = _employeeRepo.GetEmployee(this.User.FindFirstValue(ClaimTypes.NameIdentifier)), Description = newNote.Description, CreatedUtc = DateTime.Now, OpenForPatient = newNote.OpenForPatient };
-            
+
             _notesRepository.AddNote(note);
 
             //Add the Treatmentplan to the medicalFile
@@ -152,7 +147,7 @@ namespace Fysio_WebApplication.Controllers
         public ActionResult TreatmentPlan(int id)
         {
             // Return all TreatmentPlan for this medical File
-            MedicalFile file = _repo.MedicalFiles.Include(c1 => c1.TreatmentPlans).ThenInclude(i=>i.PracticeRoom).FirstOrDefault(i => i.Id == id);
+            MedicalFile file = _repo.MedicalFiles.Include(c1 => c1.TreatmentPlans).ThenInclude(i => i.PracticeRoom).FirstOrDefault(i => i.Id == id);
             ViewBag.Url = "/MedicalFile/" + file.Id + "/AddRoomTreatment/";
             return View(file.TreatmentPlans);
         }
@@ -161,7 +156,7 @@ namespace Fysio_WebApplication.Controllers
         [Route("[Controller]/TreatmentPlanNew/{id}")]
         public ActionResult TreatmentPlanNew(int id)
         {
-            ViewBag.Url = "/MedicalFile/TreatmentPlanNew/"+id;
+            ViewBag.Url = "/MedicalFile/TreatmentPlanNew/" + id;
             return View();
         }
 
@@ -187,7 +182,7 @@ namespace Fysio_WebApplication.Controllers
         [Route("[Controller]/{file}/AddRoomTreatment/{id}")]
         public ActionResult AddRoomTreatment(int file, int id)
         {
-            ViewBag.Url = "/MedicalFile/"+ file +"/AddRoomTreatment/" + id;
+            ViewBag.Url = "/MedicalFile/" + file + "/AddRoomTreatment/" + id;
             ViewBag.Rooms = new SelectList(_practiceRoomRepository.FindAll(), "Id", "Name"); ;
             return View();
         }

@@ -1,24 +1,16 @@
-using Library.core.Model.SeedData;
+using Fysio_Identity;
+using Fysio_WebApplication.Seed;
+using Library.core.Model;
+using Library.Data.Dal;
+using Library.Data.Repositories;
+using Library.Domain.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Library.Domain.Repositories;
-using Library.Data;
-using Fysio_WebApplication.Seed;
-using Library.Data.Repositories;
-using Library.Data.Dal;
-using Fysio_Identity;
-using Library.core.Model;
 
 namespace Fysio_WebApplication
 {
@@ -37,34 +29,26 @@ namespace Fysio_WebApplication
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("ApplicationConnection")));
-            
+
             services.AddDbContext<AppIdentityDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("IdentityConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<AppIdentityDbContext>();
+                .AddEntityFrameworkStores<AppIdentityDbContext>()
+                .AddDefaultTokenProviders();
 
-
-            // Setup Identity
-            //services.AddIdentityCore<ApplicationUser>(options =>
-            //{
-            //    options.SignIn.RequireConfirmedAccount = false;
-            //    options.SignIn.RequireConfirmedEmail = false;
-            //    options.SignIn.RequireConfirmedPhoneNumber = false;
-            //    options.Password.RequireDigit = false;
-            //    options.Password.RequireLowercase = false;
-            //    options.Password.RequireNonAlphanumeric = false;
-            //    options.Password.RequireUppercase = false;
-            //    options.Password.RequiredLength = 6;
-            //    options.Password.RequiredUniqueChars = 0;
-            //})
-            //    .AddRoles<IdentityRole>()
-            //    .AddEntityFrameworkStores<AppIdentityDbContext>()
-            //    .AddDefaultTokenProviders();//ApplicationRole
-
-
-
+            services.AddAuthorization(options =>
+                 {
+                     options.AddPolicy("RequireEmployeeRole",
+                          policy => policy.RequireClaim("UserType", "Employee"));
+                     options.AddPolicy("RequireStudentRole",
+                          policy => policy.RequireClaim("UserType", "Student"));
+                     options.AddPolicy("RequirePatientRole",
+                          policy => policy.RequireClaim("UserType", "Patient"));
+                     options.AddPolicy("OnlyEmployeeAndStudent",
+                          policy => policy.RequireClaim("UserType", "Employee", "Student"));
+                 });
 
 
             // Setup Controller and Razor pages
@@ -104,6 +88,8 @@ namespace Fysio_WebApplication
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+
 
             app.UseEndpoints(endpoints =>
             {

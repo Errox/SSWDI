@@ -9,6 +9,6 @@ namespace Avans_Fysio_WebService.GraphQL.Mutations.Payloads
             Treatment = treatment;
         }
 
-        public Treatment Treatment { get;  }
+        public Treatment Treatment { get; }
     }
 }

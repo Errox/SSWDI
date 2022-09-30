@@ -1,22 +1,16 @@
+using Avans_Fysio_WebService.GraphQL;
+using Fysio_Codes.Abstract;
+using Fysio_Codes.DAL;
+using Fysio_Codes.DataStore;
+using Fysio_Codes.SeedData;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
-using Microsoft.EntityFrameworkCore;
-using Fysio_Codes.SeedData;
-using Fysio_Codes.DAL;
-using Fysio_Codes.Abstract;
-using Fysio_Codes.DataStore;
-using Avans_Fysio_WebService.GraphQL;
+using System;
 
 namespace Avans_Fysio_WebService
 {

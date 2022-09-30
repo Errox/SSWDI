@@ -1,16 +1,13 @@
 ﻿using Fysio_Identity;
 using Library.core.Model;
 using Library.Data.Dal;
-using Library.Domain.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace Fysio_WebApplication.Seed
 {
@@ -22,7 +19,7 @@ namespace Fysio_WebApplication.Seed
         {
             AppIdentityDbContext context = app.ApplicationServices
                 .CreateScope().ServiceProvider
-                .GetRequiredService <AppIdentityDbContext>();
+                .GetRequiredService<AppIdentityDbContext>();
 
             if (context.Database.GetPendingMigrations().Any())
             {
@@ -42,27 +39,18 @@ namespace Fysio_WebApplication.Seed
                 GetRequiredService<ApplicationDbContext>();
 
 
+            const string claimUserType = "UserType";
+            Claim EmployeeUserClaim = new Claim(claimUserType, "Employee");
+            Claim studentUserClaim = new Claim(claimUserType, "Student");
+            Claim patientUserClaim = new Claim(claimUserType, "Patient");
 
-            //if (!roleManager.RoleExistsAsync("Employee").Result)
-            //{
-            //    var role = new IdentityRole();
-            //    role.Name = "Employee";
-            //    await roleManager.CreateAsync(role);
-            //}
-
-            //if (!roleManager.RoleExistsAsync("Patient").Result)
-            //{
-            //    var role = new IdentityRole();
-            //    role.Name = "Patient";
-            //    await roleManager.CreateAsync(role);
-            //}
 
             // Create Employee user if not exists
             if (userManager.FindByNameAsync("Employee").Result == null)
             {
 
                 // When no user is found. Let's create a "employee" account. 
-                ApplicationUser user = new ApplicationUser()
+                ApplicationUser userEmployee = new ApplicationUser()
                 {
                     // Add the "employee" role to the new "employee" user we just created
                     UserName = "Employee",
@@ -74,10 +62,9 @@ namespace Fysio_WebApplication.Seed
                     PhoneNumberConfirmed = true,
                 };
 
-                await userManager.CreateAsync(user, adminPassword);
+                await userManager.CreateAsync(userEmployee, adminPassword);
 
-                ApplicationUser userID = userManager.FindByNameAsync(user.UserName).Result;
-                //await userManager.AddToRoleAsync(user, "Employee");
+                ApplicationUser userID = userManager.FindByNameAsync(userEmployee.UserName).Result;
 
                 Employee employee = new Employee();
                 employee.WorkerNumber = 20000;
@@ -88,11 +75,7 @@ namespace Fysio_WebApplication.Seed
                 appContext.Employees.Add(employee);
                 appContext.SaveChanges();
 
-
-                // Exact way of getting a logged in user. Just fetching a employee from db context will give also the applicationuser credentials
-                //ApplicationUser use = userManager.FindByNameAsync("Employee").Result;
-                //Console.WriteLine(use);
-                //Employee emm = appContext.Employees.FirstOrDefault(x => x.EmployeeId == use.Id);
+                await userManager.AddClaimAsync(userEmployee, EmployeeUserClaim);
             }
             // Create patient user if not exists 
             if (userManager.FindByNameAsync("Patient").Result == null)
@@ -126,11 +109,10 @@ namespace Fysio_WebApplication.Seed
                 // Save patient in context
                 appContext.Patients.Add(patient);
                 appContext.SaveChanges();
+
+
+                await userManager.AddClaimAsync(userPatient, patientUserClaim);
             }
-
-
-            // Get first or default employee and patient from the database.
-            appContext.Patients.FirstOrDefault(x => x.UserName == "Patient");
         }
     }
 }

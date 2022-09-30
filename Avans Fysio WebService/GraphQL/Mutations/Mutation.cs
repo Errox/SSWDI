@@ -1,6 +1,5 @@
 ﻿using Avans_Fysio_WebService.GraphQL.Extensions;
 using Avans_Fysio_WebService.GraphQL.Mutations.Payloads;
-using Avans_Fysio_WebService.Models;
 using Fysio_Codes.DAL;
 using Fysio_Codes.Models;
 using HotChocolate;

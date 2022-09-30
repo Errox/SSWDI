@@ -1,19 +1,12 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CsvHelper;
-using System.Threading.Tasks;
-using EFCore.Seeder;
-using EFCore.Seeder.Extensions;
-using EFCore.Seeder.Configuration;
-using System.IO;
-using System.Globalization;
+﻿using CsvHelper;
 using Fysio_Codes.DAL;
 using Fysio_Codes.Models;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using System.Globalization;
+using System.IO;
+using System.Linq;
 
 namespace Fysio_Codes.SeedData
 {

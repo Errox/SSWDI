@@ -1,12 +1,7 @@
 ﻿using Library.core.Model;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Fysio_WebApplication.Controllers
 {
@@ -21,13 +16,6 @@ namespace Fysio_WebApplication.Controllers
         public IActionResult Index()
         {
             return View();
-        }
-       
-        [Authorize]
-        [Route("authcheck")]
-        public string OnlyAuthenticatedUsers()
-        {
-            return "yeet";
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

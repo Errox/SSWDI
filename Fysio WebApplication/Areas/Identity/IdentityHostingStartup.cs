@@ -1,11 +1,7 @@
-﻿using System;
-using System.Configuration;
-using Fysio_Identity;
+﻿using Fysio_Identity;
 using Library.core.Model;
 using Library.Data.Dal;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,7 +13,8 @@ namespace Fysio_WebApplication.Areas.Identity
     {
         public void Configure(IWebHostBuilder builder)
         {
-            builder.ConfigureServices((context, services) => {
+            builder.ConfigureServices((context, services) =>
+            {
                 services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseSqlServer(
                         context.Configuration.GetConnectionString("ApplicationConnection")));

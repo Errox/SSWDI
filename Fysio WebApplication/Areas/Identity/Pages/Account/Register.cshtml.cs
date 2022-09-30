@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Library.core.Model;
+﻿using Library.core.Model;
 using Library.Domain.Repositories;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -11,6 +6,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Fysio_WebApplication.Areas.Identity.Pages.Account
 {
@@ -93,14 +93,15 @@ namespace Fysio_WebApplication.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
+
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-                    
+
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, PhoneNumber = Input.PhoneNumber};
+                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, PhoneNumber = Input.PhoneNumber, FirstName = Input.FirstName, SurName = Input.SurName };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
@@ -116,20 +117,32 @@ namespace Fysio_WebApplication.Areas.Identity.Pages.Account
                     // Create a int with random nummer between 1000 and 9999999
 
                     Employee employee = new Employee();
-                    employee.WorkerNumber = rnd.Next(1000, 9999999); 
+                    employee.WorkerNumber = rnd.Next(1000, 9999999);
                     employee.FirstName = Input.FirstName;
                     employee.SurName = Input.SurName;
 
+
                     if (Input.IsStudent)
                     {
+                        var addClaimResult = await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("UserType", "Student"));
                         employee.StudentNumber = Input.StudentBIGNumber;
                         employee.IsStudent = true;
+                        if (!addClaimResult.Succeeded)
+                        {
+                            ModelState.AddModelError("", "Student added but failed to add claim");
+                        }
                     }
                     else
                     {
+                        var addClaimResult = await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("UserType", "Employee"));
                         employee.IsStudent = true;
                         employee.BIGNumber = Input.StudentBIGNumber;
+                        if (!addClaimResult.Succeeded)
+                        {
+                            ModelState.AddModelError("", "Employee added but failed to add claim");
+                        }
                     }
+
                     employee.ApplicationUser = userID;
                     // Save the employee 
                     _employeeRepo.AddEmployee(employee);

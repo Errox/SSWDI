@@ -1,15 +1,9 @@
-﻿using Fysio_Codes.Models;
-using Library.core.Model;
+﻿using Library.core.Model;
 using Library.Domain.Repositories;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using RestSharp;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -22,7 +16,7 @@ namespace Fysio_WebApplication.Controllers
         private ITreatmentPlanRepository _treatmentPlanRepo;
         private IEmployeeRepository _employeeRepo;
 
-        public TreatmentPlanController(ITreatmentPlanRepository treatmentPlanRepo,  IEmployeeRepository employee)
+        public TreatmentPlanController(ITreatmentPlanRepository treatmentPlanRepo, IEmployeeRepository employee)
         {
             _treatmentPlanRepo = treatmentPlanRepo;
             _employeeRepo = employee;
@@ -39,7 +33,7 @@ namespace Fysio_WebApplication.Controllers
         {
             TreatmentPlan treatmentPlan = _treatmentPlanRepo.TreatmentPlans
                 .Include(c1 => c1.PracticeRoom)
-                .Include(c1=>c1.TreatmentPerformedBy)
+                .Include(c1 => c1.TreatmentPerformedBy)
                     .ThenInclude(a => a.ApplicationUser)
                 .FirstOrDefault(i => i.Id == id);
 

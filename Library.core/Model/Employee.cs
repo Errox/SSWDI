@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 
 namespace Library.core.Model
 {
@@ -24,7 +19,7 @@ namespace Library.core.Model
 
         [Required]
         public bool IsStudent { get; set; }
-        
+
         public virtual ApplicationUser ApplicationUser { get; set; }
     }
 }

@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
-using Library.core.Model;
+﻿using Library.core.Model;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace Fysio_WebApplication.Areas.Identity.Pages.Account.Manage
 {

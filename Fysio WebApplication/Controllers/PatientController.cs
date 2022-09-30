@@ -1,16 +1,12 @@
 ﻿using Library.core.Model;
 using Library.Domain.Repositories;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Fysio_WebApplication.Controllers
 {
@@ -28,6 +24,7 @@ namespace Fysio_WebApplication.Controllers
             _employeeRepo = employeeRepository;
         }
 
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         public ActionResult Index()
         {
             return View(_patientRepo.Patients.Include(c1 => c1.MedicalFile));
@@ -49,11 +46,11 @@ namespace Fysio_WebApplication.Controllers
             }
 
             ViewBag.ImageDataUrl = imageDataURL;
-            if(medical != null)
+            if (medical != null)
             {
                 ViewBag.MedicalId = medical.Id;
             }
-            
+
             return View(patient);
         }
 
@@ -132,7 +129,7 @@ namespace Fysio_WebApplication.Controllers
             }
             catch
             {
-                return View();  
+                return View();
             }
         }
 
@@ -143,7 +140,7 @@ namespace Fysio_WebApplication.Controllers
         {
             // To create a new medical file for the patient. 
             ViewBag.Url = "/Patient/MedicalFileNew/" + patientId;
-            ViewBag.PatientId = patientId; 
+            ViewBag.PatientId = patientId;
             return View("CreateMedicalFile");
         }
 
@@ -152,8 +149,8 @@ namespace Fysio_WebApplication.Controllers
         public ActionResult MedicalFileNew(int id, MedicalFile file)
         {
             // Fetch PatientId from the form
-            
-            
+
+
             // Get the current logged in.
             string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -180,9 +177,9 @@ namespace Fysio_WebApplication.Controllers
             _medicalFileRepo.AddMedicalFile(medicalFile);
 
 
-            
+
             //Add the Treatmentplan to the medicalFile
-            Patient patient  = _patientRepo.Patients.Include(i => i.MedicalFile).FirstOrDefault(i => i.IdNumber == id);
+            Patient patient = _patientRepo.Patients.Include(i => i.MedicalFile).FirstOrDefault(i => i.IdNumber == id);
             patient.MedicalFile = medicalFile;
             _patientRepo.UpdatePatient(id, patient);
 

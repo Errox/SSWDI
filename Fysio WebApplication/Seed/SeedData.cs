@@ -1,15 +1,4 @@
-﻿using Library.core.Model;
-using Library.Data.Dal;
-using Library.Data;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Fysio_Identity;
+﻿using Microsoft.AspNetCore.Builder;
 
 namespace Library.core.Model.SeedData
 {
@@ -27,7 +16,7 @@ namespace Library.core.Model.SeedData
 
             //AppIdentityDbContext contextEmployee = app.ApplicationServices
             //    .CreateScope().ServiceProvider.GetRequiredService<AppIdentityDbContext>();
-     
+
             //// Fetch employee's
             //// TODO: Changed Identity Context to Domain Context -W
             //Employee employee = contextEmployee.Employees.FirstOrDefault(i => i.Email == "ryangroenewold@hotmail.com");
