@@ -93,7 +93,7 @@ namespace Fysio_WebApplication.Controllers
         public async Task<IActionResult> Logout(string returnUrl = "/")
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction(returnUrl);
+            return Redirect(returnUrl);
         }
 
         public ViewResult RegisterEmployee(string returnUrl)
