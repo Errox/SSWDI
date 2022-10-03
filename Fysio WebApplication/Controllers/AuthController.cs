@@ -230,7 +230,7 @@ namespace Fysio_WebApplication.Controllers
         }
 
 
-
+         public IActionResult Error() => View();
 
 
 
