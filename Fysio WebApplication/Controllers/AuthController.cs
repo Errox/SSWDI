@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
@@ -229,72 +230,25 @@ namespace Fysio_WebApplication.Controllers
             return View(model);
         }
 
+        public IActionResult Error() => View();
 
-         public IActionResult Error() => View();
-
-
-
-
-
-        // GET: AuthPatient
-        public ActionResult Index()
+        [Authorize]
+        [Route("Account/index")]
+        public IActionResult AccountIndex()
         {
-            //  LOGIN PAGE PATIENT 
-            return View();
-        }
+            // Check if user is patient. Send it to it's own page. PatientController/Details/{id}
+            string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-
-        // GET: AuthPatient/Details/5
-        public ActionResult Details()
-        {
-            // ACOUNT VIEW PATIENT. 
-            return View();
-        }
-
-
-        // REGISTER PATIENT
-        // GET: AuthPatient/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // PATIENT REGISTER POST
-        // POST: AuthPatient/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
+            // If user is student or employee. Return normal view. 
+            if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student")){
+                return View(_employeeRepo.Employees.FirstOrDefault(i => i.EmployeeId == userId));
             }
-            catch
+            else
             {
-                return View();
-            }
-        }
-
-        // PATIENT EDIT ACCOUNT
-        // GET: AuthPatient/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // PATIENT EDIT ACCOUNT POST
-        // POST: AuthPatient/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
+                Patient patient = _patientRepo.Patients.FirstOrDefault(i => i.PatientId == userId);
+                // First application user -> patient. 
+                
+                return RedirectToAction("Details", "Patient", new { id = patient.IdNumber });
             }
         }
     }
