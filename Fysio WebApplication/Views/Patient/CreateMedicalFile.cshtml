@@ -1,4 +1,4 @@
-﻿@model Fysio_WebApplication.Models.MedicalFile
+﻿@model Library.core.Model.MedicalFile
 
 @{
     ViewData["Title"] = "CreateMedicalFile";
@@ -23,20 +23,11 @@
                 <span asp-validation-for="DiagnosisCode" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="IntakeTherapistId" class="control-label"></label>
-                <input asp-for="IntakeTherapistId" class="form-control" />
-                <span asp-validation-for="IntakeTherapistId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="IntakeSupervision" class="control-label"></label>
-                <input asp-for="IntakeSupervision" class="form-control" />
-                <span asp-validation-for="IntakeSupervision" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="DateOfDischarge" class="control-label"></label>
                 <input asp-for="DateOfDischarge" class="form-control" />
                 <span asp-validation-for="DateOfDischarge" class="text-danger"></span>
             </div>
+            <input value="@Html.Raw(ViewBag.PatientId)" name="PatientId" type="hidden" />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

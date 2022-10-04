@@ -1,12 +1,7 @@
-﻿using Fysio_WebApplication.Abstract.Repositories;
-using Fysio_WebApplication.Models;
+﻿using Library.core.Model;
+using Library.Domain.Repositories;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Fysio_WebApplication.Controllers
 {

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Fysio_WebApplication.Models.MedicalFile>
+﻿@model IEnumerable<Library.core.Model.MedicalFile>
 
 @{
     ViewData["Title"] = "Index";
@@ -42,10 +42,10 @@
                 @Html.DisplayFor(modelItem => item.DiagnosisCode)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IntakeTherapistId)
+                    @Html.Raw(item.IntakeSupervision.ApplicationUser.FirstName) @Html.Raw(item.IntakeSupervision.ApplicationUser.SurName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IntakeSupervision)
+                    @Html.Raw(item.IntakeSupervision.ApplicationUser.FirstName) @Html.Raw(item.IntakeSupervision.ApplicationUser.SurName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DateOfCreation)

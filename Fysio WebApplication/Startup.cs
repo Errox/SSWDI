@@ -1,20 +1,16 @@
-using Fysio_WebApplication.Abstract.Repositories;
-using Fysio_WebApplication.Data;
-using Fysio_WebApplication.DataStore;
-using Fysio_WebApplication.Models.SeedData;
+using Fysio_Identity;
+using Fysio_WebApplication.Seed;
+using Library.core.Model;
+using Library.Data.Dal;
+using Library.Data.Repositories;
+using Library.Domain.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Fysio_WebApplication
 {
@@ -32,8 +28,30 @@ namespace Fysio_WebApplication
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("FysioWebApplicatieConnection")));
+                    Configuration.GetConnectionString("ApplicationConnection")));
 
+            services.AddDbContext<AppIdentityDbContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("IdentityConnection")));
+
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<AppIdentityDbContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddAuthorization(options =>
+                 {
+                     options.AddPolicy("RequireEmployeeRole",
+                          policy => policy.RequireClaim("UserType", "Employee"));
+                     options.AddPolicy("RequireStudentRole",
+                          policy => policy.RequireClaim("UserType", "Student"));
+                     options.AddPolicy("RequirePatientRole",
+                          policy => policy.RequireClaim("UserType", "Patient"));
+                     options.AddPolicy("OnlyEmployeeAndStudent",
+                          policy => policy.RequireClaim("UserType", "Employee", "Student"));
+                 });
+
+
+            // Setup Controller and Razor pages
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();
 
@@ -59,7 +77,8 @@ namespace Fysio_WebApplication
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Error");
+                app.UseStatusCodePagesWithReExecute("/Error", "?code={0}");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
@@ -71,6 +90,8 @@ namespace Fysio_WebApplication
             app.UseAuthentication();
             app.UseAuthorization();
 
+
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -80,7 +101,12 @@ namespace Fysio_WebApplication
             });
 
 
-            SeedData.EnsurePopulatedApplication(app);
+            //SeedData.EnsurePopulatedApplication(app);
+
+            // ensure identity populated function
+            IdentitySeedData.EnsurePopulated(app);
+
+
         }
     }
 }

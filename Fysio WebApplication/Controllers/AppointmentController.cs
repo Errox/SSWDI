@@ -1,12 +1,8 @@
-﻿using Fysio_WebApplication.Abstract.Repositories;
-using Fysio_WebApplication.Models;
+﻿using Library.core.Model;
+using Library.Domain.Repositories;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Fysio_WebApplication.Controllers
 {
@@ -22,7 +18,7 @@ namespace Fysio_WebApplication.Controllers
         // GET: AppointmentController
         public ActionResult Index()
         {
-            return View(_repo.FindAll());
+            return View(_repo.Appointments.Include(c1 => c1.Patient).Include(c2 => c2.Employee));
         }
 
         // GET: AppointmentController/Create
