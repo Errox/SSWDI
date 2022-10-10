@@ -1,4 +1,5 @@
 using Avans_Fysio_WebService.GraphQL;
+using Avans_Fysio_WebService.GraphQL.Mutations;
 using Fysio_Codes.Abstract;
 using Fysio_Codes.DAL;
 using Fysio_Codes.DataStore;
@@ -43,8 +44,8 @@ namespace Avans_Fysio_WebService
             //GraphQL 
             services
                 .AddGraphQLServer()
-                .AddQueryType<Query>();
-            //.AddMutationType<Mutation>();
+                .AddQueryType<Query>()
+                .AddMutationType<Mutation>();
 
             // Register the swagger generator
             services.AddSwaggerGen(c =>

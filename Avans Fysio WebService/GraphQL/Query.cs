@@ -30,16 +30,12 @@ namespace Avans_Fysio_WebService.GraphQL
             context.Treatments.ToListAsync();
 
         [UseApplicationDbContext]
-        public Task<Treatment> GetTreatmentByCode([ScopedService] FysioCodeDbContext context, string code)
-        {
-            return context.Treatments.Where(treatment => treatment.Code == code).FirstOrDefaultAsync(); 
-        }
+        public Task<Treatment> GetTreatmentByCode([ScopedService] FysioCodeDbContext context, string code) => 
+            context.Treatments.Where(treatment => treatment.Code == code).FirstOrDefaultAsync(); 
 
         [UseApplicationDbContext]
-        public Task<Diagnosis> GetDiagnosesByCode([ScopedService] FysioCodeDbContext context, int id)
-        {
-            return context.Diagnoses.Where(diagnosis => diagnosis.Id == id).FirstOrDefaultAsync();
-        }
+        public Task<Diagnosis> GetDiagnosesByCode([ScopedService] FysioCodeDbContext context, int id) => 
+            context.Diagnoses.Where(diagnosis => diagnosis.Id == id).FirstOrDefaultAsync();
 
     }
 
