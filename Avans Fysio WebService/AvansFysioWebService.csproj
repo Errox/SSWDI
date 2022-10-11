@@ -31,6 +31,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Fysio_Codes\Fysio_Codes.csproj" />
   </ItemGroup>
+  <PropertyGroup>
+    <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+  </PropertyGroup>
 
 
 </Project>
