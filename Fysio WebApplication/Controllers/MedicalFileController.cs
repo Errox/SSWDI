@@ -16,29 +16,45 @@ namespace Fysio_WebApplication.Controllers
     {
         private IMedicalFileRepository _repo;
         private IEmployeeRepository _employeeRepo;
+        private IPatientRepository _patientRepository;
         private ITreatmentPlanRepository _treatmentPlanRepository;
         private INotesRepository _notesRepository;
         private IPracticeRoomRepository _practiceRoomRepository;
 
-        public MedicalFileController(IMedicalFileRepository repo, IEmployeeRepository employeeRepo, ITreatmentPlanRepository treatmentPlanRepository, INotesRepository notesRepository, IPracticeRoomRepository practiceRoomRepository)
+        public MedicalFileController(
+            IMedicalFileRepository repo,
+            IEmployeeRepository employeeRepo,
+            IPatientRepository patientRepository,
+            ITreatmentPlanRepository treatmentPlanRepository,
+            INotesRepository notesRepository,
+            IPracticeRoomRepository practiceRoomRepository)
         {
             _repo = repo;
             _employeeRepo = employeeRepo;
+            _patientRepository = patientRepository;
             _treatmentPlanRepository = treatmentPlanRepository;
             _notesRepository = notesRepository;
             _practiceRoomRepository = practiceRoomRepository;
         }
 
+        [Authorize]
         // GET: MedicalFile
         public ActionResult Index()
         {
-            return View(_repo.MedicalFiles
+            var files = _repo.MedicalFiles
                 .Include(i => i.IntakeSupervision)
                     .ThenInclude(i => i.ApplicationUser)
                 .Include(i => i.IntakeTherapistId)
-                    .ThenInclude(i => i.ApplicationUser));
+                    .ThenInclude(i => i.ApplicationUser);
+            if (User.HasClaim("UserType", "Patient"))
+            {
+                Patient patient = _patientRepository.Patients.Include(m => m.MedicalFile).FirstOrDefault(x => x.PatientId == User.FindFirstValue(ClaimTypes.NameIdentifier));
+                return Redirect("/MedicalFile/Details/" + patient.MedicalFile.Id);
+            }
+            return View(files);
         }
-
+        
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         public ActionResult IndexPersonalSupervise()
         {
             string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -49,7 +65,8 @@ namespace Fysio_WebApplication.Controllers
                     .ThenInclude(i => i.ApplicationUser)
                 .Where(i => i.IntakeSupervision == _employeeRepo.GetEmployee(userId)));
         }
-
+        
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         public ActionResult IndexPersonalTherapist()
         {
             string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -61,16 +78,17 @@ namespace Fysio_WebApplication.Controllers
                 .Where(i => i.IntakeTherapistId == _employeeRepo.GetEmployee(userId)));
         }
 
+        [Authorize]
         // GET: MedicalFile/Details/5
         public async Task<ActionResult> DetailsAsync(int id)
         {
             // Get the detailed medical File
             MedicalFile medical = _repo.MedicalFiles
-                .Include(i => i.IntakeSupervision)
-                    .ThenInclude(i => i.ApplicationUser)
-                .Include(i => i.IntakeTherapistId)
-                    .ThenInclude(i => i.ApplicationUser)
-                .FirstOrDefault(i => i.Id == id);
+            .Include(i => i.IntakeSupervision)
+                .ThenInclude(e => e.ApplicationUser)
+            .Include(i => i.IntakeTherapistId)
+                .ThenInclude(c => c.ApplicationUser)
+            .FirstOrDefault(i => i.Id == id);
 
             //Fetch the diagnosis containing the code
             //var client = new RestClient($"https://avansfysioservice.azurewebsites.net/api/Diagnosis/"+medical.DiagnosisCode);
@@ -79,19 +97,33 @@ namespace Fysio_WebApplication.Controllers
             //Diagnosis diagnosis = JsonConvert.DeserializeObject<Diagnosis>(response.Content);
 
             ////Send them towards the view
-            //ViewBag.BodyLocation = diagnosis.BodyLocation;
-            //ViewBag.Pathology = diagnosis.Pathology;
-            //ViewBag.Supervision = medical.IntakeSupervision.FirstName + " " + medical.IntakeSupervision.SurName;
-            //ViewBag.Therapist = medical.IntakeTherapistId.FirstName + " " + medical.IntakeTherapistId.SurName;
-            return View(_repo.GetMedicalFile(id));
+            //ViewBag.BodyLocation = "TODO";//diagnosis.BodyLocation;
+            //ViewBag.Pathology = "TODO";//diagnosis.Pathology;
+
+
+            if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student")) return View(_repo.GetMedicalFile(id));
+
+
+            if (User.HasClaim("UserType", "Patient"))
+            {
+                // Get the patient.
+
+                Patient patient = _patientRepository.Patients.Include(m => m.MedicalFile).FirstOrDefault(x => x.PatientId == User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+                // Check if the patient medicalfile is the same as the user
+                if (patient.MedicalFile.Id == id) return View(_repo.GetMedicalFile(id));
+            }
+            return RedirectToAction("AccessDenied", "Error");
         }
 
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         // GET: MedicalFile/Edit/5
         public ActionResult Edit(int id)
         {
             return View(_repo.GetMedicalFile(id));
         }
 
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         // POST: MedicalFile/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -109,14 +141,33 @@ namespace Fysio_WebApplication.Controllers
         }
 
 
+        [Authorize]
         [Route("[Controller]/Notes/{id}")]
         public ActionResult Notes(int id)
         {
-            // Return all notes for this medical thing
+            // Check if the medicalfile from the patient has the same value as the userID. 
+            if (User.HasClaim("UserType", "Patient"))
+            {
+                Patient patient = _patientRepository.Patients.Include(m => m.MedicalFile).FirstOrDefault(x => x.PatientId == User.FindFirstValue(ClaimTypes.NameIdentifier));
+                if (patient.MedicalFile.Id != id) return RedirectToAction("AccessDenied", "Error");
+            }
+
+
             MedicalFile file = _repo.MedicalFiles.Include(c1 => c1.Notes).FirstOrDefault(i => i.Id == id);
+
+
+            // TODO: Double check if student can watch every note's 
+            if (User.HasClaim("UserType", "Patient") || User.HasClaim("UserType", "Student"))
+            {
+                return View(file.Notes.Where(x => x.OpenForPatient == true));
+            }
+
+            // Return all notes for this medical thing
             return View(file.Notes);
         }
 
+
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         [HttpGet]
         [Route("[Controller]/NotesNew/{id}")]
         public ActionResult NotesNew(int id)
@@ -125,17 +176,29 @@ namespace Fysio_WebApplication.Controllers
             return View();
         }
 
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         [HttpPost]
         [Route("[Controller]/NotesNew/{id}")]
         public ActionResult NotesNew(int id, Note newNote)
         {
             //Create new plan because somehow it'll take the medicalFile ID and places it in the model instead of keeping it empty to insert in the DB
-            Note note = new Note { Employee = _employeeRepo.GetEmployee(this.User.FindFirstValue(ClaimTypes.NameIdentifier)), Description = newNote.Description, CreatedUtc = DateTime.Now, OpenForPatient = newNote.OpenForPatient };
+            Note note = new Note
+            {
+                Employee = _employeeRepo.GetEmployee(this.User.FindFirstValue(ClaimTypes.NameIdentifier)),
+                Description = newNote.Description,
+                CreatedUtc = DateTime.Now,
+                OpenForPatient = newNote.OpenForPatient
+            };
 
             _notesRepository.AddNote(note);
 
             //Add the Treatmentplan to the medicalFile
-            MedicalFile medicalFile = _repo.MedicalFiles.Include(i => i.Notes).Include(i => i.IntakeSupervision).Include(i => i.IntakeTherapistId).FirstOrDefault(i => i.Id == id);
+            MedicalFile medicalFile = _repo.MedicalFiles
+                .Include(i => i.Notes)
+                .Include(i => i.IntakeSupervision)
+                .Include(i => i.IntakeTherapistId)
+                .FirstOrDefault(i => i.Id == id);
+            
             medicalFile.Notes.Add(note);
             _repo.UpdateMedicalFile(id, medicalFile);
 
@@ -143,15 +206,27 @@ namespace Fysio_WebApplication.Controllers
             return Redirect("/MedicalFile/Notes/" + id);
         }
 
+        [Authorize]
         [Route("[Controller]/TreatmentPlan/{id}")]
         public ActionResult TreatmentPlan(int id)
         {
+            Patient patient = _patientRepository.Patients
+                .Include(m => m.MedicalFile)
+                    .ThenInclude(c2 => c2.TreatmentPlans)
+                .FirstOrDefault(x => x.PatientId == User.FindFirstValue(ClaimTypes.NameIdentifier));
+            
+            if (patient.MedicalFile.Id != id) return RedirectToAction("AccessDenied", "Error");
+
             // Return all TreatmentPlan for this medical File
             MedicalFile file = _repo.MedicalFiles.Include(c1 => c1.TreatmentPlans).ThenInclude(i => i.PracticeRoom).FirstOrDefault(i => i.Id == id);
+
+
             ViewBag.Url = "/MedicalFile/" + file.Id + "/AddRoomTreatment/";
             return View(file.TreatmentPlans);
         }
 
+
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         [HttpGet]
         [Route("[Controller]/TreatmentPlanNew/{id}")]
         public ActionResult TreatmentPlanNew(int id)
@@ -160,6 +235,7 @@ namespace Fysio_WebApplication.Controllers
             return View();
         }
 
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         [HttpPost]
         [Route("[Controller]/TreatmentPlanNew/{id}")]
         public ActionResult TreatmentPlanNew(int id, TreatmentPlan plan)
@@ -178,6 +254,7 @@ namespace Fysio_WebApplication.Controllers
             return Redirect("/MedicalFile/TreatmentPlan/" + id);
         }
 
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         [HttpGet]
         [Route("[Controller]/{file}/AddRoomTreatment/{id}")]
         public ActionResult AddRoomTreatment(int file, int id)
@@ -187,6 +264,7 @@ namespace Fysio_WebApplication.Controllers
             return View();
         }
 
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         [HttpPost]
         [Route("[Controller]/{file}/AddRoomTreatment/{treatment}")]
         public ActionResult AddRoomTreatment(int file, int treatment, PracticeRoom Room)
@@ -201,7 +279,5 @@ namespace Fysio_WebApplication.Controllers
             //Return view
             return Redirect("/MedicalFile/TreatmentPlan/" + file);
         }
-
-
     }
 }

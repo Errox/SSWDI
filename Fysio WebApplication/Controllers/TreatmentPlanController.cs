@@ -21,13 +21,14 @@ namespace Fysio_WebApplication.Controllers
             _treatmentPlanRepo = treatmentPlanRepo;
             _employeeRepo = employee;
         }
-
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         // GET: TreatmentController
         public ActionResult Index()
         {
             return View(_treatmentPlanRepo.FindAll());
         }
 
+        [Authorize]
         // GET: TreatmentController/Details/5
         public async Task<ActionResult> DetailsAsync(int id)
         {
@@ -45,11 +46,11 @@ namespace Fysio_WebApplication.Controllers
             //Fetch all the employee's working on this file
 
             //ViewBag.Description = treatment.Description;
-            ViewBag.Performed = treatmentPlan.TreatmentPerformedBy.ApplicationUser.FirstName + " " + treatmentPlan.TreatmentPerformedBy.ApplicationUser.SurName;
-
+            
             return View(treatmentPlan);
         }
 
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         // GET: TreatmentController/Create
         public ActionResult Create()
         {
@@ -58,6 +59,7 @@ namespace Fysio_WebApplication.Controllers
 
         // POST: TreatmentController/Create
         [HttpPost]
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         [ValidateAntiForgeryToken]
         public ActionResult Create(TreatmentPlan collection)
         {
@@ -78,6 +80,7 @@ namespace Fysio_WebApplication.Controllers
         }
 
         // GET: TreatmentController/Edit/5
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         public ActionResult Edit(int id)
         {
             return View(_treatmentPlanRepo.GetTreatmentPlan(id));
@@ -85,6 +88,7 @@ namespace Fysio_WebApplication.Controllers
 
         // POST: TreatmentController/Edit/5
         [HttpPost]
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, TreatmentPlan collection)
         {

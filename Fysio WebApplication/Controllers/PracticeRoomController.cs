@@ -15,18 +15,22 @@ namespace Fysio_WebApplication.Controllers
         {
             _repo = repo;
         }
+
+        [Authorize]
         // GET: PracticeRoomController
         public ActionResult Index()
         {
             return View(_repo.PracticeRooms);
         }
 
+        [Authorize]
         // GET: PracticeRoomController/Details/5
         public ActionResult Details(int id)
         {
             return View(_repo.PracticeRooms.FirstOrDefault(i => i.Id == id));
         }
-
+        
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         // GET: PracticeRoomController/Create
         public ActionResult Create()
         {
@@ -35,6 +39,7 @@ namespace Fysio_WebApplication.Controllers
 
         // POST: PracticeRoomController/Create
         [HttpPost]
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         [ValidateAntiForgeryToken]
         public ActionResult Create(PracticeRoom practiceRoom)
         {
@@ -48,7 +53,8 @@ namespace Fysio_WebApplication.Controllers
                 return View();
             }
         }
-
+        
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         // GET: PracticeRoomController/Edit/5
         public ActionResult Edit(int id)
         {
@@ -56,6 +62,7 @@ namespace Fysio_WebApplication.Controllers
         }
 
         // POST: PracticeRoomController/Edit/5
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, PracticeRoom practiceRoom)

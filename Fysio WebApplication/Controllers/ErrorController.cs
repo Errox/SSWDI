@@ -9,7 +9,7 @@ namespace Fysio_WebApplication.Controllers
         {
             return View();
         }
-        
+
         [Route("Error/{code}")]
         public IActionResult Index(int code)
         {

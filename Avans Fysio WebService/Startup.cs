@@ -29,13 +29,16 @@ namespace Avans_Fysio_WebService
         {
             services.AddControllers();
 
+            //services.AddDbContextFactory<FysioCodeDbContext>(opts =>
+            //{
+            //    opts.UseSqlServer(
+            //        Configuration["ConnectionStrings:AvansFysioDevWebServiceConnection"]);
+            //});
             services.AddDbContextFactory<FysioCodeDbContext>(opts =>
             {
                 opts.UseSqlServer(
                     Configuration["ConnectionStrings:AvansFysioWebServiceConnection"]);
             });
-
-
 
             // Dependency injection 
             services.AddTransient<IDiagnosesRepository, EFDiagnoseRepository>();
@@ -54,7 +57,7 @@ namespace Avans_Fysio_WebService
                 {
                     Version = "v1",
                     Title = "Avans Fysio WebService",
-                    Description = "A simple API made for the Diagnosis and treatments",
+                    Description = "A simple API made for the Diagnosis and treatments. Used by the Fysio Web Application.",
                     Contact = new OpenApiContact
                     {
                         Name = "GIT repo",

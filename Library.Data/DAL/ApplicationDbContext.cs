@@ -23,7 +23,6 @@ namespace Library.Data.Dal
 
         public DbSet<Availabilty> Availabilties { get; set; }
 
-        // TODO: I added these sets from the removed Identities, since this is domain code -W
         public DbSet<Patient> Patients { get; set; }
 
         public DbSet<Employee> Employees { get; set; }

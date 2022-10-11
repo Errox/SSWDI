@@ -7,7 +7,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace Fysio_WebApplication.Controllers
 {
@@ -39,12 +38,20 @@ namespace Fysio_WebApplication.Controllers
         {
             // Get person who's logged in
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
+            Patient LoggedInPatient = _patientRepo.Patients.FirstOrDefault(f => f.PatientId == userId);
             // If person who's logged in, is the same ID as the patient, then show the details
-            Patient patient = _patientRepo.Patients.Include(c1 => c1.MedicalFile).FirstOrDefault(i => i.IdNumber == id);
-            
+            Patient patient = _patientRepo
+                .Patients
+                .Include(c1 => c1.MedicalFile)
+                    .ThenInclude(i => i.IntakeSupervision)
+                        .ThenInclude(i => i.ApplicationUser)
+                .Include(i => i.MedicalFile)
+                    .ThenInclude(i => i.IntakeTherapistId)
+                            .ThenInclude(i => i.ApplicationUser)
+                .FirstOrDefault(i => i.IdNumber == id);
+            //return RedirectToAction("AccessDenied", "Error");
             // This is either a employee or a unauthorized user. Check if the user is a employee or student
-            if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student") || patient.IdNumber == id)
+            if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student") || LoggedInPatient.IdNumber == id)
             {
                 //var isAuthorized = await _authorizationService.AuthorizeAsync(User, "Employee");
                 MedicalFile medical = patient.MedicalFile;
@@ -71,23 +78,23 @@ namespace Fysio_WebApplication.Controllers
                 // User is not allowed to see the details of the patient
                 return RedirectToAction("AccessDenied", "Error");
             }
+            // TODO: Make it possible for patient to watch it's own appointments. 
         }
 
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         // GET: PatientController/Create
         public ActionResult Create()
         {
-            // TODO: when creating a patient. We create a patient by just filling in the email and whats needed to fullfill the model.
-            // Then we create a random password for the patient (this must be send to the patient themselves. Maybe policy when creating a account that it should change password when first logged in.) 
-            // And that the password can be printed out / given to the patient so it can login into their own account. 
-
-            return View(_employeeRepo.Employees);
+            return Redirect("/Auth/RegisterPatient");
         }
 
         // POST: PatientController/Create
         [HttpPost]
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         [ValidateAntiForgeryToken]
         public ActionResult Create(Patient pool)
         {
+            // DEPRICATED. Changed to auth/RegisterPatient
             try
             {
                 foreach (var file in Request.Form.Files)
@@ -108,6 +115,7 @@ namespace Fysio_WebApplication.Controllers
             }
         }
 
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         // GET: PatientController/Edit/5
         public ActionResult Edit(int id)
         {
@@ -126,6 +134,7 @@ namespace Fysio_WebApplication.Controllers
             return View(patient);
         }
 
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         // POST: PatientController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -153,6 +162,7 @@ namespace Fysio_WebApplication.Controllers
         }
 
 
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         [HttpGet]
         [Route("[Controller]/MedicalFileNew/{patientId}")]
         public ActionResult MedicalFileNew(int patientId)
@@ -163,13 +173,11 @@ namespace Fysio_WebApplication.Controllers
             return View("CreateMedicalFile");
         }
 
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         [HttpPost]
         [Route("[Controller]/MedicalFileNew/{id}")]
         public ActionResult MedicalFileNew(int id, MedicalFile file)
         {
-            // Fetch PatientId from the form
-
-
             // Get the current logged in.
             string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
 

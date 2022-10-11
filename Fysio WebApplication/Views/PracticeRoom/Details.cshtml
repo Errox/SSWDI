@@ -25,6 +25,9 @@
     </dl>
 </div>
 <div>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    <a asp-action="Index">Back to List</a>
+    @if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
+    {
+        @Html.ActionLink("Edit | ", "Edit", new { id = Model.Id })
+    }
+    <a href="javascript:history.go(-1)">Back</a>
 </div>

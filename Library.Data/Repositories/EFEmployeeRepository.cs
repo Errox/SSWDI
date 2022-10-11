@@ -31,7 +31,6 @@ namespace Library.Data.Repositories
 
         public Employee GetEmployee(string id)
         {
-            // TODO: Temporarily added a toString on the new Id -W
             return _context.Employees.Include(c1 => c1.ApplicationUser).FirstOrDefault(i => i.EmployeeId == id);
         }
 

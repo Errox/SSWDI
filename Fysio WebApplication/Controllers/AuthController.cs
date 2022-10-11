@@ -2,10 +2,8 @@
 using Library.core.ViewModels;
 using Library.Domain.Repositories;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
@@ -97,6 +95,7 @@ namespace Fysio_WebApplication.Controllers
             return Redirect(returnUrl);
         }
 
+        [Authorize(Policy = "RequireEmployeeRole")]
         public ViewResult RegisterEmployee(string returnUrl)
         {
             return base.View(new RegisterEmployeeModel
@@ -105,6 +104,7 @@ namespace Fysio_WebApplication.Controllers
             });
         }
 
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         public ViewResult RegisterPatient(string returnUrl)
         {
             return base.View(new RegisterPatientModel
@@ -113,7 +113,7 @@ namespace Fysio_WebApplication.Controllers
             });
         }
 
-
+        [Authorize(Policy = "RequireEmployeeRole")]
         [HttpPost]
         public async Task<IActionResult> RegisterEmployee(RegisterEmployeeModel model)
         {
@@ -175,11 +175,19 @@ namespace Fysio_WebApplication.Controllers
             return View(model);
         }
 
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         [HttpPost]
         public async Task<IActionResult> RegisterPatient(RegisterPatientModel model)
         {
             if (ModelState.IsValid)
             {
+                // check if model.DateOfBirth is above 16 years old
+                if (model.DateOfBirth.AddYears(16) > DateTime.Now && DateTime.Now.Year - model.DateOfBirth.Year > 16)
+                {
+                    ModelState.AddModelError("", "Patient is younger than 16 years old");
+                    return View(model);
+                }
+                
                 ApplicationUser user = new ApplicationUser
                 {
                     UserName = model.Email,
@@ -187,7 +195,6 @@ namespace Fysio_WebApplication.Controllers
                     SurName = model.SurName,
                     Email = model.Email,
                     PhoneNumber = model.PhoneNumber,
-
                 };
 
                 IdentityResult result = await _userManager.CreateAsync(user, model.Password);
@@ -217,6 +224,8 @@ namespace Fysio_WebApplication.Controllers
                     }
 
                     _patientRepo.AddPatient(patient);
+                    
+                    // Patient page where password and information is shown. This page can be printed for the patient to login later. 
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -240,14 +249,15 @@ namespace Fysio_WebApplication.Controllers
             string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             // If user is student or employee. Return normal view. 
-            if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student")){
+            if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
+            {
                 return View(_employeeRepo.Employees.FirstOrDefault(i => i.EmployeeId == userId));
             }
             else
             {
                 Patient patient = _patientRepo.Patients.FirstOrDefault(i => i.PatientId == userId);
                 // First application user -> patient. 
-                
+
                 return RedirectToAction("Details", "Patient", new { id = patient.IdNumber });
             }
         }
