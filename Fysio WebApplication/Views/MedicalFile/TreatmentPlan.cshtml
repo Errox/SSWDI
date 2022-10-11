@@ -58,9 +58,11 @@
                 }
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", "TreatmentPlan", new { id = item.Id })
+                @if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
+                {
+                    @Html.ActionLink("Edit", "Edit", "TreatmentPlan", new { id = item.Id })
+                }
                 @Html.ActionLink("Detail", "Details", "TreatmentPlan", new { id = item.Id })
-                @*Link To the treatment edit *@
             </td>
         </tr>
 }

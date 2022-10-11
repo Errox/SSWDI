@@ -1,9 +1,10 @@
 ﻿using Avans_Fysio_WebService.GraphQL.Extensions;
 using Avans_Fysio_WebService.GraphQL.Mutations.Payloads;
-using Avans_Fysio_WebService.Models;
 using Fysio_Codes.DAL;
 using Fysio_Codes.Models;
 using HotChocolate;
+using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace Avans_Fysio_WebService.GraphQL.Mutations
@@ -12,20 +13,38 @@ namespace Avans_Fysio_WebService.GraphQL.Mutations
     {
         [UseApplicationDbContext]
         public async Task<AddDiagnosisPayload> AddDiagnosisAsync(
-            AddDiagnosisPayload input,
+            Diagnosis input,
             [Service] FysioCodeDbContext context)
         {
             var diagnosis = new Diagnosis
             {
-                Code = input.Diagnosis.Code,
-                BodyLocation = input.Diagnosis.BodyLocation,
-                Pathology = input.Diagnosis.Pathology
+                Code = input.Code,
+                BodyLocation = input.BodyLocation,
+                Pathology = input.Pathology
             };
 
             context.Diagnoses.Add(diagnosis);
             await context.SaveChangesAsync();
 
             return new AddDiagnosisPayload(diagnosis);
+        }
+
+        [UseApplicationDbContext]
+        public async Task<AddTreatmentPayload> AddTreatmentAsync(
+            Treatment input,
+            [Service] FysioCodeDbContext context)
+        {
+            var treatment = new Treatment
+            {
+                Code = input.Code,
+                ExplanationRequired = input.ExplanationRequired,
+                Description = input.Description,
+            };
+
+            context.Treatments.Add(treatment);
+            await context.SaveChangesAsync();
+
+            return new AddTreatmentPayload(treatment);
         }
 
     }

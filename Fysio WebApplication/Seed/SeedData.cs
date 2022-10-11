@@ -1,74 +1,73 @@
 ﻿using Library.core.Model;
 using Library.Data.Dal;
-using Library.Data;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Fysio_Identity;
 
-namespace Library.core.Model.SeedData
+namespace Fysio_WebApplication.Seed
 {
     public class SeedData
     {
-
-        // We seed the database here with function ensure populated.
-        // This way we know that if the database is empty on startup. We insert data into the application
-        public static void EnsurePopulatedApplication(IApplicationBuilder app)
+        public static async void EnsurePopulatedApplicationAsync(IApplicationBuilder app)
         {
-            ApplicationDbContext context = app.ApplicationServices
-                .CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            UserManager<ApplicationUser> userManager = app.ApplicationServices
+                .CreateScope().ServiceProvider
+                .GetRequiredService<UserManager<ApplicationUser>>();
 
-            // PatientPortalDbContext contextPatient = app.ApplicationServices
-            //    .CreateScope().ServiceProvider.GetRequiredService<PatientPortalDbContext>();
+            RoleManager<IdentityRole> roleManager = app.ApplicationServices
+            .CreateScope().ServiceProvider
+                .GetRequiredService<RoleManager<IdentityRole>>();
 
-            AppIdentityDbContext contextEmployee = app.ApplicationServices
-                .CreateScope().ServiceProvider.GetRequiredService<AppIdentityDbContext>();
-     
+            ApplicationDbContext appContext = app.ApplicationServices
+                .CreateScope().ServiceProvider.
+                GetRequiredService<ApplicationDbContext>();
+
+
+
             // Fetch employee's
-            // TODO: Changed Identity Context to Domain Context -W
-            Employee employee = context.Employees.FirstOrDefault(i => i.Email == "ryangroenewold@hotmail.com");
-            Employee student = context.Employees.FirstOrDefault(i => i.Email == "Student@student.nl");
+            ApplicationUser employeeUser = userManager.FindByNameAsync("rgroen").Result;
+            Employee employee = appContext.Employees.FirstOrDefault(e => e.EmployeeId == employeeUser.Id);
+
+            ApplicationUser studentUser = userManager.FindByNameAsync("iiro").Result;
+            Employee student = appContext.Employees.FirstOrDefault(e => e.EmployeeId == studentUser.Id);
 
             // Fetch Patients
-            Patient patient1 = context.Patients.FirstOrDefault(i => i.Email == "HansPeterson@geenmail.nl");
-            Patient patient2 = context.Patients.FirstOrDefault(i => i.Email == "LauraSok@geenmail.nl");
+            ApplicationUser patientUser = userManager.FindByNameAsync("ola").Result;
+            Patient patient1 = appContext.Patients.FirstOrDefault(e => e.PatientId == patientUser.Id);
 
-            if (context.Database.GetPendingMigrations().Any())
-            {
-                context.Database.Migrate();
-            }
+            ApplicationUser patient2User = userManager.FindByNameAsync("sri").Result;
+            Patient patient2 = appContext.Patients.FirstOrDefault(e => e.PatientId == patient2User.Id);
 
 
-            if (!context.MedicalFiles.Any())
+
+            if (!appContext.MedicalFiles.Any() && employee != null)
             {
                 PracticeRoom Room1 = new PracticeRoom
                 {
                     Name = "Room: 202"
                 };
-                context.Add(Room1);
+                appContext.Add(Room1);
 
                 PracticeRoom Room2 = new PracticeRoom
                 {
                     Name = "Room: 204"
                 };
-                context.Add(Room2);
+                appContext.Add(Room2);
 
                 PracticeRoom Room3 = new PracticeRoom
                 {
                     Name = "Room: 302"
                 };
-                context.Add(Room3);
+                appContext.Add(Room3);
 
                 PracticeRoom Room4 = new PracticeRoom
                 {
                     Name = "Room: 304"
                 };
-                context.Add(Room4);
+                appContext.Add(Room4);
 
                 // Note 1 that patient 1 can't see, made by employee
                 Note note1 = new Note
@@ -76,19 +75,19 @@ namespace Library.core.Model.SeedData
                     Description = "Patient heeft overgegeven op stoel",
                     Employee = employee,
                     OpenForPatient = false,
-                    CreatedUtc = DateTime.Now.AddDays(-2)
+                    CreatedUtc = DateTime.Now.AddDays(-3)
                 };
-                context.Add(note1);
+                appContext.Add(note1);
 
                 // Note 2 that patient 1 can see, made by student
                 Note note2 = new Note
                 {
                     Description = "Patient heeft verteld dat het beter gaat",
                     Employee = student,
-                    OpenForPatient = false,
+                    OpenForPatient = true,
                     CreatedUtc = DateTime.Now.AddDays(-2)
                 };
-                context.Add(note2);
+                appContext.Add(note2);
 
                 // Note 3 that patient 2 can't see, made by employee
                 Note note3 = new Note
@@ -96,19 +95,29 @@ namespace Library.core.Model.SeedData
                     Description = "Patient heeft blauwe tenen gekregen",
                     Employee = employee,
                     OpenForPatient = false,
-                    CreatedUtc = DateTime.Now.AddDays(-2)
+                    CreatedUtc = DateTime.Now.AddDays(-4)
                 };
-                context.Add(note3);
+                appContext.Add(note3);
 
                 // Note 4 that patient 2 can see, made by student
                 Note note4 = new Note
                 {
                     Description = "Patient had eigen tenen ingekleurd",
                     Employee = student,
-                    OpenForPatient = false,
-                    CreatedUtc = DateTime.Now.AddDays(-2)
+                    OpenForPatient = true,
+                    CreatedUtc = DateTime.Now.AddDays(-3)
                 };
-                context.Add(note4);
+                appContext.Add(note4);
+
+                // Note 5 that patient 1 can see, made by employee
+                Note note5 = new Note
+                {
+                    Description = "Patient heeft een nieuwe bril gekregen",
+                    Employee = employee,
+                    OpenForPatient = false,
+                    CreatedUtc = DateTime.Now.AddDays(-20)
+                };
+                appContext.Add(note5);
 
                 TreatmentPlan treatmentPlan1 = new TreatmentPlan
                 {
@@ -120,7 +129,7 @@ namespace Library.core.Model.SeedData
                     TreatmentDate = DateTime.Now.AddDays(2),
                     AmountOfTreatmentsPerWeek = 2
                 };
-                context.Add(treatmentPlan1);
+                appContext.Add(treatmentPlan1);
                 TreatmentPlan treatmentPlan2 = new TreatmentPlan
                 {
                     Type = 1920,
@@ -132,7 +141,7 @@ namespace Library.core.Model.SeedData
                     AmountOfTreatmentsPerWeek = 2
                 };
 
-                context.Add(treatmentPlan2);
+                appContext.Add(treatmentPlan2);
                 TreatmentPlan treatmentPlan3 = new TreatmentPlan
                 {
                     Type = 1920,
@@ -143,7 +152,7 @@ namespace Library.core.Model.SeedData
                     TreatmentDate = DateTime.Now.AddDays(5),
                     AmountOfTreatmentsPerWeek = 2
                 };
-                context.Add(treatmentPlan3);
+                appContext.Add(treatmentPlan3);
 
                 var treatmentplans1 = new List<TreatmentPlan>();
                 treatmentplans1.Add(treatmentPlan1);
@@ -161,7 +170,7 @@ namespace Library.core.Model.SeedData
                     Notes = notes,
                     TreatmentPlans = treatmentplans1
                 };
-                context.Add(medicalFile1);
+                appContext.Add(medicalFile1);
 
 
                 var treatmentplans2 = new List<TreatmentPlan>();
@@ -170,6 +179,7 @@ namespace Library.core.Model.SeedData
                 var notes2 = new List<Note>();
                 notes2.Add(note3);
                 notes2.Add(note4);
+                notes2.Add(note5);
                 MedicalFile medicalFile2 = new MedicalFile
                 {
                     Description = "Veel last van de duim",
@@ -181,13 +191,13 @@ namespace Library.core.Model.SeedData
                     Notes = notes2,
                     TreatmentPlans = treatmentplans2
                 };
-                context.Add(medicalFile2);
-                // TODO: Patient is not created yet.
+                appContext.Add(medicalFile2);
+
                 patient1.MedicalFile = medicalFile1;
-                context.Patients.Update(patient1);
+                appContext.Patients.Update(patient1);
 
                 patient2.MedicalFile = medicalFile2;
-                context.Patients.Update(patient2);
+                appContext.Patients.Update(patient2);
 
                 Appointment appointment1 = new Appointment
                 {
@@ -195,7 +205,7 @@ namespace Library.core.Model.SeedData
                     Employee = employee,
                     Date = DateTime.Now.AddDays(1)
                 };
-                context.Add(appointment1);
+                appContext.Add(appointment1);
 
                 Appointment appointment2 = new Appointment
                 {
@@ -203,7 +213,7 @@ namespace Library.core.Model.SeedData
                     Employee = student,
                     Date = DateTime.Now.AddDays(1)
                 };
-                context.Add(appointment2);
+                appContext.Add(appointment2);
 
                 Availabilty availabiltyEmployee = new Availabilty
                 {
@@ -211,7 +221,7 @@ namespace Library.core.Model.SeedData
                     StartAvailability = DateTime.Now.AddDays(-7),
                     StopAvailability = DateTime.Now.AddDays(2)
                 };
-                context.Add(availabiltyEmployee);
+                appContext.Add(availabiltyEmployee);
 
                 Availabilty availabiltyStudent = new Availabilty
                 {
@@ -219,9 +229,9 @@ namespace Library.core.Model.SeedData
                     StartAvailability = DateTime.Now.AddDays(-7),
                     StopAvailability = DateTime.Now.AddDays(2)
                 };
-                context.Add(availabiltyStudent);
+                appContext.Add(availabiltyStudent);
 
-                context.SaveChanges();
+                appContext.SaveChanges();
             }
         }
     }

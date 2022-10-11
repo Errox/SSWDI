@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Library.Data
-@inject SignInManager<Employee> SignInManager
-@inject UserManager<Employee> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
 <!DOCTYPE html>
 <html lang="en">
@@ -33,8 +33,18 @@
                                     </a>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <a class="dropdown-item" href="/PracticeRoom">Practice Room</a>
-                                        <a class="dropdown-item" href="/Patient">Patient</a>
-                                        <a class="dropdown-item" href="/MedicalFile">MedicalFile</a>
+                                        @if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
+                                        {
+                                            <a class="dropdown-item" href="/Patient">Patient</a>
+                                            <a class="dropdown-item" href="/MedicalFile">MedicalFile</a>
+                                            <a class="dropdown-item" href="/Auth/RegisterEmployee">Register Employee</a>
+                                            <a class="dropdown-item" href="/Auth/RegisterPatient">Register Patient</a>
+                                        }
+                                        @if (User.HasClaim("UserType", "Patient"))
+                                        {
+                                            <a class="dropdown-item" href="/MedicalFile">My Medical File</a>
+                                            <a class="dropdown-item" href="/Account/Index">Profiel</a>
+                                        }
                                     </div>
                                 </div>
                             </li>

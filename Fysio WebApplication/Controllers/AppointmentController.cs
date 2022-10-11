@@ -1,13 +1,8 @@
 ﻿using Library.core.Model;
 using Library.Domain.Repositories;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Fysio_WebApplication.Controllers
 {
@@ -20,18 +15,23 @@ namespace Fysio_WebApplication.Controllers
         {
             _repo = repo;
         }
+
+
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         // GET: AppointmentController
         public ActionResult Index()
         {
-            return View(_repo.Appointments.Include(c1=>c1.Patient).Include(c2 => c2.Employee));
+            return View(_repo.Appointments.Include(c1 => c1.Patient).Include(c2 => c2.Employee));
         }
 
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         // GET: AppointmentController/Create
         public ActionResult Create()
         {
             return View();
         }
 
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         // POST: AppointmentController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -48,12 +48,14 @@ namespace Fysio_WebApplication.Controllers
             }
         }
 
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         // GET: AppointmentController/Edit/5
         public ActionResult Edit(int id)
         {
             return View(_repo.GetAppointment(id));
         }
 
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         // POST: AppointmentController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -72,6 +74,7 @@ namespace Fysio_WebApplication.Controllers
             }
         }
 
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         // GET: AppointmentController/Delete/5
         public ActionResult Delete(int id)
         {
@@ -79,6 +82,7 @@ namespace Fysio_WebApplication.Controllers
         }
 
         // POST: AppointmentController/Delete/5
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, Appointment collection)

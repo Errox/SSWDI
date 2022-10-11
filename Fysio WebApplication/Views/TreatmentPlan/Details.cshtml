@@ -16,12 +16,6 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Type)
         </dd>
-        <dt class="col-sm-2">
-            Beschijving
-        </dt>
-        <dd class="col-sm-10">
-            @Html.Raw(ViewBag.Description)
-        </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Description)
         </dt>
@@ -35,10 +29,10 @@
             @Html.DisplayFor(model => model.Particularities)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TreatmentPerformedBy)
+            Performed By
         </dt>
         <dd class = "col-sm-10">
-            @Html.Raw(ViewBag.Performed)
+            @Html.DisplayNameFor(model => model.TreatmentPerformedBy.ApplicationUser.FirstName) @Html.DisplayNameFor(model => model.TreatmentPerformedBy.ApplicationUser.SurName)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.TreatmentDate)
@@ -52,9 +46,19 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.AmountOfTreatmentsPerWeek)
         </dd>
+        <dt class="col-sm-2">
+            Room
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PracticeRoom.Name)
+        </dd>
+        
     </dl>
 </div>
 <div>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    <a asp-action="Index">Back to List</a>
+    @if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
+    {
+        @Html.ActionLink("Edit | ", "Edit", new { id = Model.Id })
+    }
+    <a href="javascript:history.go(-1)">Back</a>
 </div>

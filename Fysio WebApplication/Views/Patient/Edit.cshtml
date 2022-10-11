@@ -19,18 +19,18 @@
             </div>
             <div class="form-group">
                 <label asp-for="FirstName" class="control-label"></label>
-                <input asp-for="FirstName" class="form-control" />
-                <span asp-validation-for="FirstName" class="text-danger"></span>
+                <input disabled id="FirstName" name="FirstName" class="form-control" value="@Html.DisplayFor(model => model.ApplicationUser.FirstName)" />
+                <span asp-validation-for="ApplicationUser.FirstName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="SurName" class="control-label"></label>
-                <input asp-for="SurName" class="form-control" />
-                <span asp-validation-for="SurName" class="text-danger"></span>
+                <input disabled id="SurName" name="SurName" class="form-control" value="@Html.DisplayFor(model => model.ApplicationUser.SurName)" />
+                <span asp-validation-for="ApplicationUser.SurName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+                <input disabled id="Email" name="Email" class="form-control" value="@Html.DisplayFor(model => model.ApplicationUser.Email)" />
+                <span asp-validation-for="ApplicationUser.Email" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ImgData" class="control-label"></label>
@@ -71,7 +71,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a href="javascript:history.go(-1)">Back</a>
 </div>
 
 @section Scripts {

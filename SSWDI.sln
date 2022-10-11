@@ -12,8 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FysioWebApplication", "Fysio WebApplication\FysioWebApplication.csproj", "{65FBF8C2-F38C-453B-A30B-68382675CDB7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FysioWebApplicationPatientPortal", "FysioWebApplicationPatientPortal\FysioWebApplicationPatientPortal.csproj", "{E0BA29EA-B7B5-4649-8D72-127213209F72}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.core", "Library.core\Library.core.csproj", "{144FCBD5-5447-4597-A73C-C0078DE5BC89}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.Domain", "Library.Domain\Library.Domain.csproj", "{1406AFC1-07FF-4AC5-BCA5-596447B589AF}"
@@ -38,10 +36,6 @@ Global
 		{65FBF8C2-F38C-453B-A30B-68382675CDB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65FBF8C2-F38C-453B-A30B-68382675CDB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65FBF8C2-F38C-453B-A30B-68382675CDB7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E0BA29EA-B7B5-4649-8D72-127213209F72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E0BA29EA-B7B5-4649-8D72-127213209F72}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E0BA29EA-B7B5-4649-8D72-127213209F72}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E0BA29EA-B7B5-4649-8D72-127213209F72}.Release|Any CPU.Build.0 = Release|Any CPU
 		{144FCBD5-5447-4597-A73C-C0078DE5BC89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{144FCBD5-5447-4597-A73C-C0078DE5BC89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{144FCBD5-5447-4597-A73C-C0078DE5BC89}.Release|Any CPU.ActiveCfg = Release|Any CPU

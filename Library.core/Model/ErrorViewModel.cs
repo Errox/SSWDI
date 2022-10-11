@@ -1,5 +1,3 @@
-using System;
-
 namespace Library.core.Model
 {
     public class ErrorViewModel

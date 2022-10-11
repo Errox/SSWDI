@@ -1,22 +1,17 @@
+using Avans_Fysio_WebService.GraphQL;
+using Avans_Fysio_WebService.GraphQL.Mutations;
+using Fysio_Codes.Abstract;
+using Fysio_Codes.DAL;
+using Fysio_Codes.DataStore;
+using Fysio_Codes.SeedData;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
-using Microsoft.EntityFrameworkCore;
-using Fysio_Codes.SeedData;
-using Fysio_Codes.DAL;
-using Fysio_Codes.Abstract;
-using Fysio_Codes.DataStore;
-using Avans_Fysio_WebService.GraphQL;
+using System;
 
 namespace Avans_Fysio_WebService
 {
@@ -34,13 +29,16 @@ namespace Avans_Fysio_WebService
         {
             services.AddControllers();
 
+            //services.AddDbContextFactory<FysioCodeDbContext>(opts =>
+            //{
+            //    opts.UseSqlServer(
+            //        Configuration["ConnectionStrings:AvansFysioDevWebServiceConnection"]);
+            //});
             services.AddDbContextFactory<FysioCodeDbContext>(opts =>
             {
                 opts.UseSqlServer(
                     Configuration["ConnectionStrings:AvansFysioWebServiceConnection"]);
             });
-
-
 
             // Dependency injection 
             services.AddTransient<IDiagnosesRepository, EFDiagnoseRepository>();
@@ -49,8 +47,8 @@ namespace Avans_Fysio_WebService
             //GraphQL 
             services
                 .AddGraphQLServer()
-                .AddQueryType<Query>();
-            //.AddMutationType<Mutation>();
+                .AddQueryType<Query>()
+                .AddMutationType<Mutation>();
 
             // Register the swagger generator
             services.AddSwaggerGen(c =>
@@ -59,7 +57,7 @@ namespace Avans_Fysio_WebService
                 {
                     Version = "v1",
                     Title = "Avans Fysio WebService",
-                    Description = "A simple API made for the Diagnosis and treatments",
+                    Description = "A simple API made for the Diagnosis and treatments. Used by the Fysio Web Application.",
                     Contact = new OpenApiContact
                     {
                         Name = "GIT repo",

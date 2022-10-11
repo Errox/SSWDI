@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
+#nullable disable
+
 namespace Library.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
@@ -15,31 +17,99 @@ namespace Library.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.20")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "6.0.8")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("Library.core.Model.ApplicationUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("FirstName")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SurName")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ApplicationUser");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("ApplicationUser");
+                });
 
             modelBuilder.Entity("Library.core.Model.Appointment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("EmployeeID")
-                        .HasColumnType("int");
+                    b.Property<string>("EmployeeId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("PatientID")
-                        .HasColumnType("int");
+                    b.Property<string>("PatientId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployeeID");
+                    b.HasIndex("EmployeeId");
 
-                    b.HasIndex("PatientID");
+                    b.HasIndex("PatientId");
 
                     b.ToTable("Appointments");
                 });
@@ -48,11 +118,12 @@ namespace Library.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("EmployeeID")
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("EmployeeId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("StartAvailability")
                         .HasColumnType("datetime2");
@@ -62,51 +133,18 @@ namespace Library.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployeeID");
+                    b.HasIndex("EmployeeId");
 
                     b.ToTable("Availabilties");
-                });
-
-            modelBuilder.Entity("Library.core.Model.Employee", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("BIGNumber")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsStudent")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("StudentNumber")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SurName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("WorkerNumber")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("Library.core.Model.MedicalFile", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<DateTime>("DateOfCreation")
                         .HasColumnType("datetime2");
@@ -115,23 +153,23 @@ namespace Library.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(250)")
-                        .HasMaxLength(250);
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<int>("DiagnosisCode")
                         .HasColumnType("int");
 
-                    b.Property<int?>("IntakeSupervisionID")
-                        .HasColumnType("int");
+                    b.Property<string>("IntakeSupervisionId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("IntakeTherapistIdID")
-                        .HasColumnType("int");
+                    b.Property<string>("IntakeTherapistIdId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IntakeSupervisionID");
+                    b.HasIndex("IntakeSupervisionId");
 
-                    b.HasIndex("IntakeTherapistIdID");
+                    b.HasIndex("IntakeTherapistIdId");
 
                     b.ToTable("MedicalFiles");
                 });
@@ -140,18 +178,19 @@ namespace Library.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<DateTime>("CreatedUtc")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(250)")
-                        .HasMaxLength(250);
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
-                    b.Property<int?>("EmployeeID")
-                        .HasColumnType("int");
+                    b.Property<string>("EmployeeId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("MedicalFileId")
                         .HasColumnType("int");
@@ -161,67 +200,24 @@ namespace Library.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployeeID");
+                    b.HasIndex("EmployeeId");
 
                     b.HasIndex("MedicalFileId");
 
                     b.ToTable("Notes");
                 });
 
-            modelBuilder.Entity("Library.core.Model.Patient", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(250)")
-                        .HasMaxLength(250);
-
-                    b.Property<int>("Gender")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdNumber")
-                        .HasColumnType("int");
-
-                    b.Property<byte[]>("ImgData")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<bool>("IsStudent")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("MedicalFileId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SurName")
-                        .HasColumnType("nvarchar(250)")
-                        .HasMaxLength(250);
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("MedicalFileId");
-
-                    b.ToTable("Patients");
-                });
-
             modelBuilder.Entity("Library.core.Model.PracticeRoom", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(250)")
-                        .HasMaxLength(250);
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.HasKey("Id");
 
@@ -232,15 +228,16 @@ namespace Library.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("AmountOfTreatmentsPerWeek")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(500)")
-                        .HasMaxLength(500);
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<int?>("MedicalFileId")
                         .HasColumnType("int");
@@ -254,8 +251,8 @@ namespace Library.Data.Migrations
                     b.Property<DateTime>("TreatmentDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("TreatmentPerformedByID")
-                        .HasColumnType("int");
+                    b.Property<string>("TreatmentPerformedById")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
@@ -266,56 +263,124 @@ namespace Library.Data.Migrations
 
                     b.HasIndex("PracticeRoomId");
 
-                    b.HasIndex("TreatmentPerformedByID");
+                    b.HasIndex("TreatmentPerformedById");
 
                     b.ToTable("TreatmentPlans");
+                });
+
+            modelBuilder.Entity("Library.core.Model.Employee", b =>
+                {
+                    b.HasBaseType("Library.core.Model.ApplicationUser");
+
+                    b.Property<int?>("BIGNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EmployeeId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("EmployeeType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsStudent")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("StudentNumber")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("WorkerNumber")
+                        .HasColumnType("int");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasDiscriminator().HasValue("Employee");
+                });
+
+            modelBuilder.Entity("Library.core.Model.Patient", b =>
+                {
+                    b.HasBaseType("Library.core.Model.ApplicationUser");
+
+                    b.Property<string>("CustomerType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdNumber")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("ImgData")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<bool>("IsStudent")
+                        .HasColumnType("bit")
+                        .HasColumnName("Patient_IsStudent");
+
+                    b.Property<int?>("MedicalFileId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PatientId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasIndex("MedicalFileId");
+
+                    b.HasIndex("PatientId");
+
+                    b.HasDiscriminator().HasValue("Patient");
                 });
 
             modelBuilder.Entity("Library.core.Model.Appointment", b =>
                 {
                     b.HasOne("Library.core.Model.Employee", "Employee")
                         .WithMany()
-                        .HasForeignKey("EmployeeID");
+                        .HasForeignKey("EmployeeId");
 
                     b.HasOne("Library.core.Model.Patient", "Patient")
                         .WithMany()
-                        .HasForeignKey("PatientID");
+                        .HasForeignKey("PatientId");
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("Library.core.Model.Availabilty", b =>
                 {
                     b.HasOne("Library.core.Model.Employee", "Employee")
                         .WithMany()
-                        .HasForeignKey("EmployeeID");
+                        .HasForeignKey("EmployeeId");
+
+                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("Library.core.Model.MedicalFile", b =>
                 {
                     b.HasOne("Library.core.Model.Employee", "IntakeSupervision")
                         .WithMany()
-                        .HasForeignKey("IntakeSupervisionID");
+                        .HasForeignKey("IntakeSupervisionId");
 
                     b.HasOne("Library.core.Model.Employee", "IntakeTherapistId")
                         .WithMany()
-                        .HasForeignKey("IntakeTherapistIdID");
+                        .HasForeignKey("IntakeTherapistIdId");
+
+                    b.Navigation("IntakeSupervision");
+
+                    b.Navigation("IntakeTherapistId");
                 });
 
             modelBuilder.Entity("Library.core.Model.Note", b =>
                 {
                     b.HasOne("Library.core.Model.Employee", "Employee")
                         .WithMany()
-                        .HasForeignKey("EmployeeID");
+                        .HasForeignKey("EmployeeId");
 
                     b.HasOne("Library.core.Model.MedicalFile", null)
                         .WithMany("Notes")
                         .HasForeignKey("MedicalFileId");
-                });
 
-            modelBuilder.Entity("Library.core.Model.Patient", b =>
-                {
-                    b.HasOne("Library.core.Model.MedicalFile", "MedicalFile")
-                        .WithMany()
-                        .HasForeignKey("MedicalFileId");
+                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("Library.core.Model.TreatmentPlan", b =>
@@ -330,7 +395,42 @@ namespace Library.Data.Migrations
 
                     b.HasOne("Library.core.Model.Employee", "TreatmentPerformedBy")
                         .WithMany()
-                        .HasForeignKey("TreatmentPerformedByID");
+                        .HasForeignKey("TreatmentPerformedById");
+
+                    b.Navigation("PracticeRoom");
+
+                    b.Navigation("TreatmentPerformedBy");
+                });
+
+            modelBuilder.Entity("Library.core.Model.Employee", b =>
+                {
+                    b.HasOne("Library.core.Model.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId");
+
+                    b.Navigation("ApplicationUser");
+                });
+
+            modelBuilder.Entity("Library.core.Model.Patient", b =>
+                {
+                    b.HasOne("Library.core.Model.MedicalFile", "MedicalFile")
+                        .WithMany()
+                        .HasForeignKey("MedicalFileId");
+
+                    b.HasOne("Library.core.Model.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("PatientId");
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("MedicalFile");
+                });
+
+            modelBuilder.Entity("Library.core.Model.MedicalFile", b =>
+                {
+                    b.Navigation("Notes");
+
+                    b.Navigation("TreatmentPlans");
                 });
 #pragma warning restore 612, 618
         }

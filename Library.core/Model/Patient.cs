@@ -1,27 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 
 namespace Library.core.Model
 {
     // Add profile data for application users by adding properties to the Patient class
-    public class Patient
+    public class Patient : ApplicationUser
     {
-        [Key]
-        public int ID { get; set; }
+        [ForeignKey("ApplicationUser")]
+        public string PatientId { get; set; }
 
-        [Required]
-        public string Email { get; set; }
-
-        [MaxLength(250)]
-        public string FirstName { get; set; }
-
-        [MaxLength(250)]
-        public string SurName { get; set; }
+        public string CustomerType { get; set; }
 
         //http://binaryintellect.net/articles/2f55345c-1fcb-4262-89f4-c4319f95c5bd.aspx
         public byte[]? ImgData { get; set; }
@@ -35,5 +23,7 @@ namespace Library.core.Model
         public bool IsStudent { get; set; }
 
         public MedicalFile? MedicalFile { get; set; }
+
+        public virtual ApplicationUser ApplicationUser { get; set; }
     }
 }

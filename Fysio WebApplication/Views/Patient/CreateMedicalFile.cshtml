@@ -27,6 +27,7 @@
                 <input asp-for="DateOfDischarge" class="form-control" />
                 <span asp-validation-for="DateOfDischarge" class="text-danger"></span>
             </div>
+            <input value="@Html.Raw(ViewBag.PatientId)" name="PatientId" type="hidden" />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -35,6 +36,6 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a href="javascript:history.go(-1)">Back</a>
 </div>
 

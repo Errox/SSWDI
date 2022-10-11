@@ -1,7 +1,7 @@
-﻿using HotChocolate.Types.Descriptors;
+﻿using Fysio_Codes.DAL;
 using HotChocolate.Types;
+using HotChocolate.Types.Descriptors;
 using System.Reflection;
-using Fysio_Codes.DAL;
 
 namespace Avans_Fysio_WebService.GraphQL.Extensions
 {

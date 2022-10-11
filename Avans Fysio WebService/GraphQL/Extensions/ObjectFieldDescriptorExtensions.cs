@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using HotChocolate.Types;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using HotChocolate.Types;
 
 namespace Avans_Fysio_WebService.GraphQL.Extensions
 {

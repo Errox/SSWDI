@@ -1,0 +1,80 @@
+﻿@model RegisterEmployeeModel
+@{
+    ViewData["Title"] = "Register new Employee";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+
+<form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Account details.</h2>
+            <hr />
+            <div class="form-group">
+                <label asp-for="@Model.Email"></label>
+                <input asp-for="@Model.Email" class="form-control" autocomplete="username" aria-required="true" />
+                <span asp-validation-for="@Model.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Password"></label>
+                <input asp-for="@Model.Password" class="form-control" autocomplete="new-password" aria-required="true" />
+                <span asp-validation-for="@Model.Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.ConfirmPassword"></label>
+                <input asp-for="@Model.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" />
+                <span asp-validation-for="@Model.ConfirmPassword" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.PhoneNumber"></label>
+                <input asp-for="@Model.PhoneNumber" class="form-control" autocomplete="tel" aria-required="true" />
+                <span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h3>Employee details.</h3>
+            <hr />
+            <div class="form-group">
+                <label asp-for="@Model.FirstName"></label>
+                <input asp-for="@Model.FirstName" class="form-control" autocomplete="given-name" aria-required="true" />
+                <span asp-validation-for="@Model.FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.SurName"></label>
+                <input asp-for="@Model.SurName" class="form-control" autocomplete="family-name" aria-required="true" />
+                <span asp-validation-for="@Model.SurName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.IsStudent"></label>
+                <input asp-for="@Model.IsStudent" class="form-control" onclick="ChangeRegisterNumber()" aria-required="true" />
+                <span asp-validation-for="@Model.IsStudent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label id="RegistrationNumber">BIG Number</label>
+                <input asp-for="@Model.StudentBIGNumber" class="form-control" autocomplete="registration-number" aria-required="true" />
+                <span asp-validation-for="@Model.StudentBIGNumber" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        function ChangeRegisterNumber() {
+            // Get the checkbox
+            var checkBox = document.getElementById("IsStudent");
+            // Get the output text
+            var text = document.getElementById("RegistrationNumber");
+            // If the checkbox is checked, display the output text
+            if (checkBox.checked == true) {
+                text.textContent = "Student Number";
+            } else {
+                text.textContent = "BIG Number";
+            }
+        }
+    </script>
+}

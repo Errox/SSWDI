@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Library.core.Model;
+﻿using Library.core.Model;
 using Library.Data.Dal;
 using Library.Domain.Repositories;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Library.Data.Repositories
 {

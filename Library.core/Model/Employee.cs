@@ -1,24 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Library.core.Model
 {
     // Add profile data for application users by adding properties to the Employee class
-    public class Employee
+    public class Employee : ApplicationUser
     {
-        [Key]
-        public int ID { get; set; }
+        [ForeignKey("ApplicationUser")]
+        public string EmployeeId { get; set; }
 
-        [Required]
-        public string Email { get; set; }
-
-        public string FirstName { get; set; }
-
-        public string SurName { get; set; }
+        public string? EmployeeType { get; set; }
 
         public int? WorkerNumber { get; set; }
 
@@ -28,5 +19,7 @@ namespace Library.core.Model
 
         [Required]
         public bool IsStudent { get; set; }
+
+        public virtual ApplicationUser ApplicationUser { get; set; }
     }
 }

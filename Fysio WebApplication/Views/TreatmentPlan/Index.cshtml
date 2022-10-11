@@ -34,7 +34,7 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+    @foreach (var item in Model) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Type)
@@ -46,7 +46,7 @@
                 @Html.DisplayFor(modelItem => item.Particularities)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TreatmentPerformedBy)
+                @Html.DisplayNameFor(modelItem => item.TreatmentPerformedBy.ApplicationUser.FirstName) @Html.DisplayNameFor(Modelitem => item.TreatmentPerformedBy.ApplicationUser.SurName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.TreatmentDate)
@@ -55,10 +55,13 @@
                 @Html.DisplayFor(modelItem => item.AmountOfTreatmentsPerWeek)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.Id  }) |
+                @if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
+                {
+                    @Html.ActionLink("Edit", "Edit", new { id=item.Id  })
+                }
                 @Html.ActionLink("Details", "Details", new { id=item.Id }) 
             </td>
         </tr>
-}
+    }
     </tbody>
 </table>

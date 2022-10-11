@@ -5,10 +5,12 @@
 }
 
 <h1>View</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+@if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
+{
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+}
 <table class="table">
     <thead>
         <tr>
@@ -32,7 +34,10 @@
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
-                    @Html.ActionLink("Edit", "Edit", new { id=item.Id}) |
+                    @if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
+                    {
+                        @Html.ActionLink("Edit | ", "Edit", new { id=item.Id})
+                    }
                     @Html.ActionLink("Details", "Details", new { id=item.Id})
                 </td>
             </tr>
