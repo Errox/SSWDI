@@ -56,11 +56,11 @@ namespace Avans_Fysio_WebService
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
-                    Title = "Avans Fysio WebService",
+                    Title = "Avans Fysio Webservice",
                     Description = "A simple API made for the Diagnosis and treatments. Used by the Fysio Web Application.",
                     Contact = new OpenApiContact
                     {
-                        Name = "GIT repo",
+                        Name = "Github repo URL ",
                         Email = string.Empty,
                         Url = new Uri("https://github.com/Errox/SSWDI"),
                     }
