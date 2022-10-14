@@ -1,5 +1,7 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Xml.Linq;
 
 namespace Library.core.Model
 {
@@ -12,14 +14,19 @@ namespace Library.core.Model
         public string CustomerType { get; set; }
 
         //http://binaryintellect.net/articles/2f55345c-1fcb-4262-89f4-c4319f95c5bd.aspx
+        [Display(Name = "Patients image of their face.")]
         public byte[]? ImgData { get; set; }
 
+        [Display(Name = "Patients ID number")]
         public int IdNumber { get; set; }
 
+        [Display(Name = "Patients birthdate")]
         public DateTime DateOfBirth { get; set; }
 
+        [Display(Name = "Patients gender")]
         public EnumGender.Gender Gender { get; set; }
 
+        [Display(Name = "If patient is a student.")]
         public bool IsStudent { get; set; }
 
         public MedicalFile? MedicalFile { get; set; }

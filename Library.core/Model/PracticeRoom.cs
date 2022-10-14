@@ -8,6 +8,7 @@ namespace Library.core.Model
         public int Id { get; set; }
 
         [MaxLength(250)]
+        [Display(Name = "Name of the practice room.")]
         public string Name { get; set; }
 
     }
