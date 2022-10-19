@@ -27,21 +27,21 @@ namespace Fysio_WebApplication
         public void ConfigureServices(IServiceCollection services)
         {
             
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //    options.UseSqlServer(
-            //        Configuration.GetConnectionString("ApplicationDevConnection")));
-
-            //services.AddDbContext<AppIdentityDbContext>(options =>
-            //    options.UseSqlServer(
-            //        Configuration.GetConnectionString("IdentityDevConnection")));
-
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("ApplicationConnection")));
+                    Configuration.GetConnectionString("ApplicationDevConnection")));
 
             services.AddDbContext<AppIdentityDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("IdentityConnection")));
+                    Configuration.GetConnectionString("IdentityDevConnection")));
+
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("ApplicationConnection")));
+
+            //services.AddDbContext<AppIdentityDbContext>(options =>
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("IdentityConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppIdentityDbContext>()
@@ -59,6 +59,12 @@ namespace Fysio_WebApplication
                           policy => policy.RequireClaim("UserType", "Employee", "Student"));
                  });
 
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/auth/Login";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+            });
+
 
             // Setup Controller and Razor pages
             services.AddControllersWithViews();
@@ -67,6 +73,7 @@ namespace Fysio_WebApplication
 
             // Dependency injection 
             services.AddTransient<IAppointmentsRepository, EFAppointmentRepository>();
+            services.AddTransient<IAvailabilityRepository, EFAvailabilityRepository>();
             services.AddTransient<ITreatmentPlanRepository, EFTreatmentPlanRepository>();
             services.AddTransient<IPracticeRoomRepository, EFPracticeRoomRepository>();
             services.AddTransient<IPatientRepository, EFPatientRepository>();
@@ -99,6 +106,7 @@ namespace Fysio_WebApplication
 
             app.UseAuthentication();
             app.UseAuthorization();
+            
 
             app.UseEndpoints(endpoints =>
             {

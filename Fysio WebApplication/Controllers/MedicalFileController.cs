@@ -95,7 +95,7 @@ namespace Fysio_WebApplication.Controllers
             //var request = new RestRequest(Method.GET);
             //IRestResponse response = await client.ExecuteAsync(request);
             //Diagnosis diagnosis = JsonConvert.DeserializeObject<Diagnosis>(response.Content);
-
+            //TODO Fix the pathelogical thing. Diagnose code stuff.
             ////Send them towards the view
             //ViewBag.BodyLocation = "TODO";//diagnosis.BodyLocation;
             //ViewBag.Pathology = "TODO";//diagnosis.Pathology;
@@ -107,12 +107,12 @@ namespace Fysio_WebApplication.Controllers
             if (User.HasClaim("UserType", "Patient"))
             {
                 // Get the patient.
-
                 Patient patient = _patientRepository.Patients.Include(m => m.MedicalFile).FirstOrDefault(x => x.PatientId == User.FindFirstValue(ClaimTypes.NameIdentifier));
 
                 // Check if the patient medicalfile is the same as the user
                 if (patient.MedicalFile.Id == id) return View(_repo.GetMedicalFile(id));
             }
+
             return RedirectToAction("AccessDenied", "Error");
         }
 
@@ -140,7 +140,6 @@ namespace Fysio_WebApplication.Controllers
             }
         }
 
-
         [Authorize]
         [Route("[Controller]/Notes/{id}")]
         public ActionResult Notes(int id)
@@ -154,9 +153,7 @@ namespace Fysio_WebApplication.Controllers
 
 
             MedicalFile file = _repo.MedicalFiles.Include(c1 => c1.Notes).FirstOrDefault(i => i.Id == id);
-
-
-            // TODO: Double check if student can watch every note's 
+            
             if (User.HasClaim("UserType", "Patient") || User.HasClaim("UserType", "Student"))
             {
                 return View(file.Notes.Where(x => x.OpenForPatient == true));
@@ -165,7 +162,6 @@ namespace Fysio_WebApplication.Controllers
             // Return all notes for this medical thing
             return View(file.Notes);
         }
-
 
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
         [HttpGet]
@@ -225,7 +221,6 @@ namespace Fysio_WebApplication.Controllers
             return View(file.TreatmentPlans);
         }
 
-
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
         [HttpGet]
         [Route("[Controller]/TreatmentPlanNew/{id}")]
@@ -279,5 +274,8 @@ namespace Fysio_WebApplication.Controllers
             //Return view
             return Redirect("/MedicalFile/TreatmentPlan/" + file);
         }
+
+
+
     }
 }

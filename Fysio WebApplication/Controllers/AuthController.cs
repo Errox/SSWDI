@@ -160,7 +160,7 @@ namespace Fysio_WebApplication.Controllers
 
                     _employeeRepo.AddEmployee(employee);
 
-                    await _userManager.AddClaimAsync(user, EmployeeUserClaim);
+                    //await _userManager.AddClaimAsync(user, EmployeeUserClaim);
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -222,7 +222,7 @@ namespace Fysio_WebApplication.Controllers
                         ms.Close();
                         ms.Dispose();
                     }
-
+                    
                     _patientRepo.AddPatient(patient);
                     
                     // Patient page where password and information is shown. This page can be printed for the patient to login later. 

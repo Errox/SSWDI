@@ -21,7 +21,7 @@ namespace Library.Data.Dal
 
         public DbSet<Appointment> Appointments { get; set; }
 
-        public DbSet<Availabilty> Availabilties { get; set; }
+        public DbSet<Availability> Availabilties { get; set; }
 
         public DbSet<Patient> Patients { get; set; }
 

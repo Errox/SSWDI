@@ -1,0 +1,49 @@
+﻿@model Library.core.Model.Appointment
+
+@{
+    ViewData["Title"] = "Detail";
+}
+
+<h1>Detail</h1>
+
+<div>
+    <h4>MedicalFile</h4>
+    <hr />
+    <p> You have a appointment. </p>
+    <dl class="row">
+        <dt class="col-sm-2">
+            Patient
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Patient.ApplicationUser.FirstName) @Html.DisplayFor(model => model.Patient.ApplicationUser.SurName)
+        </dd>
+        <dt class="col-sm-2">
+            Employee
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Employee.ApplicationUser.FirstName) @Html.DisplayFor(model => model.Employee.ApplicationUser.SurName)
+        </dd>
+        <dt class="col-sm-2">
+            Date
+        </dt>
+        <dd class="col-sm-10">
+            @ViewBag.Date    
+        </dd>
+        <dt class="col-sm-2">
+            Time
+        </dt>
+        <dd class="col-sm-10">
+            @ViewBag.StartTime - @ViewBag.StopTime
+        </dd>
+        <dt class="col-sm-2">
+            Cancel appointment.
+        </dt>
+        <dd class="col-sm-10">
+            Do cancel thing. ALso check if it's 24 hours before timeslot. Else be like, bruh, can't do that shit man. 
+            <!-- Html.ActionLink("All Treatmentplans", "Treatmentplan", new { id = Model.Id })-->
+        </dd>
+    </dl>
+</div>
+<div>
+    <a href="javascript:history.go(-1)">Back</a>
+</div>

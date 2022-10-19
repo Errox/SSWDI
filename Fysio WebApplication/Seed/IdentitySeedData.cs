@@ -160,7 +160,7 @@ namespace Fysio_WebApplication.Seed
                 patient.IdNumber = 2000081;
                 patient.Gender = EnumGender.Gender.Male;
                 patient.DateOfBirth = DateTime.Now.AddYears(-18);
-                patient.IsStudent = false;
+                patient.IsStudent = true;
                 patient.ApplicationUser = result;
                 // Save patient in context
                 appContext.Patients.Add(patient);
@@ -168,9 +168,9 @@ namespace Fysio_WebApplication.Seed
 
                 await userManager.AddClaimAsync(userPatient, patientUserClaim);
             }
-
+            var mc = new SeedData();
             // ensure database populated
-            SeedData.EnsurePopulatedApplicationAsync(app);
+            mc.EnsurePopulatedApplicationAsync(app);
         }
     }
 }

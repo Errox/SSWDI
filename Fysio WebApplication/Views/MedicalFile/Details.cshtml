@@ -65,6 +65,7 @@
         </dt>
         <dd class="col-sm-10">
             @Html.ActionLink("All Notes", "Notes", new { id = Model.Id }) 
+            <b> | </b>
             @if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
             {
                 @Html.ActionLink("Add Note", "NotesNew", new { id = Model.Id })
@@ -74,11 +75,18 @@
             TreatmentPlan
         </dt>
         <dd class="col-sm-10">
-            @Html.ActionLink("All Treatmentplans", "Treatmentplan", new { id = Model.Id }) 
+            @Html.ActionLink("All Treatmentplans", "Treatmentplan", new { id = Model.Id })
+            <b> | </b>
             @if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
             {
                 @Html.ActionLink("Add treatmentplan", "TreatmentplanNew", new { id = Model.Id })
             }
+        </dd>
+        <dt class="col-sm-2">
+            Appointment
+        </dt>
+        <dd class="col-sm-10">
+            @Html.ActionLink("Appointment", "Appointment", new { id = Model.Id })
         </dd>
     </dl>
 </div>
