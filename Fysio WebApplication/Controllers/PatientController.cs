@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Security.Claims;
 
 namespace Fysio_WebApplication.Controllers
@@ -16,13 +17,20 @@ namespace Fysio_WebApplication.Controllers
         private IPatientRepository _patientRepo;
         private IMedicalFileRepository _medicalFileRepo;
         private IEmployeeRepository _employeeRepo;
+        private IAppointmentsRepository _appointmentRepo;
         private readonly IAuthorizationService _authorizationService;
 
-        public PatientController(IPatientRepository repo, IMedicalFileRepository medicalFile, IEmployeeRepository employeeRepository, IAuthorizationService authorizationService)
+        public PatientController(
+            IPatientRepository repo, 
+            IMedicalFileRepository medicalFile, 
+            IEmployeeRepository employeeRepository,
+            IAppointmentsRepository appointmentRepository,
+            IAuthorizationService authorizationService)
         {
             _patientRepo = repo;
             _medicalFileRepo = medicalFile;
             _employeeRepo = employeeRepository;
+            _appointmentRepo = appointmentRepository;
             _authorizationService = authorizationService;
         }
 
@@ -167,6 +175,8 @@ namespace Fysio_WebApplication.Controllers
         [Route("[Controller]/MedicalFileNew/{patientId}")]
         public ActionResult MedicalFileNew(int patientId)
         {
+
+            // TODO: Get the webservice data in it too. 
             // To create a new medical file for the patient. 
             ViewBag.Url = "/Patient/MedicalFileNew/" + patientId;
             ViewBag.PatientId = patientId;
@@ -178,12 +188,12 @@ namespace Fysio_WebApplication.Controllers
         [Route("[Controller]/MedicalFileNew/{id}")]
         public ActionResult MedicalFileNew(int id, MedicalFile file)
         {
+            // TODO: Get the webservice data in it too. 
             // Get the current logged in.
             string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             //Create new plan because somehow it'll take the medicalFile ID and places it in the model instead of keeping it empty to insert in the DB
             MedicalFile medicalFile = new MedicalFile { Description = file.Description, DiagnosisCode = file.DiagnosisCode, DateOfDischarge = file.DateOfDischarge };
-
 
             Employee employee = _employeeRepo.GetEmployee(userId);
 
@@ -200,10 +210,7 @@ namespace Fysio_WebApplication.Controllers
                 medicalFile.IntakeTherapistId = employee;
             }
 
-
             _medicalFileRepo.AddMedicalFile(medicalFile);
-
-
 
             //Add the Treatmentplan to the medicalFile
             Patient patient = _patientRepo.Patients.Include(i => i.MedicalFile).FirstOrDefault(i => i.IdNumber == id);
@@ -213,6 +220,7 @@ namespace Fysio_WebApplication.Controllers
             //Return view
             return Redirect("/MedicalFile/Details/" + medicalFile.Id);
         }
+
 
     }
 }

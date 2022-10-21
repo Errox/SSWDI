@@ -22,7 +22,7 @@ namespace Fysio_WebApplication.Controllers
         private IAppointmentsRepository _repo;
         private IAvailabilityRepository _availabilityRepository;
         private IEmployeeRepository _employeeRepository;
-        private IPatientRepository _petientRepository;
+        private IPatientRepository _patientRepository;
         private IAppointmentsRepository _appointmentRepository;
 
         public AppointmentController(
@@ -35,7 +35,7 @@ namespace Fysio_WebApplication.Controllers
             _repo = repo;
             _availabilityRepository = availabilityRepository;
             _employeeRepository = employeeRepository;
-            _petientRepository = patientRepository;
+            _patientRepository = patientRepository;
             _appointmentRepository = appointmentRepository;
         }
 
@@ -56,7 +56,7 @@ namespace Fysio_WebApplication.Controllers
             // Here we get the patient into making a appointment with the doctor. 
             string Patient = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            Patient currentlyLoggedIn = _petientRepository.Patients
+            Patient currentlyLoggedIn = _patientRepository.Patients
                 .Include(x => x.MedicalFile)
                     .ThenInclude(x => x.IntakeTherapistId)
                         .ThenInclude(x => x.ApplicationUser)
@@ -102,10 +102,9 @@ namespace Fysio_WebApplication.Controllers
                 .Include(x => x.Employee)
                     .ThenInclude(x => x.ApplicationUser)
                 .FirstOrDefault(x => x.Id == Id);
-
-            // TODO: get the availability and turn it into a appointment.
+            
             string patient = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            Patient currentlyLoggedIn = _petientRepository.Patients
+            Patient currentlyLoggedIn = _patientRepository.Patients
                 .Include(x => x.MedicalFile)
                     .ThenInclude(x => x.IntakeTherapistId)
                         .ThenInclude(x => x.ApplicationUser)
@@ -154,33 +153,74 @@ namespace Fysio_WebApplication.Controllers
             }
         }
 
-        [Authorize(Policy = "OnlyEmployeeAndStudent")]
+        [Authorize]
         // GET: AppointmentController/Delete/5
-        public ActionResult Delete()
+        public ActionResult Delete(int id)
         {
-            return View();
+            string PatientId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            
+            Appointment patientAppointment = _appointmentRepository.Appointments
+                .Include(x => x.Patient)
+                    .ThenInclude(x => x.ApplicationUser)
+                .FirstOrDefault(x => x.Patient.PatientId == PatientId);
+            
+            if (User.HasClaim("UserType", "Patient"))
+            {
+                // We need to check if the appointment is coming from the patient. 
+                if (patientAppointment is null)
+                {
+                    // This aint the patient's appointment. Access Denied
+                    return RedirectToAction("AccessDenied", "Account");
+                }
+            }
+
+            // Redirect to medical file
+            return View(_appointmentRepository.GetAppointment(id));
         }
 
         // POST: AppointmentController/Delete/5
-        [Authorize(Policy = "OnlyEmployeeAndStudent")]
+        [Authorize]
         [HttpPost]
         public ActionResult Delete(int id, Appointment collection)
         {
-            try
+            // Delete for a appointment. 
+
+            // When it's a patient, we need to check if it's 24 hours before the appointment, else it's canceled with a warning. 
+
+            // When it's a employee, it's okay (this can be discussed with a patient for curcumstances, but this is just to be in case of emergency or whatever).
+
+            Appointment appointment = _appointmentRepository.
+                Appointments
+                .Include(x => x.TimeSlot)
+                .Include(x => x.Patient)
+                    .ThenInclude(x => x.ApplicationUser)
+                .Include(x => x.Employee)
+                    .ThenInclude(x => x.ApplicationUser)
+                .FirstOrDefault(x => x.Id == id);
+
+            DateTime now = DateTime.Now;
+            if (appointment.TimeSlot.StartAvailability > now.AddHours(-24) && User.HasClaim("UserType", "Patient"))
             {
-                _repo.DeleteAppointment(id);
-                return RedirectToAction(nameof(Index));
+                // If the appointment is within 24 hours, we can't delete it. 
+                ViewBag.Error = "You can't remove a appointment within 24 hours of the appointment.";
+                return RedirectToAction("Details", "Appointment");
             }
-            catch
-            {
-                return View();
-            }
+            // Get the availability and reset it back to use it for another patient.
+            Availability availability = appointment.TimeSlot;
+            availability.Patient = null;
+            availability.IsAvailable = true;
+
+            _availabilityRepository.UpdateAvailability(availability);
+
+            _appointmentRepository.DeleteAppointment(appointment.Id);
+            
+            ViewBag.Success = "Appointment has been deleted.";
+            return RedirectToAction("Index", "Home");
         }
 
         [Authorize(Policy = "RequirePatientRole")]
         public ActionResult Details()
         {
-            // Maybe different views for roles. Or just a redirect for the employee.
             Appointment appointment = _appointmentRepository.Appointments
                 .Include(x => x.Patient)
                     .ThenInclude(x => x.ApplicationUser)
@@ -188,11 +228,12 @@ namespace Fysio_WebApplication.Controllers
                 .Include(x => x.Employee)
                     .ThenInclude(x => x.ApplicationUser)
                 .FirstOrDefault(x => x.Patient.PatientId == this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            
             if(appointment is null)
             {
-                // Redirect to create. 
                 return RedirectToAction("Create", "Appointment");
             }
+
             ViewBag.StartTime = appointment.TimeSlot.StartAvailability.ToString("t");
             ViewBag.StopTime = appointment.TimeSlot.StopAvailability.ToString("t");
             ViewBag.Date = appointment.TimeSlot.StartAvailability.ToString("d");
@@ -211,11 +252,6 @@ namespace Fysio_WebApplication.Controllers
         // POST: Appointment/Availability
         public ActionResult Availability(AvailabilityModel model)
         {
-            // These can be selected by a patient by "Selecting employee" -> Get the times available for a employee
-            //      -> "Select a time" -> "Select a date" -> "submit". 
-
-            // Getting from collection the DateTimeStart and round it to either 00 or 30
-
             string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             Employee employee = _employeeRepository.GetEmployee(userId);
             

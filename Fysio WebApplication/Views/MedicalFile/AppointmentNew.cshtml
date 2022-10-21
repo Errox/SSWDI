@@ -10,8 +10,8 @@
 <hr />
 <div class="row">
     <div class="col-md-6">
-        <form asp-action="Create">
-            <p>Make a appointment with your therapist : @ViewBag.Patient.MedicalFile.IntakeTherapistId.ApplicationUser.FirstName @ViewBag.Patient.MedicalFile.IntakeTherapistId.ApplicationUser.SurName</p>
+        <form action="@ViewBag.PostUrl" method="post">
+            <p>Make a appointment with your Patient : @ViewBag.Patient.ApplicationUser.FirstName @ViewBag.Patient.ApplicationUser.SurName</p>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <p>Please pick a TimeSlot.</p>
             <select asp-for="Id" asp-items="@(ViewBag.Brands)">
@@ -31,5 +31,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }
