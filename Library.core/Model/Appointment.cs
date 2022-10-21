@@ -12,6 +12,7 @@ namespace Library.core.Model
 
         public Employee Employee { get; set; }
 
-        public DateTime Date { get; set; }
+        public Availability TimeSlot { get; set; }
+
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Library.core.Model;
 using Library.Data.Dal;
 using Library.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -43,6 +44,30 @@ namespace Library.Data.Repositories
         {
             _context.Add(appointment);
             _context.SaveChanges();
+        }
+
+        public Appointment GetAppointmentsByPatientId(string userId)
+        {
+            return _context.Appointments
+                .Include(x => x.Employee)
+                    .ThenInclude(x => x.ApplicationUser)
+                .Include(x => x.Patient)
+                    .ThenInclude(x => x.ApplicationUser)
+                .Include(x => x.TimeSlot)
+                .FirstOrDefault(a => a.Patient.PatientId == userId);
+        }
+
+        public IEnumerable<Appointment> GetAppointmentsByEmployeeId(string employeeId)
+        {
+            return _context.Appointments
+                .Include(x => x.Employee)
+                    .ThenInclude(x => x.ApplicationUser)
+                .Include(x => x.Patient)
+                    .ThenInclude(x => x.ApplicationUser)
+                .Include(x => x.Patient)
+                    .ThenInclude(x => x.MedicalFile)
+                .Include(x => x.TimeSlot)
+                .Where(a => a.Employee.EmployeeId == employeeId);
         }
     }
 }

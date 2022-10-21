@@ -1,5 +1,16 @@
 {
   "version": "1.0",
   "defaultProvider": "cdnjs",
-  "libraries": []
+  "libraries": [{
+  "provider": "cdnjs",
+  "library": "jquery-timepicker@1.14.0",
+  "destination": "wwwroot/jquery-timepicker/"
+}
+,
+{
+  "provider": "cdnjs",
+  "library": "jquery-timepicker@1.14.0",
+  "destination": "wwwroot/lib/jquery-timepicker/"
+}
+]
 }
