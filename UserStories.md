@@ -149,21 +149,3 @@ opgenomen. De scriptstappen zullen worden gecommuniceerd.
 
 Bovenstaande producten ingepakt in I zipfile met de volgende naam:
 <klas> - <voomaam + achternaam> - IVT2-1-FysioApp.zip
-
-
-## User stories done. 
-- [x] US_01
-- [ ] US_02
-- [ ] US_03
-- [ ] US_04
-- [x] US_05
-- [ ] US_06
-
-
-## Business rules done.
-- [ ] BR_1
-- [ ] BR_2
-- [ ] BR_3
-- [ ] BR_4
-- [x] BR_5 // Just the test needs to be made
-- [ ] BR_6
