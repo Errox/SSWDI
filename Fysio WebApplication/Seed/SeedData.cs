@@ -11,7 +11,7 @@ namespace Fysio_WebApplication.Seed
 {
     public class SeedData
     {
-        public static async void EnsurePopulatedApplicationAsync(IApplicationBuilder app)
+        public async void EnsurePopulatedApplicationAsync(IApplicationBuilder app)
         {
             UserManager<ApplicationUser> userManager = app.ApplicationServices
                 .CreateScope().ServiceProvider
@@ -198,41 +198,99 @@ namespace Fysio_WebApplication.Seed
 
                 patient2.MedicalFile = medicalFile2;
                 appContext.Patients.Update(patient2);
+                
+                // Since there is quite a lot of logic to be made when making Availability.
+                // I've extracted the code from the controller and placed in it's own function. 
+                // Makes the code a little cleaner. 
+                // And yes, I know it's better when all the other models should be in a function too...
+                LoopAvailability(employee, appContext, 5);
+                LoopAvailability(student, appContext, 2);
+                
 
+                
+                // Find a availability for employee
+                Availability availabilityEmployee = appContext.Availabilties.Where(x => x.IsAvailable == true).FirstOrDefault(x => x.Employee == employee); // TODO: where isavailable 1. 
+                Availability availabilityStudent = appContext.Availabilties.Where(x => x.IsAvailable == true).FirstOrDefault(x => x.Employee == student);
+
+                // Get a timeSlot for patient 1, this one is for employee 1.
+
+                // Get a second TimeSlot for patient 2, this one is for employee 2 (student).
+
+                // TODO: Fix the renewal of appointments. 
                 Appointment appointment1 = new Appointment
                 {
                     Patient = patient1,
                     Employee = employee,
-                    Date = DateTime.Now.AddDays(1)
+                    TimeSlot = availabilityEmployee,
                 };
                 appContext.Add(appointment1);
+                
+                availabilityEmployee.IsAvailable = false;
+                // TODO: When apointment set, set availabilityEmployee IsAvailable to 0 .
 
                 Appointment appointment2 = new Appointment
                 {
                     Patient = patient2,
                     Employee = student,
-                    Date = DateTime.Now.AddDays(1)
+                    TimeSlot = availabilityStudent,
                 };
                 appContext.Add(appointment2);
+                availabilityStudent.IsAvailable = false;
 
-                Availabilty availabiltyEmployee = new Availabilty
-                {
-                    Employee = employee,
-                    StartAvailability = DateTime.Now.AddDays(-7),
-                    StopAvailability = DateTime.Now.AddDays(2)
-                };
-                appContext.Add(availabiltyEmployee);
-
-                Availabilty availabiltyStudent = new Availabilty
-                {
-                    Employee = employee,
-                    StartAvailability = DateTime.Now.AddDays(-7),
-                    StopAvailability = DateTime.Now.AddDays(2)
-                };
-                appContext.Add(availabiltyStudent);
-
-                appContext.SaveChanges();
+                await appContext.SaveChangesAsync();
             }
+
+        }
+
+        public void LoopAvailability(Employee employee, ApplicationDbContext appContext, int stopDays, int startHour = 8, int stopHour = 17)
+        {
+            DateTime dateNow = DateTime.Now;
+            
+            DateTime dateStart = new DateTime(
+                year: dateNow.Year,
+                month: dateNow.Month,
+                day: dateNow.Day);
+            
+            DateTime dateStop = DateTime.Now.AddDays(stopDays);
+
+            DateTime dateTimeStart = new DateTime(
+                year: dateNow.Year,
+                month: dateNow.Month,
+                day: dateNow.Day,
+                hour: startHour,
+                minute: 0,
+                second: 0);
+            
+            DateTime dateTimeStop = new DateTime(
+                year: dateNow.Year,
+                month: dateNow.Month,
+                day: dateNow.Day,
+                hour: stopHour,
+                minute: 30,
+                second: 0);
+            
+            //List<Availability> availabilities = null;
+            //{ 18 / 10 / 2022 8:00:00 AM} // Today with only hours set. 
+
+            while (dateStart < dateStop.AddDays(1))
+            {
+                DateTime DateTimeStartHour = dateTimeStart;
+                while (DateTimeStartHour < dateTimeStop)
+                {
+                    DateTime CurrentDateTime = dateStart.AddHours(DateTimeStartHour.Hour).AddMinutes(DateTimeStartHour.Minute);
+                    Availability availability = new Availability
+                    {
+                        Employee = employee,
+                        StartAvailability = CurrentDateTime,
+                        StopAvailability = CurrentDateTime.AddMinutes(30), // We add 30 minutes because of a treatment takes a 30 minutes slot. 
+                        IsAvailable = true
+                    };
+                    appContext.Availabilties.Add(availability);
+                    DateTimeStartHour = DateTimeStartHour.AddMinutes(30); // Here we add another 30 minutes, to start the next treatment. Slots of 30 minutes are there not only to treat te patient, but also to clean up, do administration, etc.
+                }
+                dateStart = dateStart.AddDays(1);
+            }
+            appContext.SaveChangesAsync();
         }
     }
 }

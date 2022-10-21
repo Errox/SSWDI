@@ -1,11 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Library.Data.Migrations
 {
-    public partial class init : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -75,31 +75,6 @@ namespace Library.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Appointments",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PatientId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    EmployeeId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Appointments", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Appointments_ApplicationUser_EmployeeId",
-                        column: x => x.EmployeeId,
-                        principalTable: "ApplicationUser",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Appointments_ApplicationUser_PatientId",
-                        column: x => x.PatientId,
-                        principalTable: "ApplicationUser",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Availabilties",
                 columns: table => new
                 {
@@ -107,7 +82,9 @@ namespace Library.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     EmployeeId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     StartAvailability = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    StopAvailability = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    StopAvailability = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsAvailable = table.Column<bool>(type: "bit", nullable: false),
+                    PatientId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -115,6 +92,11 @@ namespace Library.Data.Migrations
                     table.ForeignKey(
                         name: "FK_Availabilties_ApplicationUser_EmployeeId",
                         column: x => x.EmployeeId,
+                        principalTable: "ApplicationUser",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Availabilties_ApplicationUser_PatientId",
+                        column: x => x.PatientId,
                         principalTable: "ApplicationUser",
                         principalColumn: "Id");
                 });
@@ -144,6 +126,36 @@ namespace Library.Data.Migrations
                         name: "FK_MedicalFiles_ApplicationUser_IntakeTherapistIdId",
                         column: x => x.IntakeTherapistIdId,
                         principalTable: "ApplicationUser",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Appointments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PatientId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    EmployeeId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    TimeSlotId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Appointments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Appointments_ApplicationUser_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "ApplicationUser",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Appointments_ApplicationUser_PatientId",
+                        column: x => x.PatientId,
+                        principalTable: "ApplicationUser",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Appointments_Availabilties_TimeSlotId",
+                        column: x => x.TimeSlotId,
+                        principalTable: "Availabilties",
                         principalColumn: "Id");
                 });
 
@@ -183,8 +195,8 @@ namespace Library.Data.Migrations
                     Type = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     PracticeRoomId = table.Column<int>(type: "int", nullable: true),
-                    Particularities = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TreatmentPerformedById = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Particularities = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TreatmentPerformedById = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     TreatmentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     AmountOfTreatmentsPerWeek = table.Column<int>(type: "int", nullable: false),
                     MedicalFileId = table.Column<int>(type: "int", nullable: true)
@@ -196,7 +208,8 @@ namespace Library.Data.Migrations
                         name: "FK_TreatmentPlans_ApplicationUser_TreatmentPerformedById",
                         column: x => x.TreatmentPerformedById,
                         principalTable: "ApplicationUser",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_TreatmentPlans_MedicalFiles_MedicalFileId",
                         column: x => x.MedicalFileId,
@@ -235,9 +248,19 @@ namespace Library.Data.Migrations
                 column: "PatientId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Appointments_TimeSlotId",
+                table: "Appointments",
+                column: "TimeSlotId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Availabilties_EmployeeId",
                 table: "Availabilties",
                 column: "EmployeeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Availabilties_PatientId",
+                table: "Availabilties",
+                column: "PatientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MedicalFiles_IntakeSupervisionId",
@@ -292,13 +315,13 @@ namespace Library.Data.Migrations
                 name: "Appointments");
 
             migrationBuilder.DropTable(
-                name: "Availabilties");
-
-            migrationBuilder.DropTable(
                 name: "Notes");
 
             migrationBuilder.DropTable(
                 name: "TreatmentPlans");
+
+            migrationBuilder.DropTable(
+                name: "Availabilties");
 
             migrationBuilder.DropTable(
                 name: "PracticeRooms");
