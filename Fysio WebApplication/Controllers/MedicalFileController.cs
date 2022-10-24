@@ -1,4 +1,5 @@
-﻿using Library.core.Model;
+﻿using Fysio_Codes.Models;
+using Library.core.Model;
 using Library.Data.Repositories;
 using Library.Domain.Repositories;
 using Microsoft.AspNetCore.Authorization;
@@ -6,6 +7,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,10 +58,18 @@ namespace Fysio_WebApplication.Controllers
                     .ThenInclude(i => i.ApplicationUser)
                 .Include(i => i.IntakeTherapistId)
                     .ThenInclude(i => i.ApplicationUser);
+
             if (User.HasClaim("UserType", "Patient"))
             {
                 Patient patient = _patientRepository.Patients.Include(m => m.MedicalFile).FirstOrDefault(x => x.PatientId == User.FindFirstValue(ClaimTypes.NameIdentifier));
-                return Redirect("/MedicalFile/Details/" + patient.MedicalFile.Id);
+                if(patient.MedicalFile is not null) 
+                {
+                    return Redirect("/MedicalFile/Details/" + patient.MedicalFile.Id);
+                }
+                else
+                {
+                    return RedirectToAction("NoMedicalFile", "Error");
+                }
             }
             return View(files);
         }
@@ -98,19 +109,18 @@ namespace Fysio_WebApplication.Controllers
             .Include(i => i.IntakeTherapistId)
                 .ThenInclude(c => c.ApplicationUser)
             .FirstOrDefault(i => i.Id == id);
+            
 
 
-            // TODO: Make this into a graphql. 
             //Fetch the diagnosis containing the code
-            //var client = new RestClient($"https://avansfysioservice.azurewebsites.net/api/Diagnosis/"+medical.DiagnosisCode);
-            //var request = new RestRequest(Method.GET);
-            //IRestResponse response = await client.ExecuteAsync(request);
-            //Diagnosis diagnosis = JsonConvert.DeserializeObject<Diagnosis>(response.Content);
-            //TODO Fix the pathelogical thing. Diagnose code stuff.
-            ////Send them towards the view
-            //ViewBag.BodyLocation = "TODO";//diagnosis.BodyLocation;
-            //ViewBag.Pathology = "TODO";//diagnosis.Pathology;
+            var client = new RestClient("https://fysiowebservice.azurewebsites.net/api");
+            var request = new RestRequest("/Diagnosis/" + medical.DiagnosisCode, Method.Get);
+            RestResponse response = await client.ExecuteAsync(request);
+            Diagnosis diagnosis = JsonConvert.DeserializeObject<Diagnosis>(response.Content);
+            //Send them towards the             
 
+            ViewBag.BodyLocation = diagnosis.BodyLocation;
+            ViewBag.Pathology = diagnosis.Pathology;
 
             if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student")) return View(_repo.GetMedicalFile(id));
 
@@ -150,6 +160,45 @@ namespace Fysio_WebApplication.Controllers
             {
                 return View();
             }
+        }
+
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
+        public ActionResult Create()
+        {
+            // TODO: Query from GraphQLRequest (same as medicalfilenewasync);
+            return View();
+        }
+
+        [Authorize(Policy = "OnlyEmployeeAndStudent")]
+        [HttpPost]
+        public ActionResult Create(MedicalFile file)
+        {
+            // TODO: Get the webservice data in it too. 
+            // Get the current logged in.
+            string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            //Create new plan because somehow it'll take the medicalFile ID and places it in the model instead of keeping it empty to insert in the DB
+            MedicalFile medicalFile = new MedicalFile { Description = file.Description, DiagnosisCode = file.DiagnosisCode, DateOfDischarge = file.DateOfDischarge, DateOfCreation = DateTime.Now, PatientEmail = file.PatientEmail };
+
+            Employee employee = _employeeRepo.GetEmployee(userId);
+
+            if (employee.IsStudent)
+            {
+                //First employee that's not a student. This is just the stage begeleider
+                medicalFile.IntakeSupervision = _employeeRepo.Employees.FirstOrDefault(i => i.IsStudent == false);
+                // Then save the Student into the therapist. Only a employee that supervised over the patient is different when it's a student.
+                medicalFile.IntakeTherapistId = employee;
+            }
+            else
+            {
+                medicalFile.IntakeSupervision = employee;
+                medicalFile.IntakeTherapistId = employee;
+            }
+
+            _repo.AddMedicalFile(medicalFile);
+            
+            //Return view
+            return Redirect("/MedicalFile/Details/" + medicalFile.Id);
         }
 
         [Authorize]
@@ -218,12 +267,17 @@ namespace Fysio_WebApplication.Controllers
         [Route("[Controller]/TreatmentPlan/{id}")]
         public ActionResult TreatmentPlan(int id)
         {
-            Patient patient = _patientRepository.Patients
-                .Include(m => m.MedicalFile)
-                    .ThenInclude(c2 => c2.TreatmentPlans)
-                .FirstOrDefault(x => x.PatientId == User.FindFirstValue(ClaimTypes.NameIdentifier));
-            
-            if (patient.MedicalFile.Id != id) return RedirectToAction("AccessDenied", "Error");
+            // If user is patient. Then check if it's allowed to see the document
+            // A patient can only watch it's own treatmentplans.
+            if(User.HasClaim("UserType", "Patient"))
+            {
+                Patient patient = _patientRepository.Patients
+                    .Include(m => m.MedicalFile)
+                        .ThenInclude(c2 => c2.TreatmentPlans)
+                    .FirstOrDefault(x => x.PatientId == User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+                if (patient.MedicalFile.Id != id) return RedirectToAction("AccessDenied", "Error");
+            }
 
             // Return all TreatmentPlan for this medical File
             MedicalFile file = _repo.MedicalFiles.Include(c1 => c1.TreatmentPlans).ThenInclude(i => i.PracticeRoom).FirstOrDefault(i => i.Id == id);
@@ -293,6 +347,12 @@ namespace Fysio_WebApplication.Controllers
             // getting the appointment that might be set on this medical file.
             Patient patient = _patientRepository.Patients.Include(x => x.MedicalFile).FirstOrDefault(x => x.MedicalFile.Id == id);
 
+            if(patient is null)
+            {
+                ViewBag.Error = "Patient hasn't created a account yet. Please wait for the patient to create a account or make one.";
+                return Redirect("/Auth/RegisterPatient/");
+            }
+
             Appointment appointment = _appointmentsRepository.Appointments
                 .Include(x=> x.Employee)
                     .ThenInclude(x=> x.ApplicationUser)
@@ -321,6 +381,7 @@ namespace Fysio_WebApplication.Controllers
             // A new appointment on this medical file / patient. 
             Patient patient = _patientRepository.Patients.Include(x => x.MedicalFile).FirstOrDefault(x => x.MedicalFile.Id == id);
             // Here we get the patient into making a appointment with the doctor. 
+
 
             Patient currentlyLoggedIn = _patientRepository.Patients
                 .Include(x => x.MedicalFile)

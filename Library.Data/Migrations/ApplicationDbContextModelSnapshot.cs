@@ -175,6 +175,9 @@ namespace Library.Data.Migrations
                     b.Property<string>("IntakeTherapistIdId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("PatientEmail")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("IntakeSupervisionId");

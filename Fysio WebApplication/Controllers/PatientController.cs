@@ -1,13 +1,20 @@
-﻿using Library.core.Model;
+﻿using Fysio_Codes.Models;
+using GraphQL;
+using GraphQL.Client.Abstractions;
+using Library.core.GraphQL.ResponseTypes;
+using Library.core.Model;
 using Library.Domain.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Fysio_WebApplication.Controllers
 {
@@ -19,18 +26,21 @@ namespace Fysio_WebApplication.Controllers
         private IEmployeeRepository _employeeRepo;
         private IAppointmentsRepository _appointmentRepo;
         private readonly IAuthorizationService _authorizationService;
+        private readonly IGraphQLClient _client;
 
         public PatientController(
             IPatientRepository repo, 
             IMedicalFileRepository medicalFile, 
             IEmployeeRepository employeeRepository,
             IAppointmentsRepository appointmentRepository,
+            IGraphQLClient client,
             IAuthorizationService authorizationService)
         {
             _patientRepo = repo;
             _medicalFileRepo = medicalFile;
             _employeeRepo = employeeRepository;
             _appointmentRepo = appointmentRepository;
+            _client = client;
             _authorizationService = authorizationService;
         }
 
@@ -44,6 +54,7 @@ namespace Fysio_WebApplication.Controllers
         // GET: PatientController/Details/5
         public ActionResult DetailsAsync(int id)
         {
+            // TODO: Get the Diagnoses thing
             // Get person who's logged in
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             Patient LoggedInPatient = _patientRepo.Patients.FirstOrDefault(f => f.PatientId == userId);
@@ -86,7 +97,6 @@ namespace Fysio_WebApplication.Controllers
                 // User is not allowed to see the details of the patient
                 return RedirectToAction("AccessDenied", "Error");
             }
-            // TODO: Make it possible for patient to watch it's own appointments. 
         }
 
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
@@ -173,13 +183,35 @@ namespace Fysio_WebApplication.Controllers
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
         [HttpGet]
         [Route("[Controller]/MedicalFileNew/{patientId}")]
-        public ActionResult MedicalFileNew(int patientId)
+        public async Task<ActionResult> MedicalFileNewAsync(int patientId)
         {
 
             // TODO: Get the webservice data in it too. 
             // To create a new medical file for the patient. 
+
+            var query = new GraphQLRequest
+            {
+                Query = @"
+                query GetAllDiag{
+                  diagnoses {
+                      id,
+                      bodyLocation,
+                      code,
+                      pathology
+                  }
+                }"
+            };
+
+            
+            var response = await _client.SendQueryAsync<ResponseDiagnosisCollectionType>(query);
+
+
+            SelectList selectlist = new SelectList(response.Data.Diagnoses, "Code", "DisplayBodyAndPathology");
+
+            ViewBag.Diagnoses = selectlist;
             ViewBag.Url = "/Patient/MedicalFileNew/" + patientId;
             ViewBag.PatientId = patientId;
+
             return View("CreateMedicalFile");
         }
 

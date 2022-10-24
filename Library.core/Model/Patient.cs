@@ -28,7 +28,7 @@ namespace Library.core.Model
 
         [Display(Name = "If patient is a student.")]
         public bool IsStudent { get; set; }
-
+        
         public MedicalFile? MedicalFile { get; set; }
 
         public virtual ApplicationUser ApplicationUser { get; set; }

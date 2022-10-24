@@ -13,8 +13,9 @@ SSWDI
 # To do list:
 - [ ] Finish the TODO: in the project.
   - [ ] Make the link with webservice
+  - [ ] Double check the names used in models because now it's just weird long texts's 
 - [ ] Make diagrams
-- [ ] Make the API Richardson Level 2
+- [x] Make the API Richardson Level 2
 - [ ] Make tests based on interfaces.
 - [ ] Double check the user stories 
 - [ ] Double check the Business Rules
@@ -41,10 +42,11 @@ SSWDI
 
 
 ## Business rules done.
-- [ ] BR_1 
+- [ ] BR_1 // Appointments can only be set when treatmentplan amount is set.
+  - [ ] Create patients appointment for that week, that amount check if its < then treatmentsperweek.  
 - [x] BR_2
-- [ ] BR_3
-- [ ] BR_4
+- [ ] BR_3 // Only check the "After treatment is finished/ended date check" part.
+- [ ] BR_4 // Make the description mandetory if webservice is asking for it.
 - [x] BR_5 // Just the test needs to be made
 - [x] BR_6 // Just the test needs to be made
 
@@ -67,3 +69,56 @@ beschikbaarheid en de reeds gemaakte afspraken.
 | IiroCharmian@student.nl   |  Student  |   "Secret1234!" |
 | olaEliza@hotmail.com  | Patient |    "Secret1234!" |
 | sriJudd@hotmail.com   | Patient |    "Secret1234!" |
+
+
+
+## graphql examples
+
+### Get a single diagnosis
+query GetTreat($code : String!){
+  treatmentByCode(code: $code){
+    code,
+    description
+  }
+}
+
+### Get a single diagnosis
+query GetDiag($id : Int!){
+  diagnosesByCode(id: $id){
+    ...diagnoses2
+  }
+}
+
+### Get all Treatments
+query GetAllTreat{
+  treatments {
+    code
+    description
+  }
+}
+
+### Get all Diagnosis
+query GetAllDiag{
+  diagnoses {
+    ...diagnoses2
+  }
+}
+
+### Fragment example
+fragment diagnoses2 on Diagnosis{
+  id,
+  bodyLocation,
+  code,
+  pathology
+}
+
+### Mutating example
+mutation MutateDiagnosis($diagnosis : DiagnosisInput!){
+  addDiagnosis(input: $diagnosis) {
+    diagnosis {
+      code,
+      bodyLocation,
+      pathology
+    }
+  }
+}

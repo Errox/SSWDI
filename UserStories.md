@@ -22,8 +22,8 @@ Een fysiotherapeut/student moet de status van een patiént/dossier bij kunnen we
 systeem betekent dit concreet:
 De gegevens van de patiént moeten aan kunnen worden gepast.
 Een behandeling moet in kunnen worden gevoerd bij het patiéntdossier.
-Bestaande behandelingen moeten kunnen worden gewijzigd of verwijderd. Dit mag alleen op
-dezelfde dag als de behandeling gemaakt is, orn correcties mogelijk te maken.
+**Bestaande behandelingen moeten kunnen worden gewijzigd of verwijderd. Dit mag alleen op
+dezelfde dag als de behandeling gemaakt is, orn correcties mogelijk te maken.**
 Opmerkingen moeten bij het patiéntdossier kunnen worden geplaatst, De opmerkingen zijn
 read-only, dus eenmaal geplaatste opmerkingen kunnen NIET worden aangepast.
 Een nieuwe afspraak moet kunnen worden gemaakt (IJS_06).

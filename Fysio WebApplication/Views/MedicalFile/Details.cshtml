@@ -26,13 +26,13 @@
             Body Location
         </dt>
         <dd class="col-sm-10">
-            @* @Html.Raw(ViewBag.BodyLocation)*@
+            @Html.Raw(ViewBag.BodyLocation)
         </dd>
         <dt class="col-sm-2">
             Pathology
         </dt>
         <dd class="col-sm-10">
-             @* @Html.Raw(ViewBag.Pathology)*@
+            @Html.Raw(ViewBag.Pathology)
         </dd>
         @*Maybe in the future the therapist can be linked towards his viewable acocunt?*@
         <dt class="col-sm-2">
@@ -64,8 +64,10 @@
             Notes
         </dt>
         <dd class="col-sm-10">
-            @Html.ActionLink("All Notes", "Notes", new { id = Model.Id }) 
-            <b> | </b>
+            @if(Model.Notes.Count() > 0){
+                @Html.ActionLink("All Notes", "Notes", new { id = Model.Id })
+                <b> | </b>
+            }
             @if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
             {
                 @Html.ActionLink("Add Note", "NotesNew", new { id = Model.Id })
@@ -75,8 +77,11 @@
             TreatmentPlan
         </dt>
         <dd class="col-sm-10">
-            @Html.ActionLink("All Treatmentplans", "Treatmentplan", new { id = Model.Id })
-            <b> | </b>
+            @if (Model.TreatmentPlans.Count() > 0)
+            {
+                @Html.ActionLink("All Treatmentplans", "Treatmentplan", new { id = Model.Id })
+                <b> | </b>
+            }
             @if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
             {
                 @Html.ActionLink("Add treatmentplan", "TreatmentplanNew", new { id = Model.Id })
@@ -93,7 +98,8 @@
 <div>
     @if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
     {
-        @Html.ActionLink("Edit | ", "Edit", new { id = Model.Id })
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Id })
+        <b> | </b>
         <a href="javascript:history.go(-1)">Back</a>
     }
     

@@ -44,5 +44,10 @@ namespace Library.Data.Repositories
             _context.Add(medicalFile);
             _context.SaveChanges();
         }
+
+        public MedicalFile GetMedicalFileByEmail(string email)
+        {
+            return _context.MedicalFiles.FirstOrDefault(i => i.PatientEmail == email);
+        }
     }
 }

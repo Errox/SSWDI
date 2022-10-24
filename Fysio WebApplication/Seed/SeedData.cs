@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Fysio_WebApplication.Seed
 {
@@ -198,25 +199,32 @@ namespace Fysio_WebApplication.Seed
 
                 patient2.MedicalFile = medicalFile2;
                 appContext.Patients.Update(patient2);
-                
+
+                // Make a medical file without a patient
+                // This file doesn't have a lot of data, but it's to show functionallity of the medical file and that it can be added.
+                MedicalFile medicalFile3 = new MedicalFile
+                {
+                    Description = "Gevallen van de fiets. Ribben geraakt en veel pijn in de rug.",
+                    DiagnosisCode = 2236,
+                    IntakeTherapistId = student,
+                    IntakeSupervision = employee,
+                    DateOfCreation = DateTime.Now.AddDays(-4),
+                    DateOfDischarge = DateTime.Now.AddDays(1),
+                    PatientEmail = "jaquelin.pfannerstill@gmail.com",
+                };
+                appContext.Add(medicalFile3);
+
                 // Since there is quite a lot of logic to be made when making Availability.
                 // I've extracted the code from the controller and placed in it's own function. 
                 // Makes the code a little cleaner. 
                 // And yes, I know it's better when all the other models should be in a function too...
-                LoopAvailability(employee, appContext, 5);
-                LoopAvailability(student, appContext, 2);
-                
-
-                
-                // Find a availability for employee
-                Availability availabilityEmployee = appContext.Availabilties.Where(x => x.IsAvailable == true).FirstOrDefault(x => x.Employee == employee); // TODO: where isavailable 1. 
+                await LoopAvailability(employee, appContext, 5);
+                await LoopAvailability(student, appContext, 5);
+                                
+                // Find a availability for employee but also for the student. 
+                Availability availabilityEmployee = appContext.Availabilties.Where(x => x.IsAvailable == true).FirstOrDefault(x => x.Employee == employee); 
                 Availability availabilityStudent = appContext.Availabilties.Where(x => x.IsAvailable == true).FirstOrDefault(x => x.Employee == student);
-
-                // Get a timeSlot for patient 1, this one is for employee 1.
-
-                // Get a second TimeSlot for patient 2, this one is for employee 2 (student).
-
-                // TODO: Fix the renewal of appointments. 
+                
                 Appointment appointment1 = new Appointment
                 {
                     Patient = patient1,
@@ -226,7 +234,6 @@ namespace Fysio_WebApplication.Seed
                 appContext.Add(appointment1);
                 
                 availabilityEmployee.IsAvailable = false;
-                // TODO: When apointment set, set availabilityEmployee IsAvailable to 0 .
 
                 Appointment appointment2 = new Appointment
                 {
@@ -242,7 +249,7 @@ namespace Fysio_WebApplication.Seed
 
         }
 
-        public void LoopAvailability(Employee employee, ApplicationDbContext appContext, int stopDays, int startHour = 8, int stopHour = 17)
+        public Task LoopAvailability(Employee employee, ApplicationDbContext appContext, int stopDays, int startHour = 8, int stopHour = 17)
         {
             DateTime dateNow = DateTime.Now;
             
@@ -290,7 +297,8 @@ namespace Fysio_WebApplication.Seed
                 }
                 dateStart = dateStart.AddDays(1);
             }
-            appContext.SaveChangesAsync();
+            appContext.SaveChanges();
+            return Task.CompletedTask;
         }
     }
 }

@@ -112,7 +112,8 @@ namespace Library.Data.Migrations
                     IntakeTherapistIdId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     IntakeSupervisionId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     DateOfCreation = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DateOfDischarge = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    DateOfDischarge = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    PatientEmail = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {

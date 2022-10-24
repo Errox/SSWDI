@@ -22,5 +22,11 @@ namespace Fysio_WebApplication.Controllers
         {
             return View();
         }
+
+        [Route("Account/NoMedicalFile")]
+        public IActionResult NoMedicalFile()
+        {
+            return View();
+        }
     }
 }

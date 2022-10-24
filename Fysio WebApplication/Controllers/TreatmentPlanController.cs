@@ -39,6 +39,7 @@ namespace Fysio_WebApplication.Controllers
                 .FirstOrDefault(i => i.Id == id);
 
             var client = new RestClient($"https://avansfysioservice.azurewebsites.net/api/Treatment/" + treatmentPlan.Type);
+            // TODO: FIX THIS
             //var request = new RestRequest(Method.GET);
             //IRestResponse response = await client.ExecuteAsync(request);
             //Treatment treatment = JsonConvert.DeserializeObject<Treatment>(response.Content);
@@ -54,6 +55,7 @@ namespace Fysio_WebApplication.Controllers
         // GET: TreatmentController/Create
         public ActionResult Create()
         {
+            // TODO: give list of treatments
             return View();
         }
 
@@ -83,6 +85,7 @@ namespace Fysio_WebApplication.Controllers
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
         public ActionResult Edit(int id)
         {
+            // TODO: give list of treatments. 
             return View(_treatmentPlanRepo.GetTreatmentPlan(id));
         }
 

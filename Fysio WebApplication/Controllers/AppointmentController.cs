@@ -61,7 +61,12 @@ namespace Fysio_WebApplication.Controllers
                     .ThenInclude(x => x.IntakeTherapistId)
                         .ThenInclude(x => x.ApplicationUser)
                 .FirstOrDefault(x => x.PatientId == Patient);
-
+            
+            if(currentlyLoggedIn.MedicalFile is null)
+            {
+                // access denied, no medicalfile yet. 
+                return RedirectToAction("NoMedicalFile", "Error");
+            }
             // Check if the patient already has a appointment.
             if (_appointmentRepository.Appointments
                 .FirstOrDefault(x => x.Patient.PatientId == Patient) != null)
