@@ -1,9 +1,13 @@
 ﻿using Fysio_Codes.Models;
+using GraphQL;
+using GraphQL.Client.Abstractions;
+using Library.core.GraphQL.ResponseTypes;
 using Library.core.Model;
 using Library.Data.Repositories;
 using Library.Domain.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +31,7 @@ namespace Fysio_WebApplication.Controllers
         private INotesRepository _notesRepository;
         private IAppointmentsRepository _appointmentsRepository;
         private IAvailabilityRepository _availabilityRepository;
+        private readonly IGraphQLClient _client;
         private IPracticeRoomRepository _practiceRoomRepository;
 
         public MedicalFileController(
@@ -36,6 +41,7 @@ namespace Fysio_WebApplication.Controllers
             ITreatmentPlanRepository treatmentPlanRepository,
             INotesRepository notesRepository,
             IAppointmentsRepository appointmentsRepository,
+            IGraphQLClient client,
             IAvailabilityRepository availabilityRepository,
             IPracticeRoomRepository practiceRoomRepository)
         {
@@ -45,6 +51,7 @@ namespace Fysio_WebApplication.Controllers
             _treatmentPlanRepository = treatmentPlanRepository;
             _notesRepository = notesRepository;
             _appointmentsRepository = appointmentsRepository;
+            _client = client;
             _availabilityRepository = availabilityRepository;
             _practiceRoomRepository = practiceRoomRepository;
         }
@@ -139,10 +146,30 @@ namespace Fysio_WebApplication.Controllers
 
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
         // GET: MedicalFile/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> EditAsync(int id)
         {
-            // TODO: Get the webservice data in it too. Either from graphql or API. 
-            return View(_repo.GetMedicalFile(id));
+            MedicalFile file = _repo.GetMedicalFile(id);
+            var query = new GraphQLRequest
+            {
+                Query = @"
+                query GetAllDiag{
+                  diagnoses {
+                      id,
+                      bodyLocation,
+                      code,
+                      pathology
+                  }
+                }"
+            };
+   
+            var response = await _client.SendQueryAsync<ResponseDiagnosisCollectionType>(query);
+            SelectList selectlist = new SelectList(response.Data.Diagnoses, "Code", "DisplayBodyAndPathology");
+            
+            var selected = selectlist.Where(x => x.Value == file.DiagnosisCode.ToString()).First();
+            selected.Selected = true;
+            
+            ViewBag.Diagnoses = selectlist;
+            return View(file);
         }
 
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
@@ -163,9 +190,26 @@ namespace Fysio_WebApplication.Controllers
         }
 
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
-            // TODO: Query from GraphQLRequest (same as medicalfilenewasync);
+            var query = new GraphQLRequest
+            {
+                Query = @"
+                query GetAllDiag{
+                  diagnoses {
+                      id,
+                      bodyLocation,
+                      code,
+                      pathology
+                  }
+                }"
+            };
+
+            var response = await _client.SendQueryAsync<ResponseDiagnosisCollectionType>(query);
+
+            SelectList selectlist = new SelectList(response.Data.Diagnoses, "Code", "DisplayBodyAndPathology");
+
+            ViewBag.Diagnoses = selectlist;
             return View();
         }
 
@@ -173,7 +217,6 @@ namespace Fysio_WebApplication.Controllers
         [HttpPost]
         public ActionResult Create(MedicalFile file)
         {
-            // TODO: Get the webservice data in it too. 
             // Get the current logged in.
             string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -290,8 +333,24 @@ namespace Fysio_WebApplication.Controllers
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
         [HttpGet]
         [Route("[Controller]/TreatmentPlanNew/{id}")]
-        public ActionResult TreatmentPlanNew(int id)
+        public async Task<ActionResult> TreatmentPlanNewAsync(int id)
         {
+            var query = new GraphQLRequest
+            {
+                Query = @"
+                query GetAllTreat{
+                  treatments {
+                    code
+                    description
+                  }
+                }"
+            };
+
+            var response = await _client.SendQueryAsync<ResponseTreatmentCollectionType>(query);
+
+            SelectList selectlist = new SelectList(response.Data.Treatments, "Code", "Description");
+
+            ViewBag.Treatments = selectlist;
             ViewBag.Url = "/MedicalFile/TreatmentPlanNew/" + id;
             return View();
         }

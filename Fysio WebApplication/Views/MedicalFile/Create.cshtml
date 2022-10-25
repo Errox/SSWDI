@@ -18,8 +18,11 @@
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DiagnosisCode" class="control-label"></label>
-                <input asp-for="DiagnosisCode" class="form-control" />
+                <label class="control-label">Diagnose</label>
+                <select class="form-control" asp-for="DiagnosisCode" asp-items="@(ViewBag.Diagnoses)">
+                    <!--Not for edit:-->
+                    <option disabled selected>Please select one</option>
+                </select>
                 <span asp-validation-for="DiagnosisCode" class="text-danger"></span>
             </div>
             <div class="form-group">

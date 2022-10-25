@@ -6,13 +6,13 @@ SSWDI
 
 
 # Avans Fysio
-
+This piece of software is made for the fysio project. This project includes a webservice and a website. Within the webservice, we want to emulate a way of a dutch standard of diagnoses and treatments for those diagnoses. It's possible with a API Richard level 2 to fetch data you need. But provides a way of a modern standard with GraphQL. The website provides a way of having employee's and patients. The employee's can create diagnoses and treatments for those diagnoses. The patients can view their diagnoses and treatments. 
 
 
 
 # To do list:
-- [ ] Finish the TODO: in the project.
-  - [ ] Make the link with webservice
+- [X] Finish the TODO: in the project.
+  - [X] Make the link with webservice
   - [ ] Double check the names used in models because now it's just weird long texts's 
 - [ ] Make diagrams
 - [x] Make the API Richardson Level 2
@@ -20,10 +20,11 @@ SSWDI
 - [ ] Double check the user stories 
 - [ ] Double check the Business Rules
 - [ ] Make tests for the business rules
-- [ ] Write a good Readme
+- [x] Write a good Readme
 - [ ] Give the site a little makeover
-- [ ] Button on MedicalFile on patients profile to check appointments.
-
+- [x] Make a nice logo
+- [x] Make Postman collection
+- [ ] make it either dutch or english
 
 
 ## UML Diagrams
@@ -34,7 +35,7 @@ SSWDI
 
 ## User stories done. 
 - [x] US_01
-- [ ] US_02 // Double check if this is done.
+- [X] US_02 
 - [x] US_03
 - [x] US_04
 - [x] US_05

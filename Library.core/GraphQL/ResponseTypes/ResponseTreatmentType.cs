@@ -9,6 +9,6 @@ namespace Library.core.GraphQL.ResponseTypes
 {
     public class ResponseTreatmentType
     {
-        public Treatment Treatment { get; set; }
+        public Treatment treatmentByCode { get; set; }
     }
 }

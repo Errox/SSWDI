@@ -1,0 +1,176 @@
+{
+	"info": {
+		"_postman_id": "36d8e541-89be-4f73-b791-671489ce1b86",
+		"name": "AvansFysio",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5852816"
+	},
+	"item": [
+		{
+			"name": "GRAPHQL",
+			"item": [
+				{
+					"name": "Get Treatment by ID",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query GetTreat($code : String!){\r\n    treatmentByCode(code: $code){\r\n        description\r\n    }\r\n}",
+								"variables": "{\r\n    \"code\": \"1500\"\r\n}"
+							}
+						},
+						"url": {
+							"raw": "https://fysiowebservice.azurewebsites.net/graphql",
+							"protocol": "https",
+							"host": [
+								"fysiowebservice",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Diagnoses by ID",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query GetDiag($id : Int!){\r\n  diagnosesByCode(id: $id){\r\n    ...diagnoses2\r\n  }\r\n}\r\n\r\n\r\nfragment diagnoses2 on Diagnosis{\r\n  id,\r\n  bodyLocation,\r\n  code,\r\n  pathology\r\n}\r\n",
+								"variables": "{\r\n    \"id\": 1500\r\n}"
+							}
+						},
+						"url": {
+							"raw": "https://fysiowebservice.azurewebsites.net/graphql",
+							"protocol": "https",
+							"host": [
+								"fysiowebservice",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All diagnoses",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query GetAllDiag{\r\n  diagnoses {\r\n    ...diagnoses2\r\n  }\r\n}\r\n\r\nfragment diagnoses2 on Diagnosis{\r\n  id,\r\n  bodyLocation,\r\n  code,\r\n  pathology\r\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "https://fysiowebservice.azurewebsites.net/graphql",
+							"protocol": "https",
+							"host": [
+								"fysiowebservice",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Treatments",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query GetAllDiag{\r\n  diagnoses {\r\n    ...diagnoses2\r\n  }\r\n}\r\n\r\nfragment diagnoses2 on Diagnosis{\r\n  id,\r\n  bodyLocation,\r\n  code,\r\n  pathology\r\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "https://fysiowebservice.azurewebsites.net/graphql",
+							"protocol": "https",
+							"host": [
+								"fysiowebservice",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get all diagnosis",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Get specific Diagnosis by code",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Get specific Treatment by code",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Get all Treatments",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query{\r\n    diagnoses{\r\n        id\r\n    }\r\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "https://localhost:44353/graphql",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44353",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

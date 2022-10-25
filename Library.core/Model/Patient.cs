@@ -20,7 +20,7 @@ namespace Library.core.Model
         [Display(Name = "Patients ID number")]
         public int IdNumber { get; set; }
 
-        [Display(Name = "Patients birthdate")]
+        [MinAge(16)]
         public DateTime DateOfBirth { get; set; }
 
         [Display(Name = "Patients gender")]

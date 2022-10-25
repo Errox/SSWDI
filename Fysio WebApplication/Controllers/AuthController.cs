@@ -177,19 +177,11 @@ namespace Fysio_WebApplication.Controllers
             return View(model);
         }
 
-        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         [HttpPost]
         public async Task<IActionResult> RegisterPatient(RegisterPatientModel model)
         {
             if (ModelState.IsValid)
-            {
-                // todo: doesn't work
-                if (model.DateOfBirth.AddYears(16) > DateTime.Now && DateTime.Now.Year - model.DateOfBirth.Year > 16)
-                {
-                    ModelState.AddModelError("", "Patient is younger than 16 years old");
-                    return View(model);
-                }
-                
+            {                
                 ApplicationUser user = new ApplicationUser
                 {
                     UserName = model.Email,
@@ -210,7 +202,6 @@ namespace Fysio_WebApplication.Controllers
 
 
                     ApplicationUser newUser = _userManager.FindByNameAsync(user.UserName).Result;
-
 
                     // Make ID randomly generated. 
                     Random r = new Random();

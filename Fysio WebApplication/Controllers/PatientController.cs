@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -52,9 +54,8 @@ namespace Fysio_WebApplication.Controllers
 
         [Authorize]
         // GET: PatientController/Details/5
-        public ActionResult DetailsAsync(int id)
+        public async Task<ActionResult> DetailsAsync(int id)
         {
-            // TODO: Get the Diagnoses thing
             // Get person who's logged in
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             Patient LoggedInPatient = _patientRepo.Patients.FirstOrDefault(f => f.PatientId == userId);
@@ -74,6 +75,15 @@ namespace Fysio_WebApplication.Controllers
             {
                 //var isAuthorized = await _authorizationService.AuthorizeAsync(User, "Employee");
                 MedicalFile medical = patient.MedicalFile;
+                //Fetch the Treatment containing the code
+                var client = new RestClient("https://fysiowebservice.azurewebsites.net/api");
+                var request = new RestRequest("/Treatment/" + patient.MedicalFile.DiagnosisCode, Method.Get);
+                RestResponse response = await client.ExecuteAsync(request);
+                Diagnosis diagnosis = JsonConvert.DeserializeObject<Diagnosis>(response.Content);
+                //Send them towards the viewbag             
+
+                ViewBag.Diagnosis = diagnosis.DisplayBodyAndPathology;
+                
                 string imageDataURL;
                 if (patient.ImgData == null)
                 {
@@ -185,10 +195,6 @@ namespace Fysio_WebApplication.Controllers
         [Route("[Controller]/MedicalFileNew/{patientId}")]
         public async Task<ActionResult> MedicalFileNewAsync(int patientId)
         {
-
-            // TODO: Get the webservice data in it too. 
-            // To create a new medical file for the patient. 
-
             var query = new GraphQLRequest
             {
                 Query = @"
@@ -202,9 +208,7 @@ namespace Fysio_WebApplication.Controllers
                 }"
             };
 
-            
             var response = await _client.SendQueryAsync<ResponseDiagnosisCollectionType>(query);
-
 
             SelectList selectlist = new SelectList(response.Data.Diagnoses, "Code", "DisplayBodyAndPathology");
 
@@ -220,8 +224,6 @@ namespace Fysio_WebApplication.Controllers
         [Route("[Controller]/MedicalFileNew/{id}")]
         public ActionResult MedicalFileNew(int id, MedicalFile file)
         {
-            // TODO: Get the webservice data in it too. 
-            // Get the current logged in.
             string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             //Create new plan because somehow it'll take the medicalFile ID and places it in the model instead of keeping it empty to insert in the DB
