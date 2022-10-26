@@ -6,12 +6,13 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Fysio_WebApplication.Seed
 {
     public class SeedData
     {
-        public static async void EnsurePopulatedApplicationAsync(IApplicationBuilder app)
+        public async void EnsurePopulatedApplicationAsync(IApplicationBuilder app)
         {
             UserManager<ApplicationUser> userManager = app.ApplicationServices
                 .CreateScope().ServiceProvider
@@ -199,40 +200,105 @@ namespace Fysio_WebApplication.Seed
                 patient2.MedicalFile = medicalFile2;
                 appContext.Patients.Update(patient2);
 
+                // Make a medical file without a patient
+                // This file doesn't have a lot of data, but it's to show functionallity of the medical file and that it can be added.
+                MedicalFile medicalFile3 = new MedicalFile
+                {
+                    Description = "Gevallen van de fiets. Ribben geraakt en veel pijn in de rug.",
+                    DiagnosisCode = 2236,
+                    IntakeTherapistId = student,
+                    IntakeSupervision = employee,
+                    DateOfCreation = DateTime.Now.AddDays(-4),
+                    DateOfDischarge = DateTime.Now.AddDays(1),
+                    PatientEmail = "jaquelin.pfannerstill@gmail.com",
+                };
+                appContext.Add(medicalFile3);
+
+                // Since there is quite a lot of logic to be made when making Availability.
+                // I've extracted the code from the controller and placed in it's own function. 
+                // Makes the code a little cleaner. 
+                // And yes, I know it's better when all the other models should be in a function too...
+                await LoopAvailability(employee, appContext, 5);
+                await LoopAvailability(student, appContext, 5);
+                                
+                // Find a availability for employee but also for the student. 
+                Availability availabilityEmployee = appContext.Availabilties.Where(x => x.IsAvailable == true).FirstOrDefault(x => x.Employee == employee); 
+                Availability availabilityStudent = appContext.Availabilties.Where(x => x.IsAvailable == true).FirstOrDefault(x => x.Employee == student);
+                
                 Appointment appointment1 = new Appointment
                 {
                     Patient = patient1,
                     Employee = employee,
-                    Date = DateTime.Now.AddDays(1)
+                    TimeSlot = availabilityEmployee,
                 };
                 appContext.Add(appointment1);
+                
+                availabilityEmployee.IsAvailable = false;
 
                 Appointment appointment2 = new Appointment
                 {
                     Patient = patient2,
                     Employee = student,
-                    Date = DateTime.Now.AddDays(1)
+                    TimeSlot = availabilityStudent,
                 };
                 appContext.Add(appointment2);
+                availabilityStudent.IsAvailable = false;
 
-                Availabilty availabiltyEmployee = new Availabilty
-                {
-                    Employee = employee,
-                    StartAvailability = DateTime.Now.AddDays(-7),
-                    StopAvailability = DateTime.Now.AddDays(2)
-                };
-                appContext.Add(availabiltyEmployee);
-
-                Availabilty availabiltyStudent = new Availabilty
-                {
-                    Employee = employee,
-                    StartAvailability = DateTime.Now.AddDays(-7),
-                    StopAvailability = DateTime.Now.AddDays(2)
-                };
-                appContext.Add(availabiltyStudent);
-
-                appContext.SaveChanges();
+                await appContext.SaveChangesAsync();
             }
+
+        }
+
+        public Task LoopAvailability(Employee employee, ApplicationDbContext appContext, int stopDays, int startHour = 8, int stopHour = 17)
+        {
+            DateTime dateNow = DateTime.Now;
+            
+            DateTime dateStart = new DateTime(
+                year: dateNow.Year,
+                month: dateNow.Month,
+                day: dateNow.Day);
+            
+            DateTime dateStop = DateTime.Now.AddDays(stopDays);
+
+            DateTime dateTimeStart = new DateTime(
+                year: dateNow.Year,
+                month: dateNow.Month,
+                day: dateNow.Day,
+                hour: startHour,
+                minute: 0,
+                second: 0);
+            
+            DateTime dateTimeStop = new DateTime(
+                year: dateNow.Year,
+                month: dateNow.Month,
+                day: dateNow.Day,
+                hour: stopHour,
+                minute: 30,
+                second: 0);
+            
+            //List<Availability> availabilities = null;
+            //{ 18 / 10 / 2022 8:00:00 AM} // Today with only hours set. 
+
+            while (dateStart < dateStop.AddDays(1))
+            {
+                DateTime DateTimeStartHour = dateTimeStart;
+                while (DateTimeStartHour < dateTimeStop)
+                {
+                    DateTime CurrentDateTime = dateStart.AddHours(DateTimeStartHour.Hour).AddMinutes(DateTimeStartHour.Minute);
+                    Availability availability = new Availability
+                    {
+                        Employee = employee,
+                        StartAvailability = CurrentDateTime,
+                        StopAvailability = CurrentDateTime.AddMinutes(30), // We add 30 minutes because of a treatment takes a 30 minutes slot. 
+                        IsAvailable = true
+                    };
+                    appContext.Availabilties.Add(availability);
+                    DateTimeStartHour = DateTimeStartHour.AddMinutes(30); // Here we add another 30 minutes, to start the next treatment. Slots of 30 minutes are there not only to treat te patient, but also to clean up, do administration, etc.
+                }
+                dateStart = dateStart.AddDays(1);
+            }
+            appContext.SaveChanges();
+            return Task.CompletedTask;
         }
     }
 }

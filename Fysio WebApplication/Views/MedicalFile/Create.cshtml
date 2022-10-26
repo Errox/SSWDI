@@ -1,0 +1,49 @@
+﻿@model Library.core.Model.MedicalFile
+
+@{
+    ViewData["Title"] = "CreateMedicalFile";
+}
+
+<h1>CreateMedicalFile</h1>
+
+<h4>MedicalFile</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form action="/MedicalFile/Create" method="post" novalidate="novalidate">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Diagnose</label>
+                <select class="form-control" asp-for="DiagnosisCode" asp-items="@(ViewBag.Diagnoses)">
+                    <!--Not for edit:-->
+                    <option disabled selected>Please select one</option>
+                </select>
+                <span asp-validation-for="DiagnosisCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DateOfDischarge" class="control-label"></label>
+                <input asp-for="DateOfDischarge" class="form-control" />
+                <span asp-validation-for="DateOfDischarge" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PatientEmail" class="control-label"></label>
+                <input asp-for="PatientEmail" class="form-control" />
+                <span asp-validation-for="PatientEmail" class="text-danger"></span>
+            </div>
+            <hr />
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a href="javascript:history.go(-1)">Back</a>
+</div>
+

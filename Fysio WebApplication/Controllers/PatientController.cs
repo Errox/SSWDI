@@ -1,12 +1,22 @@
-﻿using Library.core.Model;
+﻿using Fysio_Codes.Models;
+using GraphQL;
+using GraphQL.Client.Abstractions;
+using Library.core.GraphQL.ResponseTypes;
+using Library.core.Model;
 using Library.Domain.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using RestSharp;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Fysio_WebApplication.Controllers
 {
@@ -16,13 +26,23 @@ namespace Fysio_WebApplication.Controllers
         private IPatientRepository _patientRepo;
         private IMedicalFileRepository _medicalFileRepo;
         private IEmployeeRepository _employeeRepo;
+        private IAppointmentsRepository _appointmentRepo;
         private readonly IAuthorizationService _authorizationService;
+        private readonly IGraphQLClient _client;
 
-        public PatientController(IPatientRepository repo, IMedicalFileRepository medicalFile, IEmployeeRepository employeeRepository, IAuthorizationService authorizationService)
+        public PatientController(
+            IPatientRepository repo, 
+            IMedicalFileRepository medicalFile, 
+            IEmployeeRepository employeeRepository,
+            IAppointmentsRepository appointmentRepository,
+            IGraphQLClient client,
+            IAuthorizationService authorizationService)
         {
             _patientRepo = repo;
             _medicalFileRepo = medicalFile;
             _employeeRepo = employeeRepository;
+            _appointmentRepo = appointmentRepository;
+            _client = client;
             _authorizationService = authorizationService;
         }
 
@@ -34,7 +54,7 @@ namespace Fysio_WebApplication.Controllers
 
         [Authorize]
         // GET: PatientController/Details/5
-        public ActionResult DetailsAsync(int id)
+        public async Task<ActionResult> DetailsAsync(int id)
         {
             // Get person who's logged in
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -49,12 +69,21 @@ namespace Fysio_WebApplication.Controllers
                     .ThenInclude(i => i.IntakeTherapistId)
                             .ThenInclude(i => i.ApplicationUser)
                 .FirstOrDefault(i => i.IdNumber == id);
-            //return RedirectToAction("AccessDenied", "Error");
+
             // This is either a employee or a unauthorized user. Check if the user is a employee or student
             if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student") || LoggedInPatient.IdNumber == id)
             {
                 //var isAuthorized = await _authorizationService.AuthorizeAsync(User, "Employee");
                 MedicalFile medical = patient.MedicalFile;
+                //Fetch the Treatment containing the code
+                var client = new RestClient("https://fysiowebservice.azurewebsites.net/api");
+                var request = new RestRequest("/Treatment/" + patient.MedicalFile.DiagnosisCode, Method.Get);
+                RestResponse response = await client.ExecuteAsync(request);
+                Diagnosis diagnosis = JsonConvert.DeserializeObject<Diagnosis>(response.Content);
+                //Send them towards the viewbag             
+
+                ViewBag.Diagnosis = diagnosis.DisplayBodyAndPathology;
+                
                 string imageDataURL;
                 if (patient.ImgData == null)
                 {
@@ -78,7 +107,6 @@ namespace Fysio_WebApplication.Controllers
                 // User is not allowed to see the details of the patient
                 return RedirectToAction("AccessDenied", "Error");
             }
-            // TODO: Make it possible for patient to watch it's own appointments. 
         }
 
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
@@ -165,11 +193,29 @@ namespace Fysio_WebApplication.Controllers
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
         [HttpGet]
         [Route("[Controller]/MedicalFileNew/{patientId}")]
-        public ActionResult MedicalFileNew(int patientId)
+        public async Task<ActionResult> MedicalFileNewAsync(int patientId)
         {
-            // To create a new medical file for the patient. 
+            var query = new GraphQLRequest
+            {
+                Query = @"
+                query GetAllDiag{
+                  diagnoses {
+                      id,
+                      bodyLocation,
+                      code,
+                      pathology
+                  }
+                }"
+            };
+
+            var response = await _client.SendQueryAsync<ResponseDiagnosisCollectionType>(query);
+
+            SelectList selectlist = new SelectList(response.Data.Diagnoses, "Code", "DisplayBodyAndPathology");
+
+            ViewBag.Diagnoses = selectlist;
             ViewBag.Url = "/Patient/MedicalFileNew/" + patientId;
             ViewBag.PatientId = patientId;
+
             return View("CreateMedicalFile");
         }
 
@@ -178,12 +224,10 @@ namespace Fysio_WebApplication.Controllers
         [Route("[Controller]/MedicalFileNew/{id}")]
         public ActionResult MedicalFileNew(int id, MedicalFile file)
         {
-            // Get the current logged in.
             string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             //Create new plan because somehow it'll take the medicalFile ID and places it in the model instead of keeping it empty to insert in the DB
             MedicalFile medicalFile = new MedicalFile { Description = file.Description, DiagnosisCode = file.DiagnosisCode, DateOfDischarge = file.DateOfDischarge };
-
 
             Employee employee = _employeeRepo.GetEmployee(userId);
 
@@ -200,10 +244,7 @@ namespace Fysio_WebApplication.Controllers
                 medicalFile.IntakeTherapistId = employee;
             }
 
-
             _medicalFileRepo.AddMedicalFile(medicalFile);
-
-
 
             //Add the Treatmentplan to the medicalFile
             Patient patient = _patientRepo.Patients.Include(i => i.MedicalFile).FirstOrDefault(i => i.IdNumber == id);
@@ -213,6 +254,7 @@ namespace Fysio_WebApplication.Controllers
             //Return view
             return Redirect("/MedicalFile/Details/" + medicalFile.Id);
         }
+
 
     }
 }

@@ -22,8 +22,8 @@ Een fysiotherapeut/student moet de status van een patiént/dossier bij kunnen we
 systeem betekent dit concreet:
 De gegevens van de patiént moeten aan kunnen worden gepast.
 Een behandeling moet in kunnen worden gevoerd bij het patiéntdossier.
-Bestaande behandelingen moeten kunnen worden gewijzigd of verwijderd. Dit mag alleen op
-dezelfde dag als de behandeling gemaakt is, orn correcties mogelijk te maken.
+**Bestaande behandelingen moeten kunnen worden gewijzigd of verwijderd. Dit mag alleen op
+dezelfde dag als de behandeling gemaakt is, orn correcties mogelijk te maken.**
 Opmerkingen moeten bij het patiéntdossier kunnen worden geplaatst, De opmerkingen zijn
 read-only, dus eenmaal geplaatste opmerkingen kunnen NIET worden aangepast.
 Een nieuwe afspraak moet kunnen worden gemaakt (IJS_06).
@@ -149,21 +149,3 @@ opgenomen. De scriptstappen zullen worden gecommuniceerd.
 
 Bovenstaande producten ingepakt in I zipfile met de volgende naam:
 <klas> - <voomaam + achternaam> - IVT2-1-FysioApp.zip
-
-
-## User stories done. 
-- [x] US_01
-- [ ] US_02
-- [ ] US_03
-- [ ] US_04
-- [x] US_05
-- [ ] US_06
-
-
-## Business rules done.
-- [ ] BR_1
-- [ ] BR_2
-- [ ] BR_3
-- [ ] BR_4
-- [x] BR_5 // Just the test needs to be made
-- [ ] BR_6

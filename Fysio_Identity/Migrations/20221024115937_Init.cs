@@ -2,9 +2,9 @@
 
 #nullable disable
 
-namespace Library.Data.Migrations
+namespace Fysio_Identity.Migrations
 {
-    public partial class New : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

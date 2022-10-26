@@ -16,6 +16,18 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Type)
         </dd>
+        <dt class="col-sm-2">
+            Treatment
+        </dt>
+        <dd class="col-sm-10">
+            @ViewBag.Description
+        </dd>
+        <dt class="col-sm-2">
+            Explanation Required
+        </dt>
+        <dd class="col-sm-10">
+            @ViewBag.ExplanationRequired
+        </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Description)
         </dt>
@@ -32,7 +44,7 @@
             Performed By
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayNameFor(model => model.TreatmentPerformedBy.ApplicationUser.FirstName) @Html.DisplayNameFor(model => model.TreatmentPerformedBy.ApplicationUser.SurName)
+            @Model.TreatmentPerformedBy.ApplicationUser.FirstName @Model.TreatmentPerformedBy.ApplicationUser.SurName
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.TreatmentDate)

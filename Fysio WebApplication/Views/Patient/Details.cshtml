@@ -10,7 +10,7 @@
     <h4>Patient</h4>
     <hr />
     <div class="row">
-        <div class="card col-md-6" style="width: 18rem;">
+        <div class="card col-md-6" >
             <img class="card-img-top" src="@ViewBag.ImageDataUrl" alt="Card image cap">
             <div class="card-body">
                 <h5 class="card-title">@Html.DisplayFor(model => model.FirstName) @Html.DisplayFor(model => model.SurName)</h5>
@@ -58,17 +58,20 @@
                         @Html.DisplayFor(model => model.IsStudent)
                     </dd>
                 </dl>
-                @if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
-                {
-                    @* TODO: IF THERE IS ALREADY A MEDICAL FILE, DON'T MAKE A NEW ONE. *@
-                    @Html.ActionLink("Add File | ", "MedicalFileNew", new { id = Model.IdNumber})
-                    <a href="javascript:history.go(-1)">Back</a>
+
+                @if(@Model.MedicalFile is null){
+                    @if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
+                    {
+                        @* TODO: IF THERE IS ALREADY A MEDICAL FILE, DON'T MAKE A NEW ONE. *@
+                        @Html.ActionLink("Add File | ", "MedicalFileNew", new { id = Model.IdNumber})
+                        <a href="javascript:history.go(-1)">Back</a>
+                    }
                 }
             </div>
         </div>
         @if (Model.MedicalFile != null)
         {
-            <div class="card col-md-6" style="width: 18rem;">
+            <div class="card col-md-6">
                 <div class="card-body">
                     <h5 class="card-title">Medical File</h5>
                     <dl class="row">
@@ -82,7 +85,7 @@
                             @Html.DisplayNameFor(model => model.MedicalFile.DiagnosisCode)
                         </dt>
                         <dd class="col-sm-6">
-                            @Html.DisplayFor(model => model.MedicalFile.DiagnosisCode)
+                            @ViewBag.Diagnosis)
                         </dd>
                         <dt class="col-sm-6">
                             Body Location
@@ -127,7 +130,8 @@
                             @Html.ActionLink("All Notes", "Notes", "MedicalFile", new { id = Model.MedicalFile.Id })
                             @if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
                             {
-                                  @Html.ActionLink("| Add Note", "NotesNew", "MedicalFile", new { id = Model.MedicalFile.Id })
+                                <b> | </b>
+                                  @Html.ActionLink("Add Note", "NotesNew", "MedicalFile", new { id = Model.MedicalFile.Id })
                             }
                         </dd>
                         <dt class="col-sm-6">
@@ -141,11 +145,13 @@
                             }
                         </dd>
                     </dl>
-                    @if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
-                    {
-                        @* TODO: IF THERE IS ALREADY A MEDICAL FILE, DON'T MAKE A NEW ONE. *@
-                        @Html.ActionLink("Add File | ", "MedicalFileNew", new { id = Model.IdNumber})
-                        <a href="javascript:history.go(-1)">Back</a>
+                    @if(@Model.MedicalFile is null){
+                        @if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
+                        {
+                            @* TODO: IF THERE IS ALREADY A MEDICAL FILE, DON'T MAKE A NEW ONE. *@
+                            @Html.ActionLink("Add File | ", "MedicalFileNew", new { id = Model.IdNumber})
+                            <a href="javascript:history.go(-1)">Back</a>
+                        }
                     }
             </div>
         </div>

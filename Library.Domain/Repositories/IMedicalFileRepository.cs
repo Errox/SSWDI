@@ -11,5 +11,6 @@ namespace Library.Domain.Repositories
         MedicalFile GetMedicalFile(int id);
         void UpdateMedicalFile(int id, MedicalFile medicalFile);
         void AddMedicalFile(MedicalFile medicalFile);
+        MedicalFile GetMedicalFileByEmail(string email);
     }
 }

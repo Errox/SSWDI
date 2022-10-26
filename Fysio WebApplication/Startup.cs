@@ -1,5 +1,8 @@
 using Fysio_Identity;
 using Fysio_WebApplication.Seed;
+using GraphQL.Client.Abstractions;
+using GraphQL.Client.Http;
+using GraphQL.Client.Serializer.Newtonsoft;
 using Library.core.Model;
 using Library.Data.Dal;
 using Library.Data.Repositories;
@@ -27,46 +30,55 @@ namespace Fysio_WebApplication
         public void ConfigureServices(IServiceCollection services)
         {
             
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //    options.UseSqlServer(
-            //        Configuration.GetConnectionString("ApplicationDevConnection")));
-
-            //services.AddDbContext<AppIdentityDbContext>(options =>
-            //    options.UseSqlServer(
-            //        Configuration.GetConnectionString("IdentityDevConnection")));
-
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("ApplicationConnection")));
+                    Configuration.GetConnectionString("ApplicationDevConnection")));
 
             services.AddDbContext<AppIdentityDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("IdentityConnection")));
+                    Configuration.GetConnectionString("IdentityDevConnection")));
+
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("ApplicationConnection")));
+
+            //services.AddDbContext<AppIdentityDbContext>(options =>
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("IdentityConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppIdentityDbContext>()
                 .AddDefaultTokenProviders();
 
             services.AddAuthorization(options =>
-                 {
-                     options.AddPolicy("RequireEmployeeRole",
-                          policy => policy.RequireClaim("UserType", "Employee"));
-                     options.AddPolicy("RequireStudentRole",
-                          policy => policy.RequireClaim("UserType", "Student"));
-                     options.AddPolicy("RequirePatientRole",
-                          policy => policy.RequireClaim("UserType", "Patient"));
-                     options.AddPolicy("OnlyEmployeeAndStudent",
-                          policy => policy.RequireClaim("UserType", "Employee", "Student"));
-                 });
+            {
+                options.AddPolicy("RequireEmployeeRole",
+                    policy => policy.RequireClaim("UserType", "Employee"));
+                options.AddPolicy("RequireStudentRole",
+                    policy => policy.RequireClaim("UserType", "Student"));
+                options.AddPolicy("RequirePatientRole",
+                    policy => policy.RequireClaim("UserType", "Patient"));
+                options.AddPolicy("OnlyEmployeeAndStudent",
+                    policy => policy.RequireClaim("UserType", "Employee", "Student"));
+            });
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/auth/Login";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+            });
 
 
             // Setup Controller and Razor pages
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();
 
+            // Import graphql client
+            services.AddScoped<IGraphQLClient>(s => new GraphQLHttpClient(Configuration.GetConnectionString("GraphqlUrl"), new NewtonsoftJsonSerializer()));
 
             // Dependency injection 
             services.AddTransient<IAppointmentsRepository, EFAppointmentRepository>();
+            services.AddTransient<IAvailabilityRepository, EFAvailabilityRepository>();
             services.AddTransient<ITreatmentPlanRepository, EFTreatmentPlanRepository>();
             services.AddTransient<IPracticeRoomRepository, EFPracticeRoomRepository>();
             services.AddTransient<IPatientRepository, EFPatientRepository>();
@@ -99,6 +111,7 @@ namespace Fysio_WebApplication
 
             app.UseAuthentication();
             app.UseAuthorization();
+            
 
             app.UseEndpoints(endpoints =>
             {

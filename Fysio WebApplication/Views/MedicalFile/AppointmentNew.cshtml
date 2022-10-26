@@ -1,0 +1,37 @@
+﻿@model Library.core.Model.Availability
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Appointment</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form action="@ViewBag.PostUrl" method="post">
+            <p>Make a appointment with your Patient : @ViewBag.Patient.ApplicationUser.FirstName @ViewBag.Patient.ApplicationUser.SurName</p>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <p>Please pick a TimeSlot.</p>
+            <select asp-for="Id" asp-items="@(ViewBag.Brands)">
+                <!--Not for edit:-->
+                <option disabled selected>Please select one</option>
+            </select>
+            <p></p>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a href="javascript:history.go(-1)">Back</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

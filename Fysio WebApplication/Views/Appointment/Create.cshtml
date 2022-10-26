@@ -1,4 +1,4 @@
-﻿@model Library.core.Model.Appointment
+﻿@model Library.core.Model.Availability
 
 @{
     ViewData["Title"] = "Create";
@@ -9,24 +9,16 @@
 <h4>Appointment</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form asp-action="Create">
+            <p>Make a appointment with your therapist : @ViewBag.Patient.MedicalFile.IntakeTherapistId.ApplicationUser.FirstName @ViewBag.Patient.MedicalFile.IntakeTherapistId.ApplicationUser.SurName</p>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Patient.IdNumber" class="control-label"></label>
-                <input asp-for="Patient.IdNumber" class="form-control" />
-                <span asp-validation-for="Patient.IdNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Employee.Id" class="control-label"></label>
-                <input asp-for="Employee.Id" class="form-control" />
-                <span asp-validation-for="Employee.Id" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Date" class="control-label"></label>
-                <input asp-for="Date" class="form-control" />
-                <span asp-validation-for="Date" class="text-danger"></span>
-            </div>
+            <p>Please pick a TimeSlot.</p>
+            <select asp-for="Id" asp-items="@(ViewBag.Brands)">
+                <!--Not for edit:-->
+                <option disabled selected>Please select one</option>
+            </select>
+            <p></p>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
