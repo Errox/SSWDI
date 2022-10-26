@@ -28,7 +28,7 @@ namespace Fysio_WebApplication.Controllers
             {
                 var appointments = _appointmentRepository.GetAppointmentsByEmployeeId(userId);
                 var appointmentNow = appointments.Where(x => x.TimeSlot.StartAvailability.ToString("d") == System.DateTime.Now.ToString("d"));
-                var appointmentNext = appointments.Where(x => x.TimeSlot.StartAvailability > System.DateTime.Now);
+                var appointmentNext = appointments.Where(x => x.TimeSlot.StartAvailability > System.DateTime.Now.AddDays(1));
                 ViewBag.AppointmentsNow = appointmentNow;
                 ViewBag.AppointmentsNext = appointmentNext;
                 ViewBag.AppointmentsNowCount = appointmentNow.Count();
@@ -41,7 +41,7 @@ namespace Fysio_WebApplication.Controllers
             {
                 var appointments = _appointmentRepository.GetAppointmentsByPatientId(userId);
                 var appointmentNow = appointments.Where(x => x.TimeSlot.StartAvailability.ToString("d") == System.DateTime.Now.ToString("d"));
-                var appointmentNext = appointments.Where(x => x.TimeSlot.StartAvailability > System.DateTime.Now);
+                var appointmentNext = appointments.Where(x => x.TimeSlot.StartAvailability > System.DateTime.Now.AddDays(1));
                 ViewBag.AppointmentsNow = appointmentNow;
                 ViewBag.AppointmentsNext = appointmentNext;
                 ViewBag.AppointmentsNowCount = appointmentNow.Count();

@@ -66,10 +66,10 @@
         <dd class="col-sm-10">
             @if(Model.Notes.Count() > 0){
                 @Html.ActionLink("All Notes", "Notes", new { id = Model.Id })
-                <b> | </b>
             }
             @if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
             {
+                <b> | </b>
                 @Html.ActionLink("Add Note", "NotesNew", new { id = Model.Id })
             }
         </dd>
@@ -80,10 +80,10 @@
             @if (Model.TreatmentPlans.Count() > 0)
             {
                 @Html.ActionLink("All Treatmentplans", "Treatmentplan", new { id = Model.Id })
-                <b> | </b>
             }
             @if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
             {
+                <b> | </b>
                 @Html.ActionLink("Add treatmentplan", "TreatmentplanNew", new { id = Model.Id })
             }
         </dd>
@@ -91,7 +91,8 @@
             Appointment
         </dt>
         <dd class="col-sm-10">
-            @Html.ActionLink("Appointment", "Appointment", new { id = Model.Id })
+            @Html.ActionLink("Details", "Appointment", new { id = Model.Id })
+            <!-- TODO: If there is more treatment things left for the week. Just make a new appointment. -->
         </dd>
     </dl>
 </div>

@@ -10,55 +10,38 @@
     {
         @if (Model is not null || ViewBag.AppointmentsNow is not null || ViewBag.AppointmentsNext is not null)
         {
-            
-            @if (User.HasClaim("UserType", "Patient"))
-            {
-                <h2> Uw afspraken voor vandaag! </h2>
-                <hr />
-                <div class="card" style="width: 50%; margin: auto;">
-                    <h5>U heeft een afspraak met uw therapeut: @Model.Employee.ApplicationUser.FirstName @Model.Employee.ApplicationUser.SurName</h5>
-                    <p>Op: @Model.TimeSlot.StartAvailability.ToString("d")</p>
-                    <p>Tussen: @Model.TimeSlot.StartAvailability.ToString("t") - @Model.TimeSlot.StopAvailability.ToString("t")</p>
-                    @Html.ActionLink("Cancel Appointment", "Delete", "Appointment", new { id = Model.Id })
-                </div>
-
-            }
-            @if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
-            {
-                <h5> Amount of appointments today : @ViewBag.AppointmentsNowCount</h5>
-                <hr/>
-                <div class="row">
-                    @foreach (var stud in ViewBag.AppointmentsNow)
-                    {
-                        <div class="col-md-4">
-                            <div class="card">
-                                <h5>U heeft een afspraak met patient: @stud.Patient.ApplicationUser.FirstName @stud.Patient.ApplicationUser.SurName</h5>
-                                @Html.ActionLink("MedicalFile", "Details", "MedicalFile", new { id = stud.Patient.MedicalFile.Id })
-                                <p>Op: @stud.TimeSlot.StartAvailability.ToString("d")</p>
-                                <p>Tussen: @stud.TimeSlot.StartAvailability.ToString("t") - @stud.TimeSlot.StopAvailability.ToString("t")</p>
-                                @Html.ActionLink("Cancel Appointment", "Delete", "Appointment", new { id = stud.Id })
-                            </div>
+            <h5> Amount of appointments today : @ViewBag.AppointmentsNowCount</h5>
+            <hr/>
+            <div class="row">
+                @foreach (var stud in ViewBag.AppointmentsNow)
+                {
+                    <div class="col-md-4">
+                        <div class="card">
+                            <h5>U heeft een afspraak met patient: @stud.Patient.ApplicationUser.FirstName @stud.Patient.ApplicationUser.SurName</h5>
+                            @Html.ActionLink("MedicalFile", "Details", "MedicalFile", new { id = stud.Patient.MedicalFile.Id })
+                            <p>Op: @stud.TimeSlot.StartAvailability.ToString("d")</p>
+                            <p>Tussen: @stud.TimeSlot.StartAvailability.ToString("t") - @stud.TimeSlot.StopAvailability.ToString("t")</p>
+                            @Html.ActionLink("Cancel Appointment", "Delete", "Appointment", new { id = stud.Id })
                         </div>
-                    }
-                </div>
-                <h5> Amount of appointments upcoming : @ViewBag.AppointmentsNextCount</h5>
-                <hr />
-                <div class="row">
-                    @foreach (var stud in ViewBag.AppointmentsNext)
-                    {
-                        <div class="col-md-4">
-                            <div class="card">
-                                <h5>U heeft een afspraak met patient: @stud.Patient.ApplicationUser.FirstName @stud.Patient.ApplicationUser.SurName</h5>
-                                @Html.ActionLink("MedicalFile", "Details", "MedicalFile", new { id = stud.Patient.MedicalFile.Id })
-                                <p>Op: @stud.TimeSlot.StartAvailability.ToString("d")</p>
-                                <p>Tussen: @stud.TimeSlot.StartAvailability.ToString("t") - @stud.TimeSlot.StopAvailability.ToString("t")</p>
-                                @Html.ActionLink("Cancel Appointment", "Delete", "Appointment", new { id = stud.Id })
-                            </div>
+                    </div>
+                }
+            </div>
+            <h5> Amount of appointments upcoming : @ViewBag.AppointmentsNextCount</h5>
+            <hr />
+            <div class="row">
+                @foreach (var stud in ViewBag.AppointmentsNext)
+                {
+                    <div class="col-md-4">
+                        <div class="card">
+                            <h5>U heeft een afspraak met patient: @stud.Patient.ApplicationUser.FirstName @stud.Patient.ApplicationUser.SurName</h5>
+                            @Html.ActionLink("MedicalFile", "Details", "MedicalFile", new { id = stud.Patient.MedicalFile.Id })
+                            <p>Op: @stud.TimeSlot.StartAvailability.ToString("d")</p>
+                            <p>Tussen: @stud.TimeSlot.StartAvailability.ToString("t") - @stud.TimeSlot.StopAvailability.ToString("t")</p>
+                            @Html.ActionLink("Cancel Appointment", "Delete", "Appointment", new { id = stud.Id })
                         </div>
-                    }
+                    </div>
+                }
                 </div>
-            }
-
         }
         else
         {

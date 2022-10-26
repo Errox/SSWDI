@@ -53,6 +53,8 @@ namespace Library.Data.Repositories
                     .ThenInclude(x => x.ApplicationUser)
                 .Include(x => x.Patient)
                     .ThenInclude(x => x.ApplicationUser)
+                .Include(x => x.Patient)
+                    .ThenInclude(x => x.MedicalFile)
                 .Include(x => x.TimeSlot)
                 .Where(a => a.Patient.PatientId == userId);
         }
