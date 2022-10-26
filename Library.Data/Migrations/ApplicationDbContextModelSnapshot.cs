@@ -96,14 +96,14 @@ namespace Library.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("EmployeeId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("PatientId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("TimeSlotId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -111,10 +111,12 @@ namespace Library.Data.Migrations
 
                     b.HasIndex("PatientId");
 
+                    b.HasIndex("TimeSlotId");
+
                     b.ToTable("Appointments");
                 });
 
-            modelBuilder.Entity("Library.core.Model.Availabilty", b =>
+            modelBuilder.Entity("Library.core.Model.Availability", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -123,6 +125,12 @@ namespace Library.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("EmployeeId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PatientId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("StartAvailability")
@@ -134,6 +142,8 @@ namespace Library.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("EmployeeId");
+
+                    b.HasIndex("PatientId");
 
                     b.ToTable("Availabilties");
                 });
@@ -164,6 +174,9 @@ namespace Library.Data.Migrations
 
                     b.Property<string>("IntakeTherapistIdId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("PatientEmail")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -243,6 +256,7 @@ namespace Library.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Particularities")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("PracticeRoomId")
@@ -252,6 +266,7 @@ namespace Library.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("TreatmentPerformedById")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Type")
@@ -288,6 +303,7 @@ namespace Library.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("WorkerNumber")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.HasIndex("EmployeeId");
@@ -341,18 +357,30 @@ namespace Library.Data.Migrations
                         .WithMany()
                         .HasForeignKey("PatientId");
 
+                    b.HasOne("Library.core.Model.Availability", "TimeSlot")
+                        .WithMany()
+                        .HasForeignKey("TimeSlotId");
+
                     b.Navigation("Employee");
 
                     b.Navigation("Patient");
+
+                    b.Navigation("TimeSlot");
                 });
 
-            modelBuilder.Entity("Library.core.Model.Availabilty", b =>
+            modelBuilder.Entity("Library.core.Model.Availability", b =>
                 {
                     b.HasOne("Library.core.Model.Employee", "Employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId");
 
+                    b.HasOne("Library.core.Model.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientId");
+
                     b.Navigation("Employee");
+
+                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("Library.core.Model.MedicalFile", b =>
@@ -395,7 +423,9 @@ namespace Library.Data.Migrations
 
                     b.HasOne("Library.core.Model.Employee", "TreatmentPerformedBy")
                         .WithMany()
-                        .HasForeignKey("TreatmentPerformedById");
+                        .HasForeignKey("TreatmentPerformedById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("PracticeRoom");
 

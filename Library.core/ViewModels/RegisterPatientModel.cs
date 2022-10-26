@@ -44,6 +44,7 @@ namespace Library.core.ViewModels
         [Required]
         [DataType(DataType.DateTime)]
         [Display(Name = "Please fill in your date of birth.")]
+        [MinAge(16)]
         public DateTime DateOfBirth { get; set; }
 
         [Required]

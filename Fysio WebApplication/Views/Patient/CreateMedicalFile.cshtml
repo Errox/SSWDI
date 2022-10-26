@@ -18,8 +18,11 @@
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DiagnosisCode" class="control-label"></label>
-                <input asp-for="DiagnosisCode" class="form-control" />
+                <label class="control-label">Diagnose</label>
+                <select class="form-control" asp-for="DiagnosisCode" asp-items="@(ViewBag.Diagnoses)">
+                    <!--Not for edit:-->
+                    <option disabled selected>Please select one</option>
+                </select>
                 <span asp-validation-for="DiagnosisCode" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -27,13 +30,15 @@
                 <input asp-for="DateOfDischarge" class="form-control" />
                 <span asp-validation-for="DateOfDischarge" class="text-danger"></span>
             </div>
-            <input value="@Html.Raw(ViewBag.PatientId)" name="PatientId" type="hidden" />
+            <br />
+            <input value="@Html.Raw(ViewBag.PatientId)" name="id" type="hidden" />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
+<br />
 
 <div>
     <a href="javascript:history.go(-1)">Back</a>

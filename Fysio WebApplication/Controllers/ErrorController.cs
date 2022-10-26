@@ -17,8 +17,21 @@ namespace Fysio_WebApplication.Controllers
             return View();
         }
 
+        [Route("ErrorString")]
+        public IActionResult IndexString(string ErrorString)
+        {
+            ViewBag.ErrorString = ErrorString;
+            return View("Index");
+        }
+
         [Route("Account/AccessDenied")]
         public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
+        [Route("Account/NoMedicalFile")]
+        public IActionResult NoMedicalFile()
         {
             return View();
         }

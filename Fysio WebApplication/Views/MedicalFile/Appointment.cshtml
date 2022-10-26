@@ -1,0 +1,40 @@
+﻿@model Library.core.Model.Appointment
+
+@{
+    ViewData["Title"] = "Detail";
+}
+
+<h1>Detail</h1>
+<div>
+    <h4>MedicalFile</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Patient
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Patient.ApplicationUser.FirstName) @Html.DisplayFor(model => model.Patient.ApplicationUser.SurName)
+        </dd>
+        <dt class="col-sm-2">
+            Employee
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Employee.ApplicationUser.FirstName) @Html.DisplayFor(model => model.Employee.ApplicationUser.SurName)
+        </dd>
+        <dt class="col-sm-2">
+            Date
+        </dt>
+        <dd class="col-sm-10">
+            @ViewBag.Date
+        </dd>
+        <dt class="col-sm-2">
+            Time
+        </dt>
+        <dd class="col-sm-10">
+            @ViewBag.StartTime - @ViewBag.StopTime
+        </dd>
+    </dl>
+</div>
+<div>
+    <a href="javascript:history.go(-1)">Back</a>
+</div>

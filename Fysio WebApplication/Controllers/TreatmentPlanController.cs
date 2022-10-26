@@ -1,8 +1,14 @@
-﻿using Library.core.Model;
+﻿using Fysio_Codes.Models;
+using GraphQL;
+using GraphQL.Client.Abstractions;
+using Library.core.GraphQL.ResponseTypes;
+using Library.core.Model;
 using Library.Domain.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using RestSharp;
 using System.Linq;
 using System.Security.Claims;
@@ -15,10 +21,15 @@ namespace Fysio_WebApplication.Controllers
     {
         private ITreatmentPlanRepository _treatmentPlanRepo;
         private IEmployeeRepository _employeeRepo;
+        private readonly IGraphQLClient _client;
 
-        public TreatmentPlanController(ITreatmentPlanRepository treatmentPlanRepo, IEmployeeRepository employee)
+        public TreatmentPlanController(
+            ITreatmentPlanRepository treatmentPlanRepo, 
+            IEmployeeRepository employee,
+            IGraphQLClient client)
         {
             _treatmentPlanRepo = treatmentPlanRepo;
+            _client = client;
             _employeeRepo = employee;
         }
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
@@ -38,22 +49,39 @@ namespace Fysio_WebApplication.Controllers
                     .ThenInclude(a => a.ApplicationUser)
                 .FirstOrDefault(i => i.Id == id);
 
-            var client = new RestClient($"https://avansfysioservice.azurewebsites.net/api/Treatment/" + treatmentPlan.Type);
-            //var request = new RestRequest(Method.GET);
-            //IRestResponse response = await client.ExecuteAsync(request);
-            //Treatment treatment = JsonConvert.DeserializeObject<Treatment>(response.Content);
+            //Fetch the Treatment containing the code
+            var client = new RestClient("https://fysiowebservice.azurewebsites.net/api");
+            var request = new RestRequest("/Treatment/" + treatmentPlan.Type, Method.Get);
+            RestResponse response = await client.ExecuteAsync(request);
+            Treatment treatment = JsonConvert.DeserializeObject<Treatment>(response.Content);
+            //Send them towards the viewbag             
 
-            //Fetch all the employee's working on this file
+            ViewBag.Description = treatment.Description;
+            ViewBag.ExplanationRequired = treatment.ExplanationRequired;
 
-            //ViewBag.Description = treatment.Description;
-            
             return View(treatmentPlan);
         }
 
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
         // GET: TreatmentController/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
+            var query = new GraphQLRequest
+            {
+                Query = @"
+                query GetAllTreat{
+                  treatments {
+                    code
+                    description
+                  }
+                }"
+            };
+
+            var response = await _client.SendQueryAsync<ResponseTreatmentCollectionType>(query);
+
+            SelectList selectlist = new SelectList(response.Data.Treatments, "Code", "Description");
+
+            ViewBag.Treatments = selectlist;
             return View();
         }
 
@@ -81,9 +109,30 @@ namespace Fysio_WebApplication.Controllers
 
         // GET: TreatmentController/Edit/5
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> EditAsync(int id)
         {
-            return View(_treatmentPlanRepo.GetTreatmentPlan(id));
+            TreatmentPlan file = _treatmentPlanRepo.GetTreatmentPlan(id);
+            
+            var query = new GraphQLRequest
+            {
+                Query = @"
+                query GetAllTreat{
+                  treatments {
+                    code
+                    description
+                  }
+                }"
+            };
+
+            var response = await _client.SendQueryAsync<ResponseTreatmentCollectionType>(query);
+
+            SelectList selectlist = new SelectList(response.Data.Treatments, "Code", "Description");
+
+            var selected = selectlist.Where(x => x.Value == file.Type.ToString()).First();
+            selected.Selected = true;
+
+            ViewBag.Treatments = selectlist;
+            return View(file);
         }
 
         // POST: TreatmentController/Edit/5
