@@ -60,9 +60,12 @@ namespace Fysio_WebApplication.Controllers
                 .Include(x => x.MedicalFile)
                     .ThenInclude(x => x.IntakeTherapistId)
                         .ThenInclude(x => x.ApplicationUser)
+                .Include(x => x.MedicalFile)
+                    .ThenInclude(x => x.TreatmentPlans)
                 .FirstOrDefault(x => x.PatientId == Patient);
-            
-            if(currentlyLoggedIn.MedicalFile is null)
+
+
+            if (currentlyLoggedIn.MedicalFile is null)
             {
                 // access denied, no medicalfile yet. 
                 return RedirectToAction("NoMedicalFile", "Error");
@@ -75,22 +78,39 @@ namespace Fysio_WebApplication.Controllers
                 return RedirectToAction("Details", "Appointment");
             }
 
-            IEnumerable<Availability> availability = _availabilityRepository.Availabilities
-                .Where(x => x.IsAvailable == true)
-                .Where(x => x.Employee == currentlyLoggedIn.MedicalFile.IntakeTherapistId);
+            // Get all appointments from the patient. For this week. 
+            IEnumerable<Appointment> appointments = _appointmentRepository.GetAppointmentsByPatientId(currentlyLoggedIn.Id);
+            // Count the amount of treatments combined all into a int 
+            ICollection<TreatmentPlan> treatmentplans = currentlyLoggedIn.MedicalFile.TreatmentPlans;
+            int treatmentsPerWeek = 0;
+            foreach(var treatmentplan in treatmentplans)
+            {
+                treatmentsPerWeek = treatmentsPerWeek + treatmentplan.AmountOfTreatmentsPerWeek;
+            }
 
-            SelectList selectlist = new SelectList(availability, "Id", "StartAvailability");
+            // Check if the amount of appointments that the patient has, are less then the treatmentplans prescribes.
+            if (appointments.Count() <= treatmentsPerWeek)
+            {
+                IEnumerable<Availability> availability = _availabilityRepository.Availabilities
+                    .Where(x => x.IsAvailable == true)
+                    .Where(x => x.Employee == currentlyLoggedIn.MedicalFile.IntakeTherapistId);
 
-            
-            ViewBag.Brands = new SelectList(_availabilityRepository.Availabilities
-                .Where(x => x.IsAvailable == true)
-                .Where(x => x.Employee == currentlyLoggedIn.MedicalFile.IntakeTherapistId).ToList(), "Id", "StartAvailability");
-            
-            ViewBag.Patient = currentlyLoggedIn;
-            ViewBag.Availability = availability;
-            ViewBag.SelectList = selectlist;
+                SelectList selectlist = new SelectList(availability, "Id", "StartAvailability");
 
-            return View();
+                ViewBag.Brands = new SelectList(_availabilityRepository.Availabilities
+                    .Where(x => x.IsAvailable == true)
+                    .Where(x => x.Employee == currentlyLoggedIn.MedicalFile.IntakeTherapistId).ToList(), "Id", "StartAvailability");
+
+                ViewBag.Patient = currentlyLoggedIn;
+                ViewBag.Availability = availability;
+                ViewBag.SelectList = selectlist;
+
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("IndexString", "Error", new { ErrorString = "You can't create more appointments then the treatment prescribes." });
+            }           
         }
 
         [Authorize(Policy = "RequirePatientRole")]
@@ -99,7 +119,6 @@ namespace Fysio_WebApplication.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection foFormCollection)
         {
-
             // Check if it's a patient. If it's a employee/student. Then it will be redirected to the CreateEmployeeAppointment.
             // We fetch the patient's id. And let them choose which time is best. We'll need the ID of the 
             var Id = Convert.ToInt32(foFormCollection["id"]);

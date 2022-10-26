@@ -10,21 +10,15 @@ This piece of software is made for the fysio project. This project includes a we
 
 
 
-# To do list:
-- [X] Finish the TODO: in the project.
-  - [X] Make the link with webservice
-  - [ ] Double check the names used in models because now it's just weird long texts's 
+# To do list: 
 - [ ] Make diagrams
-- [x] Make the API Richardson Level 2
-- [ ] Make tests based on interfaces.
-- [ ] Double check the user stories 
+  - [ ] Package- en klassendiagram voor toepassing van clean (onion) architectuur.
+  - [ ] Componentdiagram voor het gehele systeem.
+  - [ ] Deploymentdiagram voor het gehele systeem.
 - [ ] Double check the Business Rules
 - [ ] Make tests for the business rules
-- [x] Write a good Readme
+  - [ ] Make tests based on interfaces.
 - [ ] Give the site a little makeover
-- [x] Make a nice logo
-- [x] Make Postman collection
-- [ ] make it either dutch or english
 
 
 ## UML Diagrams
@@ -43,11 +37,10 @@ This piece of software is made for the fysio project. This project includes a we
 
 
 ## Business rules done.
-- [ ] BR_1 // Appointments can only be set when treatmentplan amount is set.
-  - [ ] Create patients appointment for that week, that amount check if its < then treatmentsperweek.  
+- [x] BR_1 // Appointments can only be set when treatmentplan amount is set.
 - [x] BR_2
-- [ ] BR_3 // Only check the "After treatment is finished/ended date check" part.
-- [ ] BR_4 // Make the description mandetory if webservice is asking for it.
+- [x] BR_3 // Only check the "After treatment is finished/ended date check" part.
+- [x] BR_4 // Make the description mandetory if webservice is asking for it.
 - [x] BR_5 // Just the test needs to be made
 - [x] BR_6 // Just the test needs to be made
 

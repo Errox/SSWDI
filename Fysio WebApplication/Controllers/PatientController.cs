@@ -69,7 +69,7 @@ namespace Fysio_WebApplication.Controllers
                     .ThenInclude(i => i.IntakeTherapistId)
                             .ThenInclude(i => i.ApplicationUser)
                 .FirstOrDefault(i => i.IdNumber == id);
-            //return RedirectToAction("AccessDenied", "Error");
+
             // This is either a employee or a unauthorized user. Check if the user is a employee or student
             if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student") || LoggedInPatient.IdNumber == id)
             {

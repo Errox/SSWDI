@@ -27,6 +27,7 @@ namespace Library.core.Model
 
         [Display(Name = "The date the treatment should be treated.")]
         [Required]
+        [AfterToday]
         public DateTime TreatmentDate { get; set; }
 
         [Required]
