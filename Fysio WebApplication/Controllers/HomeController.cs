@@ -26,15 +26,27 @@ namespace Fysio_WebApplication.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
             {
-                var appointment = _appointmentRepository.GetAppointmentsByEmployeeId(userId);
-                ViewBag.Appointments = appointment;
-                ViewBag.Count = appointment.Count();
-                
+                var appointments = _appointmentRepository.GetAppointmentsByEmployeeId(userId);
+                var appointmentNow = appointments.Where(x => x.TimeSlot.StartAvailability.ToString("d") == System.DateTime.Now.ToString("d"));
+                var appointmentNext = appointments.Where(x => x.TimeSlot.StartAvailability > System.DateTime.Now);
+                ViewBag.AppointmentsNow = appointmentNow;
+                ViewBag.AppointmentsNext = appointmentNext;
+                ViewBag.AppointmentsNowCount = appointmentNow.Count();
+                ViewBag.AppointmentsNextCount = appointmentNext.Count();
+
                 return View();
             }
+            
             if (User.HasClaim("UserType", "Patient"))
             {
-                return View(_appointmentRepository.GetAppointmentsByPatientId(userId));
+                var appointments = _appointmentRepository.GetAppointmentsByPatientId(userId);
+                var appointmentNow = appointments.Where(x => x.TimeSlot.StartAvailability.ToString("d") == System.DateTime.Now.ToString("d"));
+                var appointmentNext = appointments.Where(x => x.TimeSlot.StartAvailability > System.DateTime.Now);
+                ViewBag.AppointmentsNow = appointmentNow;
+                ViewBag.AppointmentsNext = appointmentNext;
+                ViewBag.AppointmentsNowCount = appointmentNow.Count();
+                ViewBag.AppointmentsNextCount = appointmentNext.Count();
+                return View();
             }
 
             

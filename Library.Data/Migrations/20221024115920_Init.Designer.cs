@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Library.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221018124210_Init")]
+    [Migration("20221024115920_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -176,6 +176,9 @@ namespace Library.Data.Migrations
 
                     b.Property<string>("IntakeTherapistIdId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("PatientEmail")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

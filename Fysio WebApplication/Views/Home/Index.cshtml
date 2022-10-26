@@ -4,11 +4,11 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welkom!</h1>
+    <h1 class="display-4">Welcome!</h1>
 
     @if (User.Identity.IsAuthenticated)
     {
-        @if (Model is not null || ViewBag.Appointments is not null)
+        @if (Model is not null || ViewBag.AppointmentsNow is not null || ViewBag.AppointmentsNext is not null)
         {
             
             @if (User.HasClaim("UserType", "Patient"))
@@ -25,10 +25,26 @@
             }
             @if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
             {
-                <h5> Aantal afspraken voor vandaag : @ViewBag.Count</h5>
+                <h5> Amount of appointments today : @ViewBag.AppointmentsNowCount</h5>
                 <hr/>
                 <div class="row">
-                    @foreach (var stud in ViewBag.Appointments)
+                    @foreach (var stud in ViewBag.AppointmentsNow)
+                    {
+                        <div class="col-md-4">
+                            <div class="card">
+                                <h5>U heeft een afspraak met patient: @stud.Patient.ApplicationUser.FirstName @stud.Patient.ApplicationUser.SurName</h5>
+                                @Html.ActionLink("MedicalFile", "Details", "MedicalFile", new { id = stud.Patient.MedicalFile.Id })
+                                <p>Op: @stud.TimeSlot.StartAvailability.ToString("d")</p>
+                                <p>Tussen: @stud.TimeSlot.StartAvailability.ToString("t") - @stud.TimeSlot.StopAvailability.ToString("t")</p>
+                                @Html.ActionLink("Cancel Appointment", "Delete", "Appointment", new { id = stud.Id })
+                            </div>
+                        </div>
+                    }
+                </div>
+                <h5> Amount of appointments upcoming : @ViewBag.AppointmentsNextCount</h5>
+                <hr />
+                <div class="row">
+                    @foreach (var stud in ViewBag.AppointmentsNext)
                     {
                         <div class="col-md-4">
                             <div class="card">
@@ -54,6 +70,6 @@
 
         }
     }else{
-        <p> Avans Fysio Web Portaal voor Therapeuten en Studenten </p>
+        <p> Avans Fysio Web portal for it's therapists, students and patients.</p>
     }
 </div>

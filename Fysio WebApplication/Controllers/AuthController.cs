@@ -19,6 +19,7 @@ namespace Fysio_WebApplication.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmployeeRepository _employeeRepo;
         private readonly IPatientRepository _patientRepo;
+        private IMedicalFileRepository _medicalFileRepo;
         private readonly ILogger<LoginModel> _logger;
 
         public AuthController(
@@ -26,12 +27,14 @@ namespace Fysio_WebApplication.Controllers
             IEmployeeRepository employeeRepo,
             IPatientRepository patientRepo,
             ILogger<LoginModel> logger,
+            IMedicalFileRepository medicalFileRepo,
             SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _employeeRepo = employeeRepo;
             _patientRepo = patientRepo;
+            _medicalFileRepo = medicalFileRepo;
             _logger = logger;
         }
 
@@ -103,8 +106,7 @@ namespace Fysio_WebApplication.Controllers
                 ReturnUrl = returnUrl
             });
         }
-
-        [Authorize(Policy = "OnlyEmployeeAndStudent")]
+        
         public ViewResult RegisterPatient(string returnUrl)
         {
             return base.View(new RegisterPatientModel
@@ -175,19 +177,11 @@ namespace Fysio_WebApplication.Controllers
             return View(model);
         }
 
-        [Authorize(Policy = "OnlyEmployeeAndStudent")]
         [HttpPost]
         public async Task<IActionResult> RegisterPatient(RegisterPatientModel model)
         {
             if (ModelState.IsValid)
-            {
-                // check if model.DateOfBirth is above 16 years old
-                if (model.DateOfBirth.AddYears(16) > DateTime.Now && DateTime.Now.Year - model.DateOfBirth.Year > 16)
-                {
-                    ModelState.AddModelError("", "Patient is younger than 16 years old");
-                    return View(model);
-                }
-                
+            {                
                 ApplicationUser user = new ApplicationUser
                 {
                     UserName = model.Email,
@@ -196,21 +190,31 @@ namespace Fysio_WebApplication.Controllers
                     Email = model.Email,
                     PhoneNumber = model.PhoneNumber,
                 };
-
+                
                 IdentityResult result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
                     await _userManager.AddClaimAsync(user, patientUserClaim);
-                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    if (!User.HasClaim("UserType", "Employee"))
+                    {
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                    }
+
 
                     ApplicationUser newUser = _userManager.FindByNameAsync(user.UserName).Result;
+
+                    // Make ID randomly generated. 
+                    Random r = new Random();
+                    int rInt = r.Next(100000, 999999);
+
 
                     Patient patient = new Patient
                     {
                         Gender = model.Gender,
                         DateOfBirth = model.DateOfBirth,
                         IsStudent = model.IsStudent,
-                        ApplicationUser = newUser
+                        ApplicationUser = newUser,
+                        IdNumber = rInt,
                     };
 
                     foreach (var file in Request.Form.Files)
@@ -221,6 +225,14 @@ namespace Fysio_WebApplication.Controllers
 
                         ms.Close();
                         ms.Dispose();
+                    }
+
+                    // Check if there is a medical file with a email the same as applicationUser.Email. If so, combine it with the patient.
+                    MedicalFile medicalFile = _medicalFileRepo.GetMedicalFileByEmail(model.Email);
+
+                    if (medicalFile != null)
+                    {
+                        patient.MedicalFile = medicalFile;
                     }
                     
                     _patientRepo.AddPatient(patient);

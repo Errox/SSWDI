@@ -28,6 +28,10 @@ namespace Library.core.Model
         [Display(Name = "Date of discharge")]
         public DateTime? DateOfDischarge { get; set; }
 
+        [Display(Name = "Patient's email. ")]
+        [EmailAddress]
+        public string? PatientEmail { get; set; }
+
         [Display(Name = "Notes of the medical file")]
         public ICollection<Note> Notes { get; set; }
 

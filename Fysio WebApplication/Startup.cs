@@ -1,5 +1,8 @@
 using Fysio_Identity;
 using Fysio_WebApplication.Seed;
+using GraphQL.Client.Abstractions;
+using GraphQL.Client.Http;
+using GraphQL.Client.Serializer.Newtonsoft;
 using Library.core.Model;
 using Library.Data.Dal;
 using Library.Data.Repositories;
@@ -48,16 +51,16 @@ namespace Fysio_WebApplication
                 .AddDefaultTokenProviders();
 
             services.AddAuthorization(options =>
-                 {
-                     options.AddPolicy("RequireEmployeeRole",
-                          policy => policy.RequireClaim("UserType", "Employee"));
-                     options.AddPolicy("RequireStudentRole",
-                          policy => policy.RequireClaim("UserType", "Student"));
-                     options.AddPolicy("RequirePatientRole",
-                          policy => policy.RequireClaim("UserType", "Patient"));
-                     options.AddPolicy("OnlyEmployeeAndStudent",
-                          policy => policy.RequireClaim("UserType", "Employee", "Student"));
-                 });
+            {
+                options.AddPolicy("RequireEmployeeRole",
+                    policy => policy.RequireClaim("UserType", "Employee"));
+                options.AddPolicy("RequireStudentRole",
+                    policy => policy.RequireClaim("UserType", "Student"));
+                options.AddPolicy("RequirePatientRole",
+                    policy => policy.RequireClaim("UserType", "Patient"));
+                options.AddPolicy("OnlyEmployeeAndStudent",
+                    policy => policy.RequireClaim("UserType", "Employee", "Student"));
+            });
 
             services.ConfigureApplicationCookie(options =>
             {
@@ -70,6 +73,8 @@ namespace Fysio_WebApplication
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();
 
+            // Import graphql client
+            services.AddScoped<IGraphQLClient>(s => new GraphQLHttpClient(Configuration.GetConnectionString("GraphqlUrl"), new NewtonsoftJsonSerializer()));
 
             // Dependency injection 
             services.AddTransient<IAppointmentsRepository, EFAppointmentRepository>();

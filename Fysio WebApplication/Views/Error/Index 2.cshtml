@@ -1,17 +1,26 @@
-﻿@model ErrorViewModel
-@{
-    ViewData["Title"] = "Error";
+﻿@{
+    ViewData["Title"] = "Error " + ViewBag.ErrorCode;
 }
 
 <h1 class="text-danger">Error.</h1>
 <h2 class="text-danger">An error occurred while processing your request.</h2>
 
-@if (Model.ShowRequestId)
-{
+@if(ViewBag.ErrorCode != null){
+        <p><strong> Oops. Something went wrong! </strong></p>
+        <p><strong>Error Code:</strong> <code>@ViewBag.ErrorCode</code></p>
+}else{
     <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
+        <strong> Oops. Something went wrong! </strong>
     </p>
 }
+
+@if (ViewBag.ErrorString is not null){
+    <p> <strong> Something went wrong. </strong></p>
+    <p> <strong> Error message: @ViewBag.ErrorString</strong></p>
+}
+
+
+
 
 <h3>Development Mode</h3>
 <p>

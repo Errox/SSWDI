@@ -46,7 +46,7 @@ namespace Library.Data.Repositories
             _context.SaveChanges();
         }
 
-        public Appointment GetAppointmentsByPatientId(string userId)
+        public IEnumerable<Appointment> GetAppointmentsByPatientId(string userId)
         {
             return _context.Appointments
                 .Include(x => x.Employee)
@@ -54,7 +54,7 @@ namespace Library.Data.Repositories
                 .Include(x => x.Patient)
                     .ThenInclude(x => x.ApplicationUser)
                 .Include(x => x.TimeSlot)
-                .FirstOrDefault(a => a.Patient.PatientId == userId);
+                .Where(a => a.Patient.PatientId == userId);
         }
 
         public IEnumerable<Appointment> GetAppointmentsByEmployeeId(string employeeId)

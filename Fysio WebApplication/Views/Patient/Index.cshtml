@@ -22,9 +22,6 @@
                 @Html.DisplayNameFor(model => model.Email)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IdNumber)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.DateOfBirth)
             </th>
             <th>
@@ -52,10 +49,7 @@
                     @Html.DisplayFor(modelItem => item.ApplicationUser.Email)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IdNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateOfBirth)
+                @item.DateOfBirth.Date.ToString("d")
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Gender)

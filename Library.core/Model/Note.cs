@@ -18,7 +18,7 @@ namespace Library.core.Model
         [Display(Name = "The employee that created the note.")]
         public Employee Employee { get; set; }
 
-        [Display(Name = "If the patient is able to see the notes.")]
+        [Display(Name = "Checked if the patient can see the note.")]
         public bool OpenForPatient { get; set; }
     }
 

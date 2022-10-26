@@ -12,7 +12,7 @@ namespace Library.Domain.Repositories
         void DeleteAppointment(int id);
         void UpdateAppointment(Appointment appointment);
         void AddAppointment(Appointment appointment);
-        Appointment GetAppointmentsByPatientId(string patientId);
+        IEnumerable<Appointment> GetAppointmentsByPatientId(string patientId);
         IEnumerable<Appointment> GetAppointmentsByEmployeeId(string employeeId);
     }
 }
