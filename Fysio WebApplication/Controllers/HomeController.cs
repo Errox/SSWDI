@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
@@ -27,8 +28,8 @@ namespace Fysio_WebApplication.Controllers
             if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
             {
                 var appointments = _appointmentRepository.GetAppointmentsByEmployeeId(userId);
-                var appointmentNow = appointments.Where(x => x.TimeSlot.StartAvailability.ToString("d") == System.DateTime.Now.ToString("d"));
-                var appointmentNext = appointments.Where(x => x.TimeSlot.StartAvailability > System.DateTime.Now.AddDays(1));
+                List<Appointment> appointmentNow = appointments.Where(x => x.TimeSlot.StartAvailability.ToString("d") == System.DateTime.Now.ToString("d")).ToList();
+                List<Appointment> appointmentNext = appointments.Where(x => x.TimeSlot.StartAvailability > System.DateTime.Now.AddDays(1)).ToList();
                 ViewBag.AppointmentsNow = appointmentNow;
                 ViewBag.AppointmentsNext = appointmentNext;
                 ViewBag.AppointmentsNowCount = appointmentNow.Count();
@@ -40,8 +41,8 @@ namespace Fysio_WebApplication.Controllers
             if (User.HasClaim("UserType", "Patient"))
             {
                 var appointments = _appointmentRepository.GetAppointmentsByPatientId(userId);
-                var appointmentNow = appointments.Where(x => x.TimeSlot.StartAvailability.ToString("d") == System.DateTime.Now.ToString("d"));
-                var appointmentNext = appointments.Where(x => x.TimeSlot.StartAvailability > System.DateTime.Now.AddDays(1));
+                List<Appointment> appointmentNow = appointments.Where(x => x.TimeSlot.StartAvailability.ToString("d") == System.DateTime.Now.ToString("d")).ToList();
+                List<Appointment> appointmentNext = appointments.Where(x => x.TimeSlot.StartAvailability > System.DateTime.Now.AddDays(1)).ToList();
                 ViewBag.AppointmentsNow = appointmentNow;
                 ViewBag.AppointmentsNext = appointmentNext;
                 ViewBag.AppointmentsNowCount = appointmentNow.Count();
@@ -49,8 +50,6 @@ namespace Fysio_WebApplication.Controllers
                 return View();
             }
 
-            
-            
             return View();
         }
 

@@ -54,7 +54,12 @@
                 }
                 else
                 {
-                    <a href="@Html.Raw(ViewBag.Url)@Html.DisplayFor(modelItem => item.Id)">Add Room</a>
+                    @if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
+                    {
+                            <a href="@Html.Raw(ViewBag.Url)@Html.DisplayFor(modelItem => item.Id)">Add Room</a>
+                    }else{
+                        <p> No Room given</p>
+                    }   
                 }
             </td>
             <td>

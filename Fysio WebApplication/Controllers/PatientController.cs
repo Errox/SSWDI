@@ -75,16 +75,21 @@ namespace Fysio_WebApplication.Controllers
             {
                 //var isAuthorized = await _authorizationService.AuthorizeAsync(User, "Employee");
                 MedicalFile medical = patient.MedicalFile;
-                //Fetch the Treatment containing the code
-                var client = new RestClient("https://fysiowebservice.azurewebsites.net/api");
-                var request = new RestRequest("/Diagnosis/" + patient.MedicalFile.DiagnosisCode, Method.Get);
-                RestResponse response = await client.ExecuteAsync(request);
-                DiagnosisE diagnosis = JsonConvert.DeserializeObject<DiagnosisE>(response.Content);
-                //Send them towards the viewbag             
 
-                ViewBag.BodyLocation = diagnosis.BodyLocation;
-                ViewBag.Pathology = diagnosis.Pathology;
-                ViewBag.DisplayBodyAndPathology = diagnosis.DisplayBodyAndPathology;
+                if(medical != null)
+                {
+                    //Fetch the Treatment containing the code
+                    var client = new RestClient("https://fysiowebservice.azurewebsites.net/api");
+                    var request = new RestRequest("/Diagnosis/" + patient.MedicalFile.DiagnosisCode, Method.Get);
+                    RestResponse response = await client.ExecuteAsync(request);
+                    DiagnosisE diagnosis = JsonConvert.DeserializeObject<DiagnosisE>(response.Content);
+                    //Send them towards the viewbag             
+
+                    ViewBag.BodyLocation = diagnosis.BodyLocation;
+                    ViewBag.Pathology = diagnosis.Pathology;
+                    ViewBag.DisplayBodyAndPathology = diagnosis.DisplayBodyAndPathology;
+                }
+                
                 
                 string imageDataURL;
                 if (patient.ImgData == null)

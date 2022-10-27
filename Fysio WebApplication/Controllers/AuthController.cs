@@ -4,6 +4,7 @@ using Library.Domain.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
@@ -58,7 +59,7 @@ namespace Fysio_WebApplication.Controllers
         {
             if (ModelState.IsValid)
             {
-                ApplicationUser user = await _userManager.FindByEmailAsync(model.Email);
+                ApplicationUser user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == model.Email);
 
                 if (user != null)
                 {
