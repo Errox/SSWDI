@@ -13,6 +13,5 @@ namespace Fysio_Codes.Models
         public string BodyLocation { get; set; }
         [StringLength(255), Required]
         public string Pathology { get; set; }
-        public string DisplayBodyAndPathology { get { return BodyLocation + " \n - " + Pathology; } }
     }
 }

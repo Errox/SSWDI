@@ -1,4 +1,5 @@
 ﻿using Fysio_Codes.Models;
+using Library.core.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace Library.core.GraphQL.ResponseTypes
 {
     public class ResponseDiagnosisCollectionType
     {
-        public List<Diagnosis> Diagnoses { get; set; }
+        public List<DiagnosisE> Diagnoses { get; set; }
     }
 }

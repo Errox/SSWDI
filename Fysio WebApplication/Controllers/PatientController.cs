@@ -77,12 +77,14 @@ namespace Fysio_WebApplication.Controllers
                 MedicalFile medical = patient.MedicalFile;
                 //Fetch the Treatment containing the code
                 var client = new RestClient("https://fysiowebservice.azurewebsites.net/api");
-                var request = new RestRequest("/Treatment/" + patient.MedicalFile.DiagnosisCode, Method.Get);
+                var request = new RestRequest("/Diagnosis/" + patient.MedicalFile.DiagnosisCode, Method.Get);
                 RestResponse response = await client.ExecuteAsync(request);
-                Diagnosis diagnosis = JsonConvert.DeserializeObject<Diagnosis>(response.Content);
+                DiagnosisE diagnosis = JsonConvert.DeserializeObject<DiagnosisE>(response.Content);
                 //Send them towards the viewbag             
 
-                ViewBag.Diagnosis = diagnosis.DisplayBodyAndPathology;
+                ViewBag.BodyLocation = diagnosis.BodyLocation;
+                ViewBag.Pathology = diagnosis.Pathology;
+                ViewBag.DisplayBodyAndPathology = diagnosis.DisplayBodyAndPathology;
                 
                 string imageDataURL;
                 if (patient.ImgData == null)
@@ -168,25 +170,29 @@ namespace Fysio_WebApplication.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, Patient patient)
         {
-            try
+            if (ModelState.IsValid)
             {
-                foreach (var file in Request.Form.Files)
+                try
                 {
-                    MemoryStream ms = new MemoryStream();
-                    file.CopyTo(ms);
-                    patient.ImgData = ms.ToArray();
+                    foreach (var file in Request.Form.Files)
+                    {
+                        MemoryStream ms = new MemoryStream();
+                        file.CopyTo(ms);
+                        patient.ImgData = ms.ToArray();
 
-                    ms.Close();
-                    ms.Dispose();
+                        ms.Close();
+                        ms.Dispose();
+                    }
+
+                    _patientRepo.UpdatePatient(id, patient);
+                    return RedirectToAction("details", new { id = id });
                 }
-
-                _patientRepo.UpdatePatient(id, patient);
-                return RedirectToAction("details", new { id = id });
+                catch
+                {
+                    return View();
+                }
             }
-            catch
-            {
-                return View();
-            }
+            return View(patient);
         }
 
 

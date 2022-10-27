@@ -32,6 +32,9 @@ namespace Library.Data.Repositories
         {
             Patient oldPatient = _context.Patients.Include(c1 => c1.ApplicationUser).FirstOrDefault(i => i.IdNumber == id);
             oldPatient.ImgData = patient.ImgData;
+            oldPatient.DateOfBirth = patient.DateOfBirth;
+            oldPatient.Gender = patient.Gender;
+            oldPatient.IsStudent = patient.IsStudent;
             _context.SaveChanges();
         }
 

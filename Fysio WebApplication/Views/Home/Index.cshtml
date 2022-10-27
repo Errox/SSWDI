@@ -8,7 +8,7 @@
 
     @if (User.Identity.IsAuthenticated)
     {
-        @if (Model is not null || ViewBag.AppointmentsNow is not null || ViewBag.AppointmentsNext is not null)
+        @if (ViewBag.AppointmentsNow is not null)
         {
             <h5> Amount of appointments today : @ViewBag.AppointmentsNowCount</h5>
             <hr/>
@@ -17,7 +17,11 @@
                 {
                     <div class="col-md-4">
                         <div class="card">
-                            <h5>U heeft een afspraak met patient: @stud.Patient.ApplicationUser.FirstName @stud.Patient.ApplicationUser.SurName</h5>
+                            @if (User.HasClaim("UserType", "Patient")){
+                                <h5>You have a appointment with: @stud.Employee.ApplicationUser.FirstName @stud.Employee.ApplicationUser.SurName</h5>
+                            }else{
+                                <h5>You have a appointment with: @stud.Patient.ApplicationUser.FirstName @stud.Patient.ApplicationUser.SurName</h5>
+                            }
                             @Html.ActionLink("MedicalFile", "Details", "MedicalFile", new { id = stud.Patient.MedicalFile.Id })
                             <p>Op: @stud.TimeSlot.StartAvailability.ToString("d")</p>
                             <p>Tussen: @stud.TimeSlot.StartAvailability.ToString("t") - @stud.TimeSlot.StopAvailability.ToString("t")</p>
@@ -26,6 +30,10 @@
                     </div>
                 }
             </div>
+        }else{
+            <h5> No Appointments for today.</h5>
+        }
+        @if (ViewBag.AppointmentsNext is not null){
             <h5> Amount of appointments upcoming : @ViewBag.AppointmentsNextCount</h5>
             <hr />
             <div class="row">
@@ -33,7 +41,12 @@
                 {
                     <div class="col-md-4">
                         <div class="card">
-                            <h5>U heeft een afspraak met patient: @stud.Patient.ApplicationUser.FirstName @stud.Patient.ApplicationUser.SurName</h5>
+                            @if (User.HasClaim("UserType", "Patient")){
+                                <h5>You have a appointment with: @stud.Employee.ApplicationUser.FirstName @stud.Employee.ApplicationUser.SurName</h5>
+                            }
+                            else{
+                                <h5>You have a appointment with: @stud.Patient.ApplicationUser.FirstName @stud.Patient.ApplicationUser.SurName</h5>
+                            }
                             @Html.ActionLink("MedicalFile", "Details", "MedicalFile", new { id = stud.Patient.MedicalFile.Id })
                             <p>Op: @stud.TimeSlot.StartAvailability.ToString("d")</p>
                             <p>Tussen: @stud.TimeSlot.StartAvailability.ToString("t") - @stud.TimeSlot.StopAvailability.ToString("t")</p>
@@ -42,8 +55,10 @@
                     </div>
                 }
                 </div>
+        }else{
+            <h5> No upcoming Appointments.</h5>
         }
-        else
+        @if (ViewBag.AppointmentsNext is null && ViewBag.AppointmentsNow is null)
         {
             <p>U heeft geen afspraak.</p>
             @if (User.HasClaim("UserType", "Patient"))
