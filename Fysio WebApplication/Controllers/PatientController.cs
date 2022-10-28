@@ -27,7 +27,6 @@ namespace Fysio_WebApplication.Controllers
         private IMedicalFileRepository _medicalFileRepo;
         private IEmployeeRepository _employeeRepo;
         private IAppointmentsRepository _appointmentRepo;
-        private readonly IAuthorizationService _authorizationService;
         private readonly IGraphQLClient _client;
 
         public PatientController(
@@ -35,15 +34,13 @@ namespace Fysio_WebApplication.Controllers
             IMedicalFileRepository medicalFile, 
             IEmployeeRepository employeeRepository,
             IAppointmentsRepository appointmentRepository,
-            IGraphQLClient client,
-            IAuthorizationService authorizationService)
+            IGraphQLClient client)
         {
             _patientRepo = repo;
             _medicalFileRepo = medicalFile;
             _employeeRepo = employeeRepository;
             _appointmentRepo = appointmentRepository;
             _client = client;
-            _authorizationService = authorizationService;
         }
 
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
@@ -73,7 +70,6 @@ namespace Fysio_WebApplication.Controllers
             // This is either a employee or a unauthorized user. Check if the user is a employee or student
             if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student") || LoggedInPatient.IdNumber == id)
             {
-                //var isAuthorized = await _authorizationService.AuthorizeAsync(User, "Employee");
                 MedicalFile medical = patient.MedicalFile;
 
                 if(medical != null)

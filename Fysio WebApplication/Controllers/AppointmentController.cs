@@ -19,20 +19,17 @@ namespace Fysio_WebApplication.Controllers
     [Authorize]
     public class AppointmentController : Controller
     {
-        private IAppointmentsRepository _repo;
         private IAvailabilityRepository _availabilityRepository;
         private IEmployeeRepository _employeeRepository;
         private IPatientRepository _patientRepository;
         private IAppointmentsRepository _appointmentRepository;
 
         public AppointmentController(
-            IAppointmentsRepository repo, 
             IAvailabilityRepository availabilityRepository,
             IEmployeeRepository employeeRepository,
             IPatientRepository patientRepository,
             IAppointmentsRepository appointmentRepository)
         {
-            _repo = repo;
             _availabilityRepository = availabilityRepository;
             _employeeRepository = employeeRepository;
             _patientRepository = patientRepository;
@@ -44,7 +41,7 @@ namespace Fysio_WebApplication.Controllers
         // GET: AppointmentController
         public ActionResult Index()
         {
-            return View(_repo.Appointments.Include(c1 => c1.Patient).Include(c2 => c2.Employee));
+            return View(_appointmentRepository.Appointments.Include(c1 => c1.Patient).Include(c2 => c2.Employee));
         }
 
         
@@ -155,7 +152,7 @@ namespace Fysio_WebApplication.Controllers
         // GET: AppointmentController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View(_repo.GetAppointment(id));
+            return View(_appointmentRepository.GetAppointment(id));
         }
 
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
@@ -166,9 +163,9 @@ namespace Fysio_WebApplication.Controllers
         {
             try
             {
-                Appointment appointment = _repo.GetAppointment(id);
+                Appointment appointment = _appointmentRepository.GetAppointment(id);
                 //appointment.Date = collection.Date;
-                _repo.UpdateAppointment(appointment);
+                _appointmentRepository.UpdateAppointment(appointment);
                 return RedirectToAction(nameof(Index));
             }
             catch
