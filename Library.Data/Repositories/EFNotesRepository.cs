@@ -37,9 +37,6 @@ namespace Library.Data.Repositories
 
         public void AddNote(Note note)
         {
-            // Getting all notes from a medical file.
-            //ICollection<Note> notW2e = _context.MedicalFiles.FirstOrDefault(a => a.Id == id).Notes;
-
             _context.Add(note);
             _context.SaveChanges();
         }
