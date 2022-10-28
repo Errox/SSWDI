@@ -11,14 +11,8 @@ This piece of software is made for the fysio project. This project includes a we
 
 
 # To do list: 
-- [ ] Make diagrams
-  - [ ] Package- en klassendiagram voor toepassing van clean (onion) architectuur.
-  - [ ] Componentdiagram voor het gehele systeem.
-  - [ ] Deploymentdiagram voor het gehele systeem.
-- [ ] Double check the Business Rules
 - [ ] Make tests for the business rules
   - [ ] Make tests based on interfaces.
-- [ ] Give the site a little makeover
 
 
 ## UML Diagrams
@@ -37,7 +31,7 @@ This piece of software is made for the fysio project. This project includes a we
 
 
 ## Business rules done.
-- [x] BR_1 // Appointments can only be set when treatmentplan amount is set.
+- [x] BR_1 
 - [x] BR_2
 - [x] BR_3 // Only check the "After treatment is finished/ended date check" part.
 - [x] BR_4 // Make the description mandetory if webservice is asking for it.

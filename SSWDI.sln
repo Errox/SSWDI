@@ -18,11 +18,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.Domain", "Library.D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.Data", "Library.Data\Library.Data.csproj", "{E730ECCB-4610-421F-AD3A-7244BF9492CA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fysio_Identity", "Fysio_Identity\Fysio_Identity.csproj", "{9564D8FB-C6EE-4640-A38F-AD3546B6DA22}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity", "Fysio_Identity\Identity.csproj", "{9564D8FB-C6EE-4640-A38F-AD3546B6DA22}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fysio_Codes", "Fysio_Codes\Fysio_Codes.csproj", "{1532F9F0-4739-4C0C-9C91-E90021A11778}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.DomainServices", "Fysio_Codes\Library.DomainServices.csproj", "{1532F9F0-4739-4C0C-9C91-E90021A11778}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FysioWebApplication.Test", "FysioWebApplication.Test\FysioWebApplication.Test.csproj", "{5C159AA6-C534-4A6E-B0B5-D17201425116}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FysioWebApplication.Test", "FysioWebApplication.Test\FysioWebApplication.Test.csproj", "{5C159AA6-C534-4A6E-B0B5-D17201425116}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

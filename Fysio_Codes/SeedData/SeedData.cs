@@ -25,7 +25,7 @@ namespace Fysio_Codes.SeedData
 
             if (!context.Diagnoses.Any())
             {
-                using (var reader = new StreamReader("SeedData\\VektisLijstDiagnoses.csv"))
+                using (var reader = new StreamReader("SeedData\\VektisLijstDiagnoses.csv", System.Text.Encoding.UTF8))
                 using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
                 {
                     csv.Read();
@@ -42,7 +42,7 @@ namespace Fysio_Codes.SeedData
 
             if (!context.Treatments.Any())
             {
-                using (var reader = new StreamReader("SeedData\\VektisLijstVerrichtingen.csv"))
+                using (var reader = new StreamReader("SeedData\\VektisLijstVerrichtingen.csv", System.Text.Encoding.UTF8))
                 using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
                 {
                     csv.Read();

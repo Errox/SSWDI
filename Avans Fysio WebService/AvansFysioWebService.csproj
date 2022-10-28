@@ -29,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Fysio_Codes\Fysio_Codes.csproj" />
+    <ProjectReference Include="..\Fysio_Codes\Library.DomainServices.csproj" />
   </ItemGroup>
   <PropertyGroup>
     <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>

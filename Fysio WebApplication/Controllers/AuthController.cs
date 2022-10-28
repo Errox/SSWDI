@@ -238,7 +238,6 @@ namespace Fysio_WebApplication.Controllers
                     
                     _patientRepo.AddPatient(patient);
                     
-                    // Patient page where password and information is shown. This page can be printed for the patient to login later. 
                     return RedirectToAction("Index", "Home");
                 }
                 else
