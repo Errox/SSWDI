@@ -9,6 +9,8 @@ Video : https://www.youtube.com/watch?v=zBSGS44h-H8
 
 Video Drive: https://drive.google.com/uc?id=1nzxLkVjsOfV9m1B_QjBHwN01fAvvSqbE&export=download
 
+Github Repository : https://github.com/Errox/SSWDI
+
 # Avans Fysio
 This piece of software is made for the fysio project. This project includes a webservice and a website. Within the webservice, we want to emulate a way of a dutch standard of diagnoses and treatments for those diagnoses. It's possible with a API Richard level 2 to fetch data you need. But provides a way of a modern standard with GraphQL. The website provides a way of having employee's and patients. The employee's can create diagnoses and treatments for those diagnoses. The patients can view their diagnoses and treatments. 
 
