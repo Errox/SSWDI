@@ -471,14 +471,6 @@ namespace Fysio_WebApplication.Controllers
                         .ThenInclude(x => x.ApplicationUser)
                 .FirstOrDefault(x => x.PatientId == patient.PatientId);
 
-                // Check if the patient already has a appointment.
-                if (_appointmentsRepository.Appointments
-                    .FirstOrDefault(x => x.Patient.PatientId == patient.PatientId) != null)
-                {
-                    // If the patient already has a appointment, we redirect the patient to the details page of the appointment.
-                    return RedirectToAction("Details", "Appointment");
-                }
-
                 IEnumerable<Availability> availability = _availabilityRepository.Availabilities
                     .Where(x => x.IsAvailable == true)
                     .Where(x => x.StartAvailability >= DateTime.Now.AddHours(2))
