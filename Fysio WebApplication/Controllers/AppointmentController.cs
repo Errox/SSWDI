@@ -236,7 +236,7 @@ namespace Fysio_WebApplication.Controllers
                 .FirstOrDefault(x => x.Id == id);
 
             DateTime now = DateTime.Now;
-            if (appointment.TimeSlot.StartAvailability > now.AddHours(-24) && User.HasClaim("UserType", "Patient"))
+            if (appointment.TimeSlot.StartAvailability <= now.AddHours(-24) && User.HasClaim("UserType", "Patient"))
             {
                 // If the appointment is within 24 hours, we can't delete it. 
                 return RedirectToAction("IndexString", "Error", new { ErrorString = "You can't remove a appointment within 24 hours of the appointment." });
