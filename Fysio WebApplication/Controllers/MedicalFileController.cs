@@ -548,15 +548,6 @@ namespace Fysio_WebApplication.Controllers
                 _availabilityRepository.UpdateAvailability(availability);
                 _appointmentsRepository.AddAppointment(appointment);
             
-                Appointment appointmentNew = new Appointment
-                {
-                    Patient = patient,
-                    Employee = _employeeRepo.GetEmployee(this.User.FindFirstValue(ClaimTypes.NameIdentifier)),
-                    TimeSlot = availability,
-                };
-
-                _appointmentsRepository.AddAppointment(appointmentNew);
-
                 ViewBag.Success = "Appointment has been set.";
 
                 return Redirect("/");

@@ -131,6 +131,10 @@ namespace Fysio_WebApplication.Controllers
             
             IEnumerable<Appointment> appointments = _appointmentRepository.GetAppointmentsByPatientId(currentlyLoggedIn.Id);
             ICollection<TreatmentPlan> treatmentplans = currentlyLoggedIn.MedicalFile.TreatmentPlans;
+            if(treatmentplans.Count() == 0)
+            {
+                return RedirectToAction("IndexString", "Error", new { ErrorString = "You don't have any treatmentplans. You can't make a appointment yet." });
+            }
             int treatmentsPerWeek = 0;
             foreach (var treatmentplan in treatmentplans)
             {

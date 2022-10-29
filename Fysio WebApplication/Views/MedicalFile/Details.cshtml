@@ -94,6 +94,8 @@
             @if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
             {
                 @Html.ActionLink("Details", "Appointment", new { id = Model.Id })
+                <b> | </b>
+                @Html.ActionLink("Afspraak maken", "AppointmentNew", "MedicalFile", new { id = Model.Id})
             }else{
                 @Html.ActionLink("Afspraak maken", "Create", "Appointment")
             }

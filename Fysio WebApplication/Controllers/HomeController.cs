@@ -28,7 +28,7 @@ namespace Fysio_WebApplication.Controllers
             if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
             {
                 var appointments = _appointmentRepository.GetAppointmentsByEmployeeId(userId);
-                List<Appointment> appointmentNow = appointments.Where(x => x.TimeSlot.StartAvailability.ToString("d") == System.DateTime.Now.ToString("d")).ToList();
+                List<Appointment> appointmentNow = appointments.Where(x => x.TimeSlot.StopAvailability >= System.DateTime.Now).ToList();
                 List<Appointment> appointmentNext = appointments.Where(x => x.TimeSlot.StartAvailability > System.DateTime.Now.AddDays(1)).ToList();
                 ViewBag.AppointmentsNow = appointmentNow;
                 ViewBag.AppointmentsNext = appointmentNext;
@@ -40,8 +40,17 @@ namespace Fysio_WebApplication.Controllers
             
             if (User.HasClaim("UserType", "Patient"))
             {
-                var appointments = _appointmentRepository.GetAppointmentsByPatientId(userId);
-                List<Appointment> appointmentNow = appointments.Where(x => x.TimeSlot.StartAvailability.ToString("d") == System.DateTime.Now.ToString("d")).ToList();
+                var appointments = _appointmentRepository.Appointments
+                    .Include(x => x.Employee)
+                        .ThenInclude(x => x.ApplicationUser)
+                    .Include(x => x.Patient)
+                        .ThenInclude(x => x.ApplicationUser)
+                    .Include(x => x.Patient)
+                        .ThenInclude(x => x.MedicalFile)
+                    .Include(x => x.TimeSlot)
+                    .Where(x => x.Patient.Id == userId || x.Patient.ApplicationUser.Id == userId).ToList();
+
+                List<Appointment> appointmentNow = appointments.Where(x => x.TimeSlot.StopAvailability >= System.DateTime.Now).ToList();
                 List<Appointment> appointmentNext = appointments.Where(x => x.TimeSlot.StartAvailability > System.DateTime.Now.AddDays(1)).ToList();
                 ViewBag.AppointmentsNow = appointmentNow;
                 ViewBag.AppointmentsNext = appointmentNext;
