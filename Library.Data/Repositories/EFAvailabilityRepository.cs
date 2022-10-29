@@ -16,7 +16,7 @@ namespace Library.Data.Repositories
         }
 
 
-        public IQueryable<Availability> Availabilities => _context.Availabilties.Where(x => x.StartAvailability >= System.DateTime.Now);
+        public IQueryable<Availability> Availabilities => _context.Availabilties.Where(x => x.StartAvailability >= System.DateTime.Now.AddHours(1));
 
         public IEnumerable<Availability> FindAll()
         {

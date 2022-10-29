@@ -83,12 +83,14 @@ namespace Fysio_WebApplication.Controllers
             {
                 IEnumerable<Availability> availability = _availabilityRepository.Availabilities
                     .Where(x => x.IsAvailable == true)
+                    .Where(x => x.StartAvailability >= DateTime.Now.AddHours(1))
                     .Where(x => x.Employee == currentlyLoggedIn.MedicalFile.IntakeTherapistId);
 
                 SelectList selectlist = new SelectList(availability, "Id", "StartAvailability");
 
                 ViewBag.Brands = new SelectList(_availabilityRepository.Availabilities
                     .Where(x => x.IsAvailable == true)
+                    .Where(x => x.StartAvailability >= DateTime.Now.AddHours(1))
                     .Where(x => x.Employee == currentlyLoggedIn.MedicalFile.IntakeTherapistId).ToList(), "Id", "StartAvailability");
 
                 ViewBag.Patient = currentlyLoggedIn;
