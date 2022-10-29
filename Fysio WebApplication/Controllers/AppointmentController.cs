@@ -67,13 +67,6 @@ namespace Fysio_WebApplication.Controllers
                 // access denied, no medicalfile yet. 
                 return RedirectToAction("NoMedicalFile", "Error");
             }
-            // Check if the patient already has a appointment.
-            if (_appointmentRepository.Appointments
-                .FirstOrDefault(x => x.Patient.PatientId == Patient) != null)
-            {
-                // If the patient already has a appointment, we redirect the patient to the details page of the appointment.
-                return RedirectToAction("Details", "Appointment");
-            }
 
             // Get all appointments from the patient. For this week. 
             IEnumerable<Appointment> appointments = _appointmentRepository.GetAppointmentsByPatientId(currentlyLoggedIn.Id);
@@ -105,7 +98,15 @@ namespace Fysio_WebApplication.Controllers
                 return View();
             }
             else
-            {
+            {            
+                // Check if the patient already has a appointment.
+                if (_appointmentRepository.Appointments
+                    .FirstOrDefault(x => x.Patient.PatientId == Patient) != null)
+                {
+                    // If the patient already has a appointment, we redirect the patient to the details page of the appointment.
+                    return RedirectToAction("Details", "Appointment");
+                }
+
                 return RedirectToAction("IndexString", "Error", new { ErrorString = "You can't create more appointments then the treatment prescribes." });
             }           
         }
@@ -205,11 +206,6 @@ namespace Fysio_WebApplication.Controllers
         public ActionResult Delete(int id, Appointment collection)
         {
             // Delete for a appointment. 
-
-            // When it's a patient, we need to check if it's 24 hours before the appointment, else it's canceled with a warning. 
-
-            // When it's a employee, it's okay (this can be discussed with a patient for curcumstances, but this is just to be in case of emergency or whatever).
-
             Appointment appointment = _appointmentRepository.
                 Appointments
                 .Include(x => x.TimeSlot)
@@ -241,22 +237,30 @@ namespace Fysio_WebApplication.Controllers
         [Authorize(Policy = "RequirePatientRole")]
         public ActionResult Details()
         {
-            Appointment appointment = _appointmentRepository.Appointments
+            List<Appointment> appointment = _appointmentRepository.Appointments
                 .Include(x => x.Patient)
                     .ThenInclude(x => x.ApplicationUser)
                 .Include(x => x.TimeSlot)
                 .Include(x => x.Employee)
                     .ThenInclude(x => x.ApplicationUser)
-                .FirstOrDefault(x => x.Patient.PatientId == this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+                .Where(x => x.Patient.PatientId == this.User.FindFirstValue(ClaimTypes.NameIdentifier)).ToList();
             
             if(appointment is null) 
             {
                 return RedirectToAction("Create", "Appointment");
             }
+            if (appointment.Count() == 0)
+            {
+                return RedirectToAction("Create", "Appointment");
+            }
+            if(appointment.Count() > 0)
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
-            ViewBag.StartTime = appointment.TimeSlot.StartAvailability.ToString("t");
-            ViewBag.StopTime = appointment.TimeSlot.StopAvailability.ToString("t");
-            ViewBag.Date = appointment.TimeSlot.StartAvailability.ToString("d");
+            ViewBag.StartTime = appointment.FirstOrDefault().TimeSlot.StartAvailability.ToString("t");
+            ViewBag.StopTime = appointment.FirstOrDefault().TimeSlot.StopAvailability.ToString("t");
+            ViewBag.Date = appointment.FirstOrDefault().TimeSlot.StartAvailability.ToString("d");
             return View(appointment);
         }
 

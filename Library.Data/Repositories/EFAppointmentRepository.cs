@@ -16,12 +16,11 @@ namespace Library.Data.Repositories
             _context = ctx;
         }
 
-
-        public IQueryable<Appointment> Appointments => _context.Appointments;
+        // Find all after today. 
+        public IQueryable<Appointment> Appointments => _context.Appointments.Where(a => a.TimeSlot.StartAvailability >= System.DateTime.Now);
         public IEnumerable<Appointment> FindAll()
         {
-            // Find all after today. 
-            return _context.Appointments.Where(a => a.TimeSlot.StartAvailability >= System.DateTime.Now);
+            return _context.Appointments;
         }
 
         public Appointment GetAppointment(int id)
@@ -57,8 +56,7 @@ namespace Library.Data.Repositories
                 .Include(x => x.Patient)
                     .ThenInclude(x => x.MedicalFile)
                 .Include(x => x.TimeSlot)
-                .Where(a => a.Patient.PatientId == userId)
-                .Where(a => a.TimeSlot.StartAvailability >= System.DateTime.Now);
+                .Where(a => a.Patient.PatientId == userId);
         }
 
         public IEnumerable<Appointment> GetAppointmentsByEmployeeId(string employeeId)
@@ -71,8 +69,7 @@ namespace Library.Data.Repositories
                 .Include(x => x.Patient)
                     .ThenInclude(x => x.MedicalFile)
                 .Include(x => x.TimeSlot)
-                .Where(a => a.Employee.EmployeeId == employeeId)
-                .Where(a => a.TimeSlot.StartAvailability >= System.DateTime.Now);
+                .Where(a => a.Employee.EmployeeId == employeeId);
         }
     }
 }

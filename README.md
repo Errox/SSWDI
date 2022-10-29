@@ -9,12 +9,6 @@ Documentation can be found in the folder Docs.
 This piece of software is made for the fysio project. This project includes a webservice and a website. Within the webservice, we want to emulate a way of a dutch standard of diagnoses and treatments for those diagnoses. It's possible with a API Richard level 2 to fetch data you need. But provides a way of a modern standard with GraphQL. The website provides a way of having employee's and patients. The employee's can create diagnoses and treatments for those diagnoses. The patients can view their diagnoses and treatments. 
 
 
-
-# To do list: 
-- [ ] Make tests for the business rules
-  - [ ] Make tests based on interfaces.
-
-
 ## UML Diagrams
 - Package- en klassendiagram voor toepassing van clean (onion) architectuur.
 - Componentdiagram voor het gehele systeem.
@@ -33,10 +27,10 @@ This piece of software is made for the fysio project. This project includes a we
 ## Business rules done.
 - [x] BR_1 
 - [x] BR_2
-- [x] BR_3 // Only check the "After treatment is finished/ended date check" part.
-- [x] BR_4 // Make the description mandetory if webservice is asking for it.
-- [x] BR_5 // Just the test needs to be made
-- [x] BR_6 // Just the test needs to be made
+- [x] BR_3 
+- [x] BR_4
+- [x] BR_5 
+- [x] BR_6 
 
 
 ### Business rules
