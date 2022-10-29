@@ -3,7 +3,11 @@ SSWDI
 [![Build Status](https://dev.azure.com/rgroenewold3/Avans%20Fysio/_apis/build/status/Avans%20Fysio-ASP.NET%20Core-CI?branchName=main)](https://dev.azure.com/rgroenewold3/Avans%20Fysio/_build/latest?definitionId=7&branchName=main)
  
 
-Documentation can be found in the folder Docs.
+Diagrams can be found in the folder Docs.
+
+Video : https://www.youtube.com/watch?v=zBSGS44h-H8
+
+Video Drive: https://drive.google.com/uc?id=1nzxLkVjsOfV9m1B_QjBHwN01fAvvSqbE&export=download
 
 # Avans Fysio
 This piece of software is made for the fysio project. This project includes a webservice and a website. Within the webservice, we want to emulate a way of a dutch standard of diagnoses and treatments for those diagnoses. It's possible with a API Richard level 2 to fetch data you need. But provides a way of a modern standard with GraphQL. The website provides a way of having employee's and patients. The employee's can create diagnoses and treatments for those diagnoses. The patients can view their diagnoses and treatments. 
@@ -15,35 +19,6 @@ This piece of software is made for the fysio project. This project includes a we
 - Deploymentdiagram voor het gehele systeem.
 
 
-## User stories done. 
-- [x] US_01
-- [X] US_02 
-- [x] US_03
-- [x] US_04
-- [x] US_05
-- [x] US_06
-
-
-## Business rules done.
-- [x] BR_1 
-- [x] BR_2
-- [x] BR_3 
-- [x] BR_4
-- [x] BR_5 
-- [x] BR_6 
-
-
-### Business rules
-- **BR_1** Het maximaal aantal afspraken per week wordt niet overschreden bij het boeken van een afspraak.
-- **BR_2**. Afspraken kunnen alleen worden gemaakt op beschikbare momenten van de
-hoofdbehandelaar. Hierbij moet rekening gehouden worden met de algemene
-beschikbaarheid en de reeds gemaakte afspraken.
-- **BR_3** Een behandeling kan niet in worden gevoerd als de patiént nog niet in de praktijk is geregistreerd of nadat de behandeling is beéindigd.
-- **BR 4** Bij een aantal behandelingen is een toelichting verplicht.
-- **BR_5** De leeftijd van een patiént is > 16.
-- **BR_6** Een afspraak kan niet door een patient worden geannuleerd minder van 24 uur voorafgaand aan de afspraak.
-
-
 # Accounts
 | Account name |  Role  | Password |
 |:-|:-:|-:|
@@ -52,50 +27,58 @@ beschikbaarheid en de reeds gemaakte afspraken.
 | olaEliza@hotmail.com  | Patient |    "Secret1234!" |
 | sriJudd@hotmail.com   | Patient |    "Secret1234!" |
 
+## Azure Locations
+| Application | URL | 
+|:-|:-:|
+| Fysio Web Appliction  | https://fysiowebapplication.azurewebsites.net/ |
+| Fysio Web Service   |  https://fysiowebservice.azurewebsites.net/  |  
+| Fysio Web service GraphQL  | https://fysiowebservice.azurewebsites.net/graphql/ |  
+| Fysio Web Service Swagger   | https://fysiowebservice.azurewebsites.net/swagger/index.html |  
 
 
-## graphql examples
+
+## GraphQL examples
 
 ### Get a single diagnosis
-query GetTreat($code : String!){
+`query GetTreat($code : String!){
   treatmentByCode(code: $code){
     code,
     description
   }
-}
+}`
 
 ### Get a single diagnosis
-query GetDiag($id : Int!){
+`query GetDiag($id : Int!){
   diagnosesByCode(id: $id){
     ...diagnoses2
   }
-}
+}`
 
 ### Get all Treatments
-query GetAllTreat{
+`query GetAllTreat{
   treatments {
     code
     description
   }
-}
+}`
 
 ### Get all Diagnosis
-query GetAllDiag{
+`query GetAllDiag{
   diagnoses {
     ...diagnoses2
   }
-}
+}`
 
 ### Fragment example
-fragment diagnoses2 on Diagnosis{
+`fragment diagnoses2 on Diagnosis{
   id,
   bodyLocation,
   code,
   pathology
-}
+}`
 
 ### Mutating example
-mutation MutateDiagnosis($diagnosis : DiagnosisInput!){
+`mutation MutateDiagnosis($diagnosis : DiagnosisInput!){
   addDiagnosis(input: $diagnosis) {
     diagnosis {
       code,
@@ -103,4 +86,4 @@ mutation MutateDiagnosis($diagnosis : DiagnosisInput!){
       pathology
     }
   }
-}
+}`
