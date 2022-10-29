@@ -128,7 +128,7 @@ namespace Fysio_WebApplication.Seed
                     Particularities = "Let op de teennagels",
                     TreatmentPerformedBy = student,
                     TreatmentDate = DateTime.Now.AddDays(2),
-                    AmountOfTreatmentsPerWeek = 2
+                    AmountOfTreatmentsPerWeek = 1
                 };
                 appContext.Add(treatmentPlan1);
                 TreatmentPlan treatmentPlan2 = new TreatmentPlan
@@ -139,7 +139,7 @@ namespace Fysio_WebApplication.Seed
                     Particularities = "Let op de manier van spreken, kan erg aggressief zijn.",
                     TreatmentPerformedBy = employee,
                     TreatmentDate = DateTime.Now.AddDays(1),
-                    AmountOfTreatmentsPerWeek = 2
+                    AmountOfTreatmentsPerWeek = 1
                 };
 
                 appContext.Add(treatmentPlan2);
@@ -151,7 +151,7 @@ namespace Fysio_WebApplication.Seed
                     Particularities = "Ballontherapie zou genoeg moeten zijn.",
                     TreatmentPerformedBy = employee,
                     TreatmentDate = DateTime.Now.AddDays(5),
-                    AmountOfTreatmentsPerWeek = 2
+                    AmountOfTreatmentsPerWeek = 1
                 };
                 appContext.Add(treatmentPlan3);
 
@@ -184,7 +184,7 @@ namespace Fysio_WebApplication.Seed
                 MedicalFile medicalFile2 = new MedicalFile
                 {
                     Description = "Veel last van de duim",
-                    DiagnosisCode = 5585,
+                    DiagnosisCode = 5586,
                     IntakeTherapistId = employee,
                     IntakeSupervision = employee,
                     DateOfCreation = DateTime.Now.AddDays(-4),
@@ -278,7 +278,6 @@ namespace Fysio_WebApplication.Seed
             
             //List<Availability> availabilities = null;
             //{ 18 / 10 / 2022 8:00:00 AM} // Today with only hours set. 
-
             while (dateStart < dateStop.AddDays(1))
             {
                 DateTime DateTimeStartHour = dateTimeStart;

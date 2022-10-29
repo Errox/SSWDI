@@ -69,17 +69,19 @@ namespace Fysio_WebApplication.Controllers
             }
 
             // Get all appointments from the patient. For this week. 
-            IEnumerable<Appointment> appointments = _appointmentRepository.GetAppointmentsByPatientId(currentlyLoggedIn.Id);
+            List<Appointment> appointments = _appointmentRepository.GetAppointmentsByPatientId(currentlyLoggedIn.Id).ToList();
+
+            List<Appointment> app = _appointmentRepository.Appointments.Where(x => x.Patient.Id == currentlyLoggedIn.Id).ToList();
             // Count the amount of treatments combined all into a int 
             ICollection<TreatmentPlan> treatmentplans = currentlyLoggedIn.MedicalFile.TreatmentPlans;
             int treatmentsPerWeek = 0;
+
             foreach(var treatmentplan in treatmentplans)
             {
                 treatmentsPerWeek = treatmentsPerWeek + treatmentplan.AmountOfTreatmentsPerWeek;
             }
-
             // Check if the amount of appointments that the patient has, are less then the treatmentplans prescribes.
-            if (appointments.Count() <= treatmentsPerWeek)
+            if (app.Count() <= treatmentsPerWeek)
             {
                 IEnumerable<Availability> availability = _availabilityRepository.Availabilities
                     .Where(x => x.IsAvailable == true)
@@ -100,16 +102,8 @@ namespace Fysio_WebApplication.Controllers
                 return View();
             }
             else
-            {            
-                // Check if the patient already has a appointment.
-                if (_appointmentRepository.Appointments
-                    .FirstOrDefault(x => x.Patient.PatientId == Patient) != null)
-                {
-                    // If the patient already has a appointment, we redirect the patient to the details page of the appointment.
-                    return RedirectToAction("Details", "Appointment");
-                }
-
-                return RedirectToAction("IndexString", "Error", new { ErrorString = "You can't create more appointments then the treatment prescribes." });
+            {        
+                return RedirectToAction("IndexString", "Error", new { ErrorString = "You can't create more appointments then the treatments prescribes." });
             }           
         }
 
@@ -134,20 +128,38 @@ namespace Fysio_WebApplication.Controllers
                         .ThenInclude(x => x.ApplicationUser)
                 .FirstOrDefault(x => x.PatientId == patient);
 
-            Appointment appointment = new Appointment();
+            
+            IEnumerable<Appointment> appointments = _appointmentRepository.GetAppointmentsByPatientId(currentlyLoggedIn.Id);
+            ICollection<TreatmentPlan> treatmentplans = currentlyLoggedIn.MedicalFile.TreatmentPlans;
+            int treatmentsPerWeek = 0;
+            foreach (var treatmentplan in treatmentplans)
+            {
+                treatmentsPerWeek = treatmentsPerWeek + treatmentplan.AmountOfTreatmentsPerWeek;
+            }
 
-            appointment.TimeSlot = availability;
-            appointment.Patient = currentlyLoggedIn;
-            appointment.Employee = currentlyLoggedIn.MedicalFile.IntakeTherapistId;
+            // Check if the amount of appointments that the patient has, are less then the treatmentplans prescribes.
+            if (appointments.Count() <= treatmentsPerWeek)
+            {
+                Appointment appointment = new Appointment();
+
+                appointment.TimeSlot = availability;
+                appointment.Patient = currentlyLoggedIn;
+                appointment.Employee = currentlyLoggedIn.MedicalFile.IntakeTherapistId;
 
 
-            availability.Patient = currentlyLoggedIn;
+                availability.Patient = currentlyLoggedIn;
+                availability.IsAvailable = false;
 
-            _availabilityRepository.UpdateAvailability(availability);
-            _appointmentRepository.AddAppointment(appointment);
+                _availabilityRepository.UpdateAvailability(availability);
+                _appointmentRepository.AddAppointment(appointment);
 
 
-            return RedirectToAction("Details", "Appointment");
+                return RedirectToAction("Details", "Appointment");
+            }
+            else
+            {
+                return RedirectToAction("IndexString", "Error", new { ErrorString = "You can't create more appointments then the treatment prescribes." });
+            }
 
         }
 
