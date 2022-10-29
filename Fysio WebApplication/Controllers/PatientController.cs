@@ -189,11 +189,11 @@ namespace Fysio_WebApplication.Controllers
                             ms.Dispose();
                         }
                     }
-
-                    // Because the model is empty. We need to fetch the old img photo to return it. 
-
-                    patient.ImgData = _patientRepo.Patients.FirstOrDefault(x => x.IdNumber == int.Parse(patient.Id)).ImgData;
-
+                    else
+                    {
+                        // Because the model is empty. We need to fetch the old img photo to return it. 
+                        patient.ImgData = _patientRepo.Patients.FirstOrDefault(x => x.IdNumber == int.Parse(patient.Id)).ImgData;
+                    }
 
                     _patientRepo.UpdatePatient(id, patient);
                     
