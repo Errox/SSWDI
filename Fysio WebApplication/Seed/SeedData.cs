@@ -214,35 +214,35 @@ namespace Fysio_WebApplication.Seed
                 };
                 appContext.Add(medicalFile3);
 
-                // Since there is quite a lot of logic to be made when making Availability.
-                // I've extracted the code from the controller and placed in it's own function. 
-                // Makes the code a little cleaner. 
-                // And yes, I know it's better when all the other models should be in a function too...
-                await LoopAvailability(employee, appContext, 5);
-                await LoopAvailability(student, appContext, 5);
+                //// Since there is quite a lot of logic to be made when making Availability.
+                //// I've extracted the code from the controller and placed in it's own function. 
+                //// Makes the code a little cleaner. 
+                //// And yes, I know it's better when all the other models should be in a function too...
+                //await LoopAvailability(employee, appContext, 5);
+                //await LoopAvailability(student, appContext, 5);
                                 
-                // Find a availability for employee but also for the student. 
-                Availability availabilityEmployee = appContext.Availabilties.Where(x => x.IsAvailable == true).FirstOrDefault(x => x.Employee == employee); 
-                Availability availabilityStudent = appContext.Availabilties.Where(x => x.IsAvailable == true).FirstOrDefault(x => x.Employee == student);
+                //// Find a availability for employee but also for the student. 
+                //Availability availabilityEmployee = appContext.Availabilties.Where(x => x.IsAvailable == true).Where(x => x.StartAvailability >= DateTime.Now.AddMinutes(30)).FirstOrDefault(x => x.Employee == employee); 
+                //Availability availabilityStudent = appContext.Availabilties.Where(x => x.IsAvailable == true).Where(x => x.StartAvailability >= DateTime.Now.AddMinutes(30)).FirstOrDefault(x => x.Employee == student);
                 
-                Appointment appointment1 = new Appointment
-                {
-                    Patient = patient1,
-                    Employee = employee,
-                    TimeSlot = availabilityEmployee,
-                };
-                appContext.Add(appointment1);
+                //Appointment appointment1 = new Appointment
+                //{
+                //    Patient = patient1,
+                //    Employee = employee,
+                //    TimeSlot = availabilityEmployee,
+                //};
+                //appContext.Add(appointment1);
                 
-                availabilityEmployee.IsAvailable = false;
+                //availabilityEmployee.IsAvailable = false;
 
-                Appointment appointment2 = new Appointment
-                {
-                    Patient = patient2,
-                    Employee = student,
-                    TimeSlot = availabilityStudent,
-                };
-                appContext.Add(appointment2);
-                availabilityStudent.IsAvailable = false;
+                //Appointment appointment2 = new Appointment
+                //{
+                //    Patient = patient2,
+                //    Employee = student,
+                //    TimeSlot = availabilityStudent,
+                //};
+                //appContext.Add(appointment2);
+                //availabilityStudent.IsAvailable = false;
 
                 await appContext.SaveChangesAsync();
             }

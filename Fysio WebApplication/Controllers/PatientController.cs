@@ -27,6 +27,7 @@ namespace Fysio_WebApplication.Controllers
         private IMedicalFileRepository _medicalFileRepo;
         private IEmployeeRepository _employeeRepo;
         private IAppointmentsRepository _appointmentRepo;
+        private byte[] imgData;
         private readonly IGraphQLClient _client;
 
         public PatientController(
@@ -173,19 +174,31 @@ namespace Fysio_WebApplication.Controllers
         {
             if (ModelState.IsValid)
             {
+                
                 try
                 {
-                    foreach (var file in Request.Form.Files)
+                    if(Request.Form.Files.Count() > 0)
                     {
-                        MemoryStream ms = new MemoryStream();
-                        file.CopyTo(ms);
-                        patient.ImgData = ms.ToArray();
+                        foreach (var file in Request.Form.Files)
+                        {
+                            MemoryStream ms = new MemoryStream();
+                            file.CopyTo(ms);
+                            patient.ImgData = ms.ToArray();
 
-                        ms.Close();
-                        ms.Dispose();
+                            ms.Close();
+                            ms.Dispose();
+                        }
                     }
 
+                    // Because the model is empty. We need to fetch the old img photo to return it. 
+
+                    patient.ImgData = _patientRepo.Patients.FirstOrDefault(x => x.IdNumber == int.Parse(patient.Id)).ImgData;
+
+
                     _patientRepo.UpdatePatient(id, patient);
+                    
+
+
                     return RedirectToAction("details", new { id = id });
                 }
                 catch
