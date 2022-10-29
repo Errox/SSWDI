@@ -126,6 +126,8 @@ namespace Fysio_WebApplication.Controllers
                 .Include(x => x.MedicalFile)
                     .ThenInclude(x => x.IntakeTherapistId)
                         .ThenInclude(x => x.ApplicationUser)
+                .Include(x => x.MedicalFile)
+                    .ThenInclude(x => x.TreatmentPlans)
                 .FirstOrDefault(x => x.PatientId == patient);
 
             
