@@ -28,9 +28,9 @@ namespace Fysio_WebApplication.Controllers
             if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
             {
                 var appointments = _appointmentRepository.GetAppointmentsByEmployeeId(userId);
-                List<Appointment> appointmentNow = appointments.Where(x => x.TimeSlot.StopAvailability >= System.DateTime.Now).ToList();
+                List<Appointment> appointmentNow = appointments.Where(x => x.TimeSlot.StopAvailability.ToString("d") == System.DateTime.Now.ToString("d")).ToList();
                 List<Appointment> appointmentNext = appointments.Where(x => x.TimeSlot.StartAvailability > System.DateTime.Now.AddDays(1)).ToList();
-                ViewBag.AppointmentsNow = appointmentNow;
+                ViewBag.AppointmentsNow = appointmentNow.Where(x => x.TimeSlot.StartAvailability >= System.DateTime.Now).ToList();
                 ViewBag.AppointmentsNext = appointmentNext;
                 ViewBag.AppointmentsNowCount = appointmentNow.Count();
                 ViewBag.AppointmentsNextCount = appointmentNext.Count();
