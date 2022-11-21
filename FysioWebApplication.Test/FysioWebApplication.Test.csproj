@@ -24,7 +24,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Fysio WebApplication\FysioWebApplication.csproj" />
-    <ProjectReference Include="..\Library.Domain\Library.Domain.csproj" />
   </ItemGroup>
   <PropertyGroup>
     <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>

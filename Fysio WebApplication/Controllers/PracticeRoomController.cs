@@ -1,5 +1,5 @@
-﻿using Library.core.Model;
-using Library.Domain.Repositories;
+﻿using Core.DomainModel;
+using DomainServices.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;

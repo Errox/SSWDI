@@ -1,5 +1,5 @@
-﻿using Fysio_Codes.Abstract;
-using Fysio_Codes.Models;
+﻿using DomainServices.Repositories;
+using Core.DomainModel;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 

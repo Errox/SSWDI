@@ -1,5 +1,6 @@
-﻿using Library.core.Model;
-using Library.Domain.Repositories;
+﻿using Core.DomainModel;
+using DomainServices.Repositories;
+using Library.core.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

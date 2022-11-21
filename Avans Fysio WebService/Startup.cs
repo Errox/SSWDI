@@ -1,9 +1,9 @@
 using Avans_Fysio_WebService.GraphQL;
 using Avans_Fysio_WebService.GraphQL.Mutations;
-using Fysio_Codes.Abstract;
-using Fysio_Codes.DAL;
-using Fysio_Codes.DataStore;
-using Fysio_Codes.SeedData;
+using DomainServices.Repositories;
+using EFFysioData.DAL;
+using EFFysioData.Repositories;
+using EFFysioData.SeedData;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;

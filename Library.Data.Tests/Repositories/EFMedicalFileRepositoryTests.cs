@@ -1,9 +1,9 @@
 ﻿using Fysio_WebApplication.Controllers;
 using GraphQL.Client.Abstractions;
-using Library.core.Model;
+using Core.DomainModel;
 using Library.Data.Dal;
 using Library.Data.Repositories;
-using Library.Domain.Repositories;
+using DomainServices.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;

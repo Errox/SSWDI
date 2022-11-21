@@ -1,8 +1,8 @@
 ﻿using HotChocolate;
 using HotChocolate.Language;
-using Library.core.Model;
-using Library.core.ViewModels;
-using Library.Domain.Repositories;
+using Core.DomainModel;
+using Core.ViewModels;
+using DomainServices.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

@@ -24,7 +24,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Fysio WebApplication\FysioWebApplication.csproj" />
-    <ProjectReference Include="..\Library.Data\Library.Data.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

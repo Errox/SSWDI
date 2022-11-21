@@ -1,12 +1,12 @@
 ﻿using Avans_Fysio_WebService.GraphQL.Extensions;
-using Fysio_Codes.DAL;
-using Fysio_Codes.Models;
+using Core.DomainModel;
 using HotChocolate;
 using HotChocolate.Types;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EFFysioData.DAL;
 
 namespace Avans_Fysio_WebService.GraphQL
 {

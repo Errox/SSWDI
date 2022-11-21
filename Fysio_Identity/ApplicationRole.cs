@@ -1,4 +1,4 @@
-﻿namespace Fysio_Identity
+﻿namespace Identity
 {
     public class ApplicationRole
     {

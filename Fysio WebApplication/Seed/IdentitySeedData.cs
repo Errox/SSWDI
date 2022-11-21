@@ -1,5 +1,5 @@
-﻿using Fysio_Identity;
-using Library.core.Model;
+﻿using Identity;
+using Core.DomainModel;
 using Library.Data.Dal;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;

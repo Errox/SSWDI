@@ -1,9 +1,7 @@
-﻿using Fysio_Codes.Models;
+﻿using Core.DomainModel;
 using GraphQL;
 using GraphQL.Client.Abstractions;
-using Library.core.GraphQL.ResponseTypes;
-using Library.core.Model;
-using Library.Domain.Repositories;
+using DomainServices.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,12 +9,12 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.ExceptionServices;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Core.ViewModels;
+using Core.GraphQL.ResponseTypes;
 
 namespace Fysio_WebApplication.Controllers
 {
@@ -79,7 +77,7 @@ namespace Fysio_WebApplication.Controllers
                     var client = new RestClient("https://fysiowebservice.azurewebsites.net/api");
                     var request = new RestRequest("/Diagnosis/" + patient.MedicalFile.DiagnosisCode, Method.Get);
                     RestResponse response = await client.ExecuteAsync(request);
-                    DiagnosisE diagnosis = JsonConvert.DeserializeObject<DiagnosisE>(response.Content);
+                    DiagnosisExtended diagnosis = JsonConvert.DeserializeObject<DiagnosisExtended>(response.Content);
                     //Send them towards the viewbag             
 
                     ViewBag.BodyLocation = diagnosis.BodyLocation;

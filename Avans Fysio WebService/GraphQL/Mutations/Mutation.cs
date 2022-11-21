@@ -1,7 +1,7 @@
 ﻿using Avans_Fysio_WebService.GraphQL.Extensions;
 using Avans_Fysio_WebService.GraphQL.Mutations.Payloads;
-using Fysio_Codes.DAL;
-using Fysio_Codes.Models;
+using EFFysioData.DAL;
+using Core.DomainModel;
 using HotChocolate;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;

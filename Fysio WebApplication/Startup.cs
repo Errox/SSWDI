@@ -1,12 +1,7 @@
-using Fysio_Identity;
-using Fysio_WebApplication.Seed;
 using GraphQL.Client.Abstractions;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.Newtonsoft;
-using Library.core.Model;
-using Library.Data.Dal;
-using Library.Data.Repositories;
-using Library.Domain.Repositories;
+using DomainServices.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -14,6 +9,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Identity;
+using EFFysioData.DAL;
+using Identity;
+using EFFysioData.Repositories;
+using Fysio_WebApplication.Seed;
 
 namespace Fysio_WebApplication
 {
@@ -29,7 +29,6 @@ namespace Fysio_WebApplication
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             //services.AddDbContext<ApplicationDbContext>(options =>
             //    options.UseSqlServer(
             //        Configuration.GetConnectionString("ApplicationDevConnection")));

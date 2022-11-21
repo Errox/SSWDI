@@ -1,8 +1,8 @@
-﻿using Library.core.Model;
+﻿
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Fysio_Identity
+namespace Identity
 {
     public class AppIdentityDbContext : IdentityDbContext<ApplicationUser>
     {

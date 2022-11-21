@@ -1,4 +1,4 @@
-﻿using Fysio_Codes.DAL;
+﻿using EFFysioData.DAL;
 using HotChocolate.Types;
 using HotChocolate.Types.Descriptors;
 using System.Reflection;

@@ -1,9 +1,9 @@
-﻿using Fysio_Codes.Models;
+﻿using Core.DomainModel;
 using GraphQL;
 using GraphQL.Client.Abstractions;
 using Library.core.GraphQL.ResponseTypes;
-using Library.core.Model;
-using Library.Domain.Repositories;
+using Core.DomainModel;
+using DomainServices.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;

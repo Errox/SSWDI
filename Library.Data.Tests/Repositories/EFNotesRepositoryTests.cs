@@ -1,8 +1,8 @@
 ﻿using Fysio_WebApplication.Controllers;
-using Library.core.Model;
+using Core.DomainModel;
 using Library.Data.Dal;
 using Library.Data.Repositories;
-using Library.Domain.Repositories;
+using DomainServices.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
 using Moq;
