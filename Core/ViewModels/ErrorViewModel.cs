@@ -1,4 +1,4 @@
-namespace Library.core.Model
+namespace Core.ViewModel
 {
     public class ErrorViewModel
     {

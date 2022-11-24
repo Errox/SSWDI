@@ -1,17 +1,15 @@
-﻿using EFFysioData.DAL;
-using Core.DomainModel;
+﻿using Core.DomainModel;
 using DomainServices.Repositories;
+using EFFysioData.DAL;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace EFFysioData.Repositories
 {
-    public class EFEmployeeRepository : IEmployeeRepository
+    public class EFEmployeeRepository : EFGenericRepository<Employee>, IEmployeeRepository
     {
         private readonly ApplicationDbContext _context;
 
-        public EFEmployeeRepository(ApplicationDbContext ctx)
+        public EFEmployeeRepository(ApplicationDbContext ctx) : base(ctx)
         {
             _context = ctx;
         }

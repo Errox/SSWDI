@@ -1,9 +1,8 @@
 ﻿using Core.DomainModel;
+using Core.GraphQL.ResponseTypes;
+using DomainServices.Repositories;
 using GraphQL;
 using GraphQL.Client.Abstractions;
-using Library.core.GraphQL.ResponseTypes;
-using Core.DomainModel;
-using DomainServices.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -24,7 +23,7 @@ namespace Fysio_WebApplication.Controllers
         private readonly IGraphQLClient _client;
 
         public TreatmentPlanController(
-            ITreatmentPlanRepository treatmentPlanRepo, 
+            ITreatmentPlanRepository treatmentPlanRepo,
             IEmployeeRepository employee,
             IGraphQLClient client)
         {
@@ -36,7 +35,7 @@ namespace Fysio_WebApplication.Controllers
         // GET: TreatmentController
         public ActionResult Index()
         {
-            return View(_treatmentPlanRepo.FindAll());
+            return View(_treatmentPlanRepo.GetAll());
         }
 
         [Authorize]
@@ -112,7 +111,7 @@ namespace Fysio_WebApplication.Controllers
         public async Task<ActionResult> EditAsync(int id)
         {
             TreatmentPlan file = _treatmentPlanRepo.GetTreatmentPlan(id);
-            
+
             var query = new GraphQLRequest
             {
                 Query = @"

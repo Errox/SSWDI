@@ -1,8 +1,6 @@
 ﻿using Core.DomainModel;
 using DomainServices.Repositories;
 using EFFysioData.DAL;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace EFFysioData.Repositories
 {

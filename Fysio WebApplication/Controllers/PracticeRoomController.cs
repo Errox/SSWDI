@@ -29,7 +29,7 @@ namespace Fysio_WebApplication.Controllers
         {
             return View(_repo.PracticeRooms.FirstOrDefault(i => i.Id == id));
         }
-        
+
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
         // GET: PracticeRoomController/Create
         public ActionResult Create()
@@ -53,7 +53,7 @@ namespace Fysio_WebApplication.Controllers
                 return View();
             }
         }
-        
+
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
         // GET: PracticeRoomController/Edit/5
         public ActionResult Edit(int id)

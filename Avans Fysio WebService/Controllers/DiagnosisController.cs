@@ -1,5 +1,5 @@
-﻿using DomainServices.Repositories;
-using Core.DomainModel;
+﻿using Core.DomainModel;
+using DomainServices.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 

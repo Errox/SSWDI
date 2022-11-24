@@ -1,15 +1,11 @@
-﻿using Fysio_WebApplication.Controllers;
-using GraphQL.Client.Abstractions;
-using Core.DomainModel;
-using Library.Data.Dal;
-using Library.Data.Repositories;
+﻿using Core.DomainModel;
 using DomainServices.Repositories;
+using Fysio_WebApplication.Controllers;
+using GraphQL.Client.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System;
 using System.Security.Claims;
-using Xunit;
 namespace Library.Data.Tests.Repositories
 {
     public class EFMedicalFileRepositoryTests
@@ -54,7 +50,7 @@ namespace Library.Data.Tests.Repositories
                     User = new ClaimsPrincipal(new ClaimsIdentity(claims))
                 }
             };
-            
+
             // Act
             var actionResult = controller.Index();
             var result = actionResult as ViewResult;
@@ -126,7 +122,7 @@ namespace Library.Data.Tests.Repositories
                     PatientEmail = "JopDop2@mail.nl"
                 }
             };
-            
+
             return output;
         }
 
@@ -137,16 +133,16 @@ namespace Library.Data.Tests.Repositories
             var files = getMedicalFileSample();
             mock.Setup(x => x.MedicalFiles).Returns(files.AsQueryable());
             var newFile = files[0];
-            
+
             var controller = new MedicalFileController(mock.Object, mockEmployee.Object, mockPatient.Object, mockTreatment.Object, mockNotes.Object, mockAppointments.Object, mockGraphQLClient.Object, mockAvailability.Object, mockPracticeRoom.Object);
 
             var editedFile = newFile;
             editedFile.Description = "Edited Description";
-            
+
 
             // Act
             var actionResult = controller.Edit(newFile.Id, newFile);
-            
+
             // Assert
             Assert.IsType<RedirectToActionResult>(actionResult);
             Assert.Equal(editedFile.Description, mock.Object.MedicalFiles.FirstOrDefault(X => X.Id == 1).Description);

@@ -1,5 +1,4 @@
 ﻿using Core.ValidationAttributeExtentions;
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Core.DomainModel

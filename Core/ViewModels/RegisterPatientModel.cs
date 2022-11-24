@@ -1,6 +1,5 @@
 ﻿using Core.Enums;
 using Core.ValidationAttributeExtentions;
-using System;
 using System.ComponentModel.DataAnnotations;
 
 

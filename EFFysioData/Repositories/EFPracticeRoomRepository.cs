@@ -1,16 +1,14 @@
-﻿using EFFysioData.DAL;
-using Core.DomainModel;
+﻿using Core.DomainModel;
 using DomainServices.Repositories;
-using System.Collections.Generic;
-using System.Linq;
+using EFFysioData.DAL;
 
 namespace EFFysioData.Repositories
 {
-    public class EFPracticeRoomRepository : IPracticeRoomRepository
+    public class EFPracticeRoomRepository : EFGenericRepository<PracticeRoom>, IPracticeRoomRepository
     {
         private readonly ApplicationDbContext _context;
 
-        public EFPracticeRoomRepository(ApplicationDbContext ctx)
+        public EFPracticeRoomRepository(ApplicationDbContext ctx) : base(ctx)
         {
             _context = ctx;
         }

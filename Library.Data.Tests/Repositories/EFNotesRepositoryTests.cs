@@ -1,13 +1,8 @@
-﻿using Fysio_WebApplication.Controllers;
-using Core.DomainModel;
-using Library.Data.Dal;
-using Library.Data.Repositories;
+﻿using Core.DomainModel;
 using DomainServices.Repositories;
+using Fysio_WebApplication.Controllers;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualBasic;
 using Moq;
-using System;
-using Xunit;
 
 namespace Library.Data.Tests.Repositories
 {
@@ -16,13 +11,13 @@ namespace Library.Data.Tests.Repositories
         private MockRepository mockRepository;
 
         private Mock<ApplicationDbContext> mockApplicationDbContext;
-        private readonly Mock<INotesRepository> noteRepo; 
+        private readonly Mock<INotesRepository> noteRepo;
 
         public EFNotesRepositoryTests()
         {
             noteRepo = new Mock<INotesRepository>();
         }
-        
+
         [Fact]
         public void FindAll_StateUnderTest_ExpectedBehavior()
         {

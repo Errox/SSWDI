@@ -1,18 +1,15 @@
 ﻿using Core.DomainModel;
-using EFFysioData.DAL;
-using Core.DomainModel;
 using DomainServices.Repositories;
+using EFFysioData.DAL;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace EFFysioData.Repositories
 {
-    public class EFAppointmentRepository : IAppointmentsRepository
+    public class EFAppointmentRepository : EFGenericRepository<Appointment>, IAppointmentsRepository
     {
         private readonly ApplicationDbContext _context;
 
-        public EFAppointmentRepository(ApplicationDbContext ctx)
+        public EFAppointmentRepository(ApplicationDbContext ctx) : base(ctx)
         {
             _context = ctx;
         }
@@ -49,7 +46,6 @@ namespace EFFysioData.Repositories
 
         public IEnumerable<Appointment> GetAppointmentsByPatientId(string userId)
         {
-            // TODO: GET THIS IN A REPO
             return _context.Appointments
                 .Include(x => x.Employee)
                     .ThenInclude(x => x.ApplicationUser)

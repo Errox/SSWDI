@@ -1,16 +1,14 @@
-﻿using CsvHelper;
-using Fysio_Codes.DAL;
-using Fysio_Codes.Models;
+﻿using Core.DomainModel;
+using CsvHelper;
+using EFFysioData.DAL;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 
-namespace Fysio_Codes.SeedData
+namespace EFFysioData.SeedData
 {
-    public class SeedData
+    public class SeedDataWebService
     {
         public static void EnsurePopulated(IApplicationBuilder app)
         {

@@ -1,13 +1,10 @@
 ﻿using Core.DomainModel;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace DomainServices.Repositories
 {
-    public interface IAppointmentsRepository
+    public interface IAppointmentsRepository : IGenericRepository<Appointment>
     {
         IQueryable<Appointment> Appointments { get; }
-        IEnumerable<Appointment> FindAll();
         Appointment GetAppointment(int id);
         void DeleteAppointment(int id);
         void UpdateAppointment(Appointment appointment);

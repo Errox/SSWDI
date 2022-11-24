@@ -1,6 +1,7 @@
-﻿using Identity;
-using Core.DomainModel;
-using Library.Data.Dal;
+﻿using Core.DomainModel;
+using Core.Enums;
+using EFFysioData.DAL;
+using Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +10,7 @@ using System;
 using System.Linq;
 using System.Security.Claims;
 
-namespace Fysio_WebApplication.Seed
+namespace EFFysioData.SeedData
 {
     public class IdentitySeedData
     {
@@ -168,9 +169,8 @@ namespace Fysio_WebApplication.Seed
 
                 await userManager.AddClaimAsync(userPatient, patientUserClaim);
             }
-            var mc = new SeedData();
-            // ensure database populated
-            mc.EnsurePopulatedApplicationAsync(app);
+            SeedDataWebService.EnsurePopulated(app);
+
         }
     }
 }

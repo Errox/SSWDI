@@ -1,6 +1,4 @@
 ﻿using Core.DomainModel;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace DomainServices.Repositories
 {

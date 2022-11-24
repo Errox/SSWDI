@@ -20,7 +20,7 @@ namespace Fysio_WebApplication.Controllers
         // GET: NoteController
         public ActionResult Index()
         {
-            return View(_repo.FindAll());
+            return View(_repo.GetAll());
         }
 
         [Authorize(Policy = "OnlyEmployeeAndStudent")]

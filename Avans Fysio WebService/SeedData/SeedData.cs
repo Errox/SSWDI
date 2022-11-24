@@ -1,6 +1,6 @@
-﻿using CsvHelper;
+﻿using Core.DomainModel;
+using CsvHelper;
 using EFFysioData.DAL;
-using Core.DomainModel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

@@ -1,10 +1,8 @@
-﻿using Fysio_WebApplication.Controllers;
-using Core.DomainModel;
+﻿using Core.DomainModel;
 using DomainServices.Repositories;
+using Fysio_WebApplication.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System;
-using Xunit;
 
 namespace Library.Data.Tests.Repositories
 {

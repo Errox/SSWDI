@@ -1,15 +1,9 @@
-﻿using Fysio_WebApplication.Controllers;
-using GraphQL.Client.Abstractions;
-using Core.DomainModel;
-using Library.Data.Dal;
-using Library.Data.Repositories;
+﻿using Core.DomainModel;
+using Core.Enums;
 using DomainServices.Repositories;
-using Microsoft.AspNetCore.Http;
+using Fysio_WebApplication.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System;
-using System.Security.Claims;
-using Xunit;
 
 namespace Library.Data.Tests.Repositories
 {
@@ -36,7 +30,7 @@ namespace Library.Data.Tests.Repositories
             var Appointment = getAppointmentSample();
             mock.Setup(x => x.Appointments).Returns(Appointment.AsQueryable());
             var controller = new AppointmentController(mockAvailability.Object, mockEmployee.Object, mockPatient.Object, mock.Object);
-            
+
             // Act
             var actionResult = controller.Index();
             var result = actionResult as ViewResult;
@@ -168,7 +162,7 @@ namespace Library.Data.Tests.Repositories
                 StopAvailability = DateTime.Now.AddDays(3).AddMinutes(30),
                 IsAvailable = false
             };
-            
+
 
             // Act
             var actionResult = controller.Edit(newFile.Id, newFile);

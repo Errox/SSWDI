@@ -1,16 +1,14 @@
-﻿using EFFysioData.DAL;
-using Core.DomainModel;
+﻿using Core.DomainModel;
 using DomainServices.Repositories;
-using System.Collections.Generic;
-using System.Linq;
+using EFFysioData.DAL;
 
 namespace EFFysioData.Repositories
 {
-    public class EFAvailabilityRepository : IAvailabilityRepository
+    public class EFAvailabilityRepository : EFGenericRepository<Availability>, IAvailabilityRepository
     {
         private readonly ApplicationDbContext _context;
 
-        public EFAvailabilityRepository(ApplicationDbContext ctx)
+        public EFAvailabilityRepository(ApplicationDbContext ctx) : base(ctx)
         {
             _context = ctx;
         }
@@ -18,10 +16,6 @@ namespace EFFysioData.Repositories
 
         public IQueryable<Availability> Availabilities => _context.Availabilties.Where(x => x.StartAvailability >= DateTime.Now.AddHours(1));
 
-        public IEnumerable<Availability> FindAll()
-        {
-            return _context.Availabilties;
-        }
 
         public Availability GetAvailability(int id)
         {

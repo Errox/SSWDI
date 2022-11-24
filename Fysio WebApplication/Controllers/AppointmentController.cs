@@ -1,6 +1,4 @@
-﻿using HotChocolate;
-using HotChocolate.Language;
-using Core.DomainModel;
+﻿using Core.DomainModel;
 using Core.ViewModels;
 using DomainServices.Repositories;
 using Microsoft.AspNetCore.Authorization;
@@ -10,7 +8,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Security.Claims;
 
@@ -44,7 +41,7 @@ namespace Fysio_WebApplication.Controllers
             return View(_appointmentRepository.Appointments.Include(c1 => c1.Patient).Include(c2 => c2.Employee));
         }
 
-        
+
         [Authorize(Policy = "RequirePatientRole")]
         // GET: AppointmentController/Create
         // This Create is for a patient to make a appointment with it's Therapist.
@@ -76,7 +73,7 @@ namespace Fysio_WebApplication.Controllers
             ICollection<TreatmentPlan> treatmentplans = currentlyLoggedIn.MedicalFile.TreatmentPlans;
             int treatmentsPerWeek = 0;
 
-            foreach(var treatmentplan in treatmentplans)
+            foreach (var treatmentplan in treatmentplans)
             {
                 treatmentsPerWeek = treatmentsPerWeek + treatmentplan.AmountOfTreatmentsPerWeek;
             }
@@ -102,9 +99,9 @@ namespace Fysio_WebApplication.Controllers
                 return View();
             }
             else
-            {        
+            {
                 return RedirectToAction("IndexString", "Error", new { ErrorString = "You can't create more appointments then the treatments prescribes." });
-            }           
+            }
         }
 
         [Authorize(Policy = "RequirePatientRole")]
@@ -120,7 +117,7 @@ namespace Fysio_WebApplication.Controllers
                 .Include(x => x.Employee)
                     .ThenInclude(x => x.ApplicationUser)
                 .FirstOrDefault(x => x.Id == Id);
-            
+
             string patient = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             Patient currentlyLoggedIn = _patientRepository.Patients
                 .Include(x => x.MedicalFile)
@@ -130,10 +127,10 @@ namespace Fysio_WebApplication.Controllers
                     .ThenInclude(x => x.TreatmentPlans)
                 .FirstOrDefault(x => x.PatientId == patient);
 
-            
+
             IEnumerable<Appointment> appointments = _appointmentRepository.GetAppointmentsByPatientId(currentlyLoggedIn.Id);
             ICollection<TreatmentPlan> treatmentplans = currentlyLoggedIn.MedicalFile.TreatmentPlans;
-            if(treatmentplans.Count() == 0)
+            if (treatmentplans.Count() == 0)
             {
                 return RedirectToAction("IndexString", "Error", new { ErrorString = "You don't have any treatmentplans. You can't make a appointment yet." });
             }
@@ -177,7 +174,7 @@ namespace Fysio_WebApplication.Controllers
         }
 
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
-        
+
         // POST: AppointmentController/Edit/5
         [HttpPost]
         public ActionResult Edit(int id, Appointment collection)
@@ -200,12 +197,12 @@ namespace Fysio_WebApplication.Controllers
         public ActionResult Delete(int id)
         {
             string PatientId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            
+
             Appointment patientAppointment = _appointmentRepository.Appointments
                 .Include(x => x.Patient)
                     .ThenInclude(x => x.ApplicationUser)
                 .FirstOrDefault(x => x.Patient.PatientId == PatientId);
-            
+
             if (User.HasClaim("UserType", "Patient"))
             {
                 // We need to check if the appointment is coming from the patient. 
@@ -249,7 +246,7 @@ namespace Fysio_WebApplication.Controllers
             _availabilityRepository.UpdateAvailability(availability);
 
             _appointmentRepository.DeleteAppointment(appointment.Id);
-            
+
             ViewBag.Success = "Appointment has been deleted.";
             return RedirectToAction("Index", "Home");
         }
@@ -264,8 +261,8 @@ namespace Fysio_WebApplication.Controllers
                 .Include(x => x.Employee)
                     .ThenInclude(x => x.ApplicationUser)
                 .Where(x => x.Patient.PatientId == this.User.FindFirstValue(ClaimTypes.NameIdentifier)).ToList();
-            
-            if(appointment is null) 
+
+            if (appointment is null)
             {
                 return RedirectToAction("Create", "Appointment");
             }
@@ -273,7 +270,7 @@ namespace Fysio_WebApplication.Controllers
             {
                 return RedirectToAction("Create", "Appointment");
             }
-            if(appointment.Count() > 0)
+            if (appointment.Count() > 0)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -298,7 +295,7 @@ namespace Fysio_WebApplication.Controllers
         {
             string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             Employee employee = _employeeRepository.GetEmployee(userId);
-            
+
             if (model.DateTimeStart.Hour > model.DateTimeStop.Hour)
             {
                 ModelState.AddModelError("", "You can't have a start time that is after the stop time.");
@@ -313,7 +310,7 @@ namespace Fysio_WebApplication.Controllers
 
             DateTime DateStart = model.DateStart;
 
-            while(DateStart < model.DateStop.AddDays(1))
+            while (DateStart < model.DateStop.AddDays(1))
             {
                 DateTime startHour = model.DateTimeStart;
                 while (startHour < model.DateTimeStop)
@@ -335,6 +332,6 @@ namespace Fysio_WebApplication.Controllers
             model.IsValid = ModelState.IsValid;
             return View(model);
         }
-        
+
     }
 }

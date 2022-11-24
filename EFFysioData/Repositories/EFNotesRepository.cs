@@ -1,16 +1,14 @@
-﻿using EFFysioData.DAL;
-using Core.DomainModel;
+﻿using Core.DomainModel;
 using DomainServices.Repositories;
-using System.Collections.Generic;
-using System.Linq;
+using EFFysioData.DAL;
 
 namespace EFFysioData.Repositories
 {
-    public class EFNotesRepository : INotesRepository
+    public class EFNotesRepository : EFGenericRepository<Note>, INotesRepository
     {
         private readonly ApplicationDbContext _context;
 
-        public EFNotesRepository(ApplicationDbContext ctx)
+        public EFNotesRepository(ApplicationDbContext ctx) : base(ctx)
         {
             _context = ctx;
         }

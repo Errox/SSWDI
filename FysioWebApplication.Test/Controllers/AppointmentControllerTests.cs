@@ -1,11 +1,6 @@
-﻿using Fysio_WebApplication.Controllers;
-using Core.DomainModel;
-using Core.ViewModels;
-using DomainServices.Repositories;
-using Microsoft.AspNetCore.Http;
+﻿using DomainServices.Repositories;
+using Fysio_WebApplication.Controllers;
 using Moq;
-using System;
-using Xunit;
 
 namespace FysioWebApplication.Test.Controllers
 {
@@ -41,9 +36,9 @@ namespace FysioWebApplication.Test.Controllers
         public void Index_StateUnderTest_ExpectedBehavior()
         {
             // Arrange
-            
+
             // Act
-            
+
             // Assert
             Assert.True(true);
         }

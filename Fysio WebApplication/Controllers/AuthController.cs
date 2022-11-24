@@ -108,7 +108,7 @@ namespace Fysio_WebApplication.Controllers
                 ReturnUrl = returnUrl
             });
         }
-        
+
         public ViewResult RegisterPatient(string returnUrl)
         {
             return base.View(new RegisterPatientModel
@@ -183,7 +183,7 @@ namespace Fysio_WebApplication.Controllers
         public async Task<IActionResult> RegisterPatient(RegisterPatientModel model)
         {
             if (ModelState.IsValid)
-            {                
+            {
                 ApplicationUser user = new ApplicationUser
                 {
                     UserName = model.Email,
@@ -192,7 +192,7 @@ namespace Fysio_WebApplication.Controllers
                     Email = model.Email,
                     PhoneNumber = model.PhoneNumber,
                 };
-                
+
                 IdentityResult result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -236,9 +236,9 @@ namespace Fysio_WebApplication.Controllers
                     {
                         patient.MedicalFile = medicalFile;
                     }
-                    
+
                     _patientRepo.AddPatient(patient);
-                    
+
                     return RedirectToAction("Index", "Home");
                 }
                 else

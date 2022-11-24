@@ -98,7 +98,7 @@ namespace Avans_Fysio_WebService
                 endpoints.MapGraphQL();
             });
 
-            SeedData.EnsurePopulated(app);
+            SeedDataWebService.EnsurePopulated(app);
         }
     }
 }

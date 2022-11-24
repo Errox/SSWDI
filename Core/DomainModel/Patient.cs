@@ -1,10 +1,8 @@
 ﻿using Core.Enums;
 using Core.ValidationAttributeExtentions;
 using Identity;
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Xml.Linq;
 
 namespace Core.DomainModel
 {

@@ -1,6 +1,6 @@
 ﻿using Core.DomainModel;
 using DomainServices.Repositories;
-using Library.core.Model;
+using Core.DomainModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
+using Core.ViewModel;
 
 namespace Fysio_WebApplication.Controllers
 {
@@ -17,7 +18,7 @@ namespace Fysio_WebApplication.Controllers
         private readonly ILogger<HomeController> _logger;
         private IAppointmentsRepository _appointmentRepository;
 
-        public HomeController(ILogger<HomeController> logger, IAppointmentsRepository appointmentsRepository )
+        public HomeController(ILogger<HomeController> logger, IAppointmentsRepository appointmentsRepository)
         {
             _logger = logger;
             _appointmentRepository = appointmentsRepository;
@@ -38,7 +39,7 @@ namespace Fysio_WebApplication.Controllers
 
                 return View();
             }
-            
+
             if (User.HasClaim("UserType", "Patient"))
             {
                 var appointments = _appointmentRepository.Appointments

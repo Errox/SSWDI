@@ -1,7 +1,9 @@
 ﻿using Core.DomainModel;
+using Core.GraphQL.ResponseTypes;
+using Core.ViewModels;
+using DomainServices.Repositories;
 using GraphQL;
 using GraphQL.Client.Abstractions;
-using DomainServices.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,8 +15,6 @@ using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Core.ViewModels;
-using Core.GraphQL.ResponseTypes;
 
 namespace Fysio_WebApplication.Controllers
 {
@@ -29,8 +29,8 @@ namespace Fysio_WebApplication.Controllers
         private readonly IGraphQLClient _client;
 
         public PatientController(
-            IPatientRepository repo, 
-            IMedicalFileRepository medicalFile, 
+            IPatientRepository repo,
+            IMedicalFileRepository medicalFile,
             IEmployeeRepository employeeRepository,
             IAppointmentsRepository appointmentRepository,
             IGraphQLClient client)
@@ -71,7 +71,7 @@ namespace Fysio_WebApplication.Controllers
             {
                 MedicalFile medical = patient.MedicalFile;
 
-                if(medical != null)
+                if (medical != null)
                 {
                     //Fetch the Treatment containing the code
                     var client = new RestClient("https://fysiowebservice.azurewebsites.net/api");
@@ -84,8 +84,8 @@ namespace Fysio_WebApplication.Controllers
                     ViewBag.Pathology = diagnosis.Pathology;
                     ViewBag.DisplayBodyAndPathology = diagnosis.DisplayBodyAndPathology;
                 }
-                
-                
+
+
                 string imageDataURL;
                 if (patient.ImgData == null)
                 {
@@ -172,10 +172,10 @@ namespace Fysio_WebApplication.Controllers
         {
             if (ModelState.IsValid)
             {
-                
+
                 try
                 {
-                    if(Request.Form.Files.Count() > 0)
+                    if (Request.Form.Files.Count() > 0)
                     {
                         foreach (var file in Request.Form.Files)
                         {
@@ -194,7 +194,7 @@ namespace Fysio_WebApplication.Controllers
                     }
 
                     _patientRepo.UpdatePatient(id, patient);
-                    
+
 
 
                     return RedirectToAction("details", new { id = id });

@@ -1,10 +1,10 @@
 ﻿using Core.DomainModel;
+using Core.GraphQL.ResponseTypes;
+using DomainServices.Repositories;
 using GraphQL;
 using GraphQL.Client.Abstractions;
-using DomainServices.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +15,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Core.GraphQL.ResponseTypes;
 
 namespace Fysio_WebApplication.Controllers
 {
@@ -67,7 +66,7 @@ namespace Fysio_WebApplication.Controllers
             if (User.HasClaim("UserType", "Patient"))
             {
                 Patient patient = _patientRepository.Patients.Include(m => m.MedicalFile).FirstOrDefault(x => x.PatientId == User.FindFirstValue(ClaimTypes.NameIdentifier));
-                if(patient.MedicalFile is not null) 
+                if (patient.MedicalFile is not null)
                 {
                     return Redirect("/MedicalFile/Details/" + patient.MedicalFile.Id);
                 }
@@ -78,7 +77,7 @@ namespace Fysio_WebApplication.Controllers
             }
             return View(files);
         }
-        
+
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
         public ActionResult IndexPersonalSupervise()
         {
@@ -90,7 +89,7 @@ namespace Fysio_WebApplication.Controllers
                     .ThenInclude(i => i.ApplicationUser)
                 .Where(i => i.IntakeSupervision == _employeeRepo.GetEmployee(userId)));
         }
-        
+
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
         public ActionResult IndexPersonalTherapist()
         {
@@ -114,7 +113,7 @@ namespace Fysio_WebApplication.Controllers
             .Include(i => i.IntakeTherapistId)
                 .ThenInclude(c => c.ApplicationUser)
             .FirstOrDefault(i => i.Id == id);
-            
+
 
 
             //Fetch the diagnosis containing the code
@@ -159,13 +158,13 @@ namespace Fysio_WebApplication.Controllers
                   }
                 }"
             };
-   
+
             var response = await _client.SendQueryAsync<ResponseDiagnosisCollectionType>(query);
             SelectList selectlist = new SelectList(response.Data.Diagnoses, "Code", "DisplayBodyAndPathology");
-            
+
             var selected = selectlist.Where(x => x.Value == file.DiagnosisCode.ToString()).First();
             selected.Selected = true;
-            
+
             ViewBag.Diagnoses = selectlist;
             return View(file);
         }
@@ -237,7 +236,7 @@ namespace Fysio_WebApplication.Controllers
             }
 
             _repo.AddMedicalFile(medicalFile);
-            
+
             //Return view
             return Redirect("/MedicalFile/Details/" + medicalFile.Id);
         }
@@ -255,7 +254,7 @@ namespace Fysio_WebApplication.Controllers
 
 
             MedicalFile file = _repo.MedicalFiles.Include(c1 => c1.Notes).FirstOrDefault(i => i.Id == id);
-            
+
             if (User.HasClaim("UserType", "Patient") || User.HasClaim("UserType", "Student"))
             {
                 return View(file.Notes.Where(x => x.OpenForPatient == true));
@@ -296,7 +295,7 @@ namespace Fysio_WebApplication.Controllers
                 .Include(i => i.IntakeSupervision)
                 .Include(i => i.IntakeTherapistId)
                 .FirstOrDefault(i => i.Id == id);
-            
+
             medicalFile.Notes.Add(note);
             _repo.UpdateMedicalFile(id, medicalFile);
 
@@ -310,7 +309,7 @@ namespace Fysio_WebApplication.Controllers
         {
             // If user is patient. Then check if it's allowed to see the document
             // A patient can only watch it's own treatmentplans.
-            if(User.HasClaim("UserType", "Patient"))
+            if (User.HasClaim("UserType", "Patient"))
             {
                 Patient patient = _patientRepository.Patients
                     .Include(m => m.MedicalFile)
@@ -354,9 +353,9 @@ namespace Fysio_WebApplication.Controllers
             MedicalFile medicalFile = _repo.MedicalFiles.Include(i => i.TreatmentPlans).FirstOrDefault(i => i.Id == id);
 
             if (medicalFile.DateOfDischarge > DateTime.Now) return View();
-            
+
             return RedirectToAction("IndexString", "Error", new { ErrorString = "You can't make a new treatment when it's beyond discharge date." });
-            
+
         }
 
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
@@ -381,7 +380,7 @@ namespace Fysio_WebApplication.Controllers
                 return Redirect("/MedicalFile/TreatmentPlan/" + id);
             }
             return RedirectToAction("IndexString", "Error", new { ErrorString = "You can't make a new treatment when it's beyond discharge date." });
-            
+
         }
 
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
@@ -390,7 +389,7 @@ namespace Fysio_WebApplication.Controllers
         public ActionResult AddRoomTreatment(int file, int id)
         {
             ViewBag.Url = "/MedicalFile/" + file + "/AddRoomTreatment/" + id;
-            ViewBag.Rooms = new SelectList(_practiceRoomRepository.FindAll(), "Id", "Name"); ;
+            ViewBag.Rooms = new SelectList(_practiceRoomRepository.GetAll(), "Id", "Name");
             return View();
         }
 
@@ -416,15 +415,15 @@ namespace Fysio_WebApplication.Controllers
             // getting the appointment that might be set on this medical file.
             Patient patient = _patientRepository.Patients.Include(x => x.MedicalFile).FirstOrDefault(x => x.MedicalFile.Id == id);
 
-            if(patient is null)
+            if (patient is null)
             {
                 ViewBag.Error = "Patient hasn't created a account yet. Please wait for the patient to create a account or make one.";
                 return Redirect("/Auth/RegisterPatient/");
             }
 
             Appointment appointment = _appointmentsRepository.Appointments
-                .Include(x=> x.Employee)
-                    .ThenInclude(x=> x.ApplicationUser)
+                .Include(x => x.Employee)
+                    .ThenInclude(x => x.ApplicationUser)
                 .Include(x => x.Patient)
                     .ThenInclude(x => x.ApplicationUser)
                 .Include(x => x.TimeSlot)
@@ -475,7 +474,7 @@ namespace Fysio_WebApplication.Controllers
                     .Where(x => x.Employee == currentlyLoggedIn.MedicalFile.IntakeTherapistId);
 
                 SelectList selectlist = new SelectList(availability, "Id", "StartAvailability");
-                
+
                 ViewBag.Brands = new SelectList(availability.ToList(), "Id", "StartAvailability");
 
                 ViewBag.Patient = currentlyLoggedIn;
@@ -491,9 +490,9 @@ namespace Fysio_WebApplication.Controllers
                 return RedirectToAction("IndexString", "Error", new { ErrorString = "You can't create more appointments then the treatment prescribes." });
             }
 
-            
+
         }
-        
+
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
         [HttpPost]
         [Route("[Controller]/AppointmentNew/{medicalfileId}")]
@@ -520,7 +519,7 @@ namespace Fysio_WebApplication.Controllers
                     .Include(x => x.Employee)
                         .ThenInclude(x => x.ApplicationUser)
                     .FirstOrDefault(x => x.Id == Id);
-            
+
                 Patient currentlyLoggedIn = _patientRepository.Patients
                     .Include(x => x.MedicalFile)
                         .ThenInclude(x => x.IntakeTherapistId)
@@ -537,7 +536,7 @@ namespace Fysio_WebApplication.Controllers
 
                 _availabilityRepository.UpdateAvailability(availability);
                 _appointmentsRepository.AddAppointment(appointment);
-            
+
                 ViewBag.Success = "Appointment has been set.";
 
                 return Redirect("/");

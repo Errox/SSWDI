@@ -1,7 +1,11 @@
+using DomainServices.Repositories;
+using EFFysioData.DAL;
+using EFFysioData.Repositories;
+using EFFysioData.SeedData;
 using GraphQL.Client.Abstractions;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.Newtonsoft;
-using DomainServices.Repositories;
+using Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -9,11 +13,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Identity;
-using EFFysioData.DAL;
-using Identity;
-using EFFysioData.Repositories;
-using Fysio_WebApplication.Seed;
 
 namespace Fysio_WebApplication
 {
@@ -110,7 +109,7 @@ namespace Fysio_WebApplication
 
             app.UseAuthentication();
             app.UseAuthorization();
-            
+
 
             app.UseEndpoints(endpoints =>
             {
