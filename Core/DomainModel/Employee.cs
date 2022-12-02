@@ -8,9 +8,7 @@ namespace Core.DomainModel
     public class Employee : ApplicationUser
     {
         [ForeignKey("ApplicationUser")]
-        public string EmployeeId { get; set; }
-
-        public string? EmployeeType { get; set; }
+        public string? EmployeeId { get; set; }
 
         [Required]
         [Display(Name = "Worker number.")]
@@ -28,6 +26,6 @@ namespace Core.DomainModel
         [Required]
         public bool IsStudent { get; set; }
 
-        public virtual ApplicationUser ApplicationUser { get; set; }
+        public virtual ApplicationUser? ApplicationUser { get; set; }
     }
 }

@@ -29,16 +29,16 @@ namespace Avans_Fysio_WebService
         {
             services.AddControllers();
 
-            //services.AddDbContextFactory<FysioCodeDbContext>(opts =>
-            //{
-            //    opts.UseSqlServer(
-            //        Configuration["ConnectionStrings:AvansFysioDevWebServiceConnection"]);
-            //});
             services.AddDbContextFactory<FysioCodeDbContext>(opts =>
             {
                 opts.UseSqlServer(
-                    Configuration["ConnectionStrings:AvansFysioWebServiceConnection"]);
+                    Configuration["ConnectionStrings:AvansFysioDevWebServiceConnection"]);
             });
+            //services.AddDbContextFactory<FysioCodeDbContext>(opts =>
+            //{
+            //    opts.UseSqlServer(
+            //        Configuration["ConnectionStrings:AvansFysioWebServiceConnection"]);
+            //});
 
             // Dependency injection 
             services.AddTransient<IDiagnosesRepository, EFDiagnoseRepository>();

@@ -12,7 +12,7 @@ namespace EFFysioData.SeedData
     {
         public static void EnsurePopulated(IApplicationBuilder app)
         {
-
+            // TOOD: meuh, doesn't work.
             FysioCodeDbContext context = app.ApplicationServices
                 .CreateScope().ServiceProvider.GetRequiredService<FysioCodeDbContext>();
 
@@ -23,7 +23,7 @@ namespace EFFysioData.SeedData
 
             if (!context.Diagnoses.Any())
             {
-                using (var reader = new StreamReader("SeedData\\VektisLijstDiagnoses.csv", System.Text.Encoding.UTF8))
+                using (var reader = new StreamReader("Files\\VektisLijstDiagnoses.csv", System.Text.Encoding.UTF8))
                 using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
                 {
                     csv.Read();
@@ -40,7 +40,7 @@ namespace EFFysioData.SeedData
 
             if (!context.Treatments.Any())
             {
-                using (var reader = new StreamReader("SeedData\\VektisLijstVerrichtingen.csv", System.Text.Encoding.UTF8))
+                using (var reader = new StreamReader("Files\\VektisLijstVerrichtingen.csv", System.Text.Encoding.UTF8))
                 using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
                 {
                     csv.Read();

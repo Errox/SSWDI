@@ -1,5 +1,6 @@
 ﻿using Core.DomainModel;
 using DomainServices.Repositories;
+using EFFysioData.DAL;
 using Fysio_WebApplication.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -23,7 +24,7 @@ namespace Library.Data.Tests.Repositories
         {
             // Arrange
             var note = getSampleNotes();
-            noteRepo.Setup(x => x.FindAll()).Returns(note);
+            noteRepo.Setup(x => x.GetAll()).Returns(note);
 
             var controller = new NoteController(noteRepo.Object);
 

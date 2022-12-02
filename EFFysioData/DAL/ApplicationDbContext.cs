@@ -26,5 +26,10 @@ namespace EFFysioData.DAL
         public DbSet<Patient> Patients { get; set; }
 
         public DbSet<Employee> Employees { get; set; }
+
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.
+        //}
     }
 }

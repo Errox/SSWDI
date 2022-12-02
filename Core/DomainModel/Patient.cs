@@ -10,9 +10,7 @@ namespace Core.DomainModel
     public class Patient : ApplicationUser
     {
         [ForeignKey("ApplicationUser")]
-        public string PatientId { get; set; }
-
-        public string CustomerType { get; set; }
+        public string? PatientId { get; set; }
 
         //http://binaryintellect.net/articles/2f55345c-1fcb-4262-89f4-c4319f95c5bd.aspx
         [Display(Name = "Patients image of their face.")]

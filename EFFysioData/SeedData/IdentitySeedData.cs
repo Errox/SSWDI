@@ -18,6 +18,8 @@ namespace EFFysioData.SeedData
 
         public static async void EnsurePopulated(IApplicationBuilder app)
         {
+            // DOesn't work
+
             AppIdentityDbContext context = app.ApplicationServices
                 .CreateScope().ServiceProvider
                 .GetRequiredService<AppIdentityDbContext>();
@@ -169,7 +171,9 @@ namespace EFFysioData.SeedData
 
                 await userManager.AddClaimAsync(userPatient, patientUserClaim);
             }
-            SeedDataWebService.EnsurePopulated(app);
+
+            var seedeData = new SeedData();
+            seedeData.EnsurePopulatedApplicationAsync(app);
 
         }
     }
