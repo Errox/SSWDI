@@ -12,7 +12,6 @@ namespace EFFysioData.SeedData
     {
         public static void EnsurePopulated(IApplicationBuilder app)
         {
-            // TOOD: meuh, doesn't work.
             FysioCodeDbContext context = app.ApplicationServices
                 .CreateScope().ServiceProvider.GetRequiredService<FysioCodeDbContext>();
 

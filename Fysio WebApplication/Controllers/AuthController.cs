@@ -1,7 +1,6 @@
 ﻿using Core.DomainModel;
-using Core.ViewModels;
 using DomainServices.Repositories;
-using Identity;
+using Fysio_WebApplication.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

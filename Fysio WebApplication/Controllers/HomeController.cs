@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
-using Core.ViewModel;
+using Fysio_WebApplication.ViewModels;
 
 namespace Fysio_WebApplication.Controllers
 {

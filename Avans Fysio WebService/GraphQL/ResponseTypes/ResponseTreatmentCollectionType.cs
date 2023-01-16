@@ -1,4 +1,5 @@
 ﻿using Core.DomainModel;
+using System.Collections.Generic;
 
 namespace Core.GraphQL.ResponseTypes
 {

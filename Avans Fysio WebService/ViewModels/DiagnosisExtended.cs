@@ -1,6 +1,6 @@
 ﻿using Core.DomainModel;
 
-namespace Core.ViewModels
+namespace Avans_Fysio_WebService.ViewModels
 {
     public class DiagnosisExtended : Diagnosis
     {

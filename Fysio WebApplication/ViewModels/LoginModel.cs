@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Core.ViewModels
+namespace Fysio_WebApplication.ViewModels
 {
     public class LoginModel
     {

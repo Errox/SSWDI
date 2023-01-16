@@ -1,4 +1,6 @@
+using Core.DomainModel;
 using DomainServices.Repositories;
+using DomainServices.Services;
 using EFFysioData.DAL;
 using EFFysioData.Repositories;
 using EFFysioData.SeedData;
@@ -74,7 +76,7 @@ namespace Fysio_WebApplication
             // Import graphql client
             services.AddScoped<IGraphQLClient>(s => new GraphQLHttpClient(Configuration.GetConnectionString("GraphqlUrl"), new NewtonsoftJsonSerializer()));
 
-            // Dependency injection 
+            // Dependency injection repository
             services.AddTransient<IAppointmentsRepository, EFAppointmentRepository>();
             services.AddTransient<IAvailabilityRepository, EFAvailabilityRepository>();
             services.AddTransient<ITreatmentPlanRepository, EFTreatmentPlanRepository>();
@@ -84,10 +86,20 @@ namespace Fysio_WebApplication
             services.AddTransient<IMedicalFileRepository, EFMedicalFileRepository>();
             services.AddTransient<IAppointmentsRepository, EFAppointmentRepository>();
             services.AddTransient<IEmployeeRepository, EFEmployeeRepository>();
+
+            // Dependency injection Services.
+            services.AddTransient<IAppointmentsService, AppointmentService>();
+            services.AddTransient<IAvailabilityService, AvailabilityService>();
+            services.AddTransient<ITreatmentPlanService, TreatmentPlanService>();
+            services.AddTransient<IPracticeRoomService, PracticeRoomService>();
+            services.AddTransient<IPatientService, PatientService>();
+            services.AddTransient<INotesService, NotesService>();
+            services.AddTransient<IMedicalFileService, MedicalFileService>();
+            services.AddTransient<IAppointmentsService, AppointmentService>();
+            services.AddTransient<IEmployeeService, EmployeeService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        [System.Obsolete]
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

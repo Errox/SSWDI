@@ -1,7 +1,9 @@
-﻿using Core.DomainModel;
+﻿using Avans_Fysio_WebService.GraphQL.ResponseTypes;
+using Avans_Fysio_WebService.ViewModels;
+using Core.DomainModel;
 using Core.GraphQL.ResponseTypes;
-using Core.ViewModels;
 using DomainServices.Repositories;
+using Fysio_WebApplication.ViewModels;
 using GraphQL;
 using GraphQL.Client.Abstractions;
 using Microsoft.AspNetCore.Authorization;

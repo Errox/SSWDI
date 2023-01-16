@@ -1,8 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Core.Enums;
+using Core.ValidationAttributeExtentions;
+using System;
+using System.ComponentModel.DataAnnotations;
 
-namespace Core.ViewModels
+
+namespace Fysio_WebApplication.ViewModels
 {
-    public class RegisterEmployeeModel
+    public class RegisterPatientModel
     {
         [Required]
         [EmailAddress]
@@ -35,15 +39,24 @@ namespace Core.ViewModels
         [Display(Name = "Sur Name")]
         public string SurName { get; set; }
 
-        [Range(1000000, 9999999, ErrorMessage = "Your Registration Number can only be 7 Numbers long. That means a number between 1000000, 9999999")]
-        [Display(Name = "Registration Number")]
-        public int StudentBIGNumber { get; set; }
+        [Display(Name = "Please select a image.")]
+        public byte[] ImgData { get; set; }
+
+        [Required]
+        [DataType(DataType.DateTime)]
+        [Display(Name = "Please fill in your date of birth.")]
+        [MinAge(16)]
+        public DateTime DateOfBirth { get; set; }
+
+        [Required]
+        [Display(Name = "Pick a gender.")]
+        public EnumGender.Gender Gender { get; set; }
 
         [Required]
         [Display(Name = "Is the user a student?")]
         public bool IsStudent { get; set; }
 
         public string ReturnUrl { get; set; }
-
     }
+
 }

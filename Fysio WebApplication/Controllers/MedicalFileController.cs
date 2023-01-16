@@ -1,4 +1,5 @@
-﻿using Core.DomainModel;
+﻿using Avans_Fysio_WebService.GraphQL.ResponseTypes;
+using Core.DomainModel;
 using Core.GraphQL.ResponseTypes;
 using DomainServices.Repositories;
 using GraphQL;
