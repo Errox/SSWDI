@@ -14,7 +14,7 @@ namespace EFFysioData.Repositories
             _context = ctx;
         }
 
-        public IQueryable<Patient> Patients => _context.Patients.Include(c1 => c1.ApplicationUser);
+        public IQueryable<Patient> Patients => _context.Patients;
 
         public IEnumerable<Patient> FindAll()
         {

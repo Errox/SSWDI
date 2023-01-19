@@ -1,5 +1,6 @@
 ﻿using Core.DomainModel;
 using DomainServices.Repositories;
+using DomainServices.Services;
 using Fysio_WebApplication.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -20,17 +21,20 @@ namespace Fysio_WebApplication.Controllers
         private IEmployeeRepository _employeeRepository;
         private IPatientRepository _patientRepository;
         private IAppointmentsRepository _appointmentRepository;
+        private IAppointmentsService _appointmentService;
 
         public AppointmentController(
             IAvailabilityRepository availabilityRepository,
             IEmployeeRepository employeeRepository,
             IPatientRepository patientRepository,
-            IAppointmentsRepository appointmentRepository)
+            IAppointmentsRepository appointmentRepository,
+            IAppointmentsService appointmentsService)
         {
             _availabilityRepository = availabilityRepository;
             _employeeRepository = employeeRepository;
             _patientRepository = patientRepository;
             _appointmentRepository = appointmentRepository;
+            _appointmentService = appointmentsService;
         }
 
 
@@ -66,7 +70,7 @@ namespace Fysio_WebApplication.Controllers
             }
 
             // Get all appointments from the patient. For this week. 
-            List<Appointment> appointments = _appointmentRepository.GetAppointmentsByPatientId(currentlyLoggedIn.Id).ToList();
+            List<Appointment> appointments = _appointmentService.GetAppointmentsByPatientId(currentlyLoggedIn.Id).ToList();
 
             List<Appointment> app = _appointmentRepository.Appointments.Where(x => x.Patient.Id == currentlyLoggedIn.Id).ToList();
             // Count the amount of treatments combined all into a int 

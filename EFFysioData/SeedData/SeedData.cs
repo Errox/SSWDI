@@ -1,5 +1,6 @@
 ﻿using Core.DomainModel;
 using EFFysioData.DAL;
+using Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;

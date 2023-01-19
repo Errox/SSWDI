@@ -29,8 +29,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Avans Fysio WebService\AvansFysioWebService.csproj" />
+    <ProjectReference Include="..\DomainServices\DomainServices.csproj" />
     <ProjectReference Include="..\EFFysioData\EFFysioData.csproj" />
     <ProjectReference Include="..\Fysio_Identity\Identity.csproj" />
+    <ProjectReference Include="..\Services\Services.csproj" />
   </ItemGroup>
   <PropertyGroup>
     <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>

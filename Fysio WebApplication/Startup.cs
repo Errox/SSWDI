@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Services;
 
 namespace Fysio_WebApplication
 {
@@ -84,7 +85,6 @@ namespace Fysio_WebApplication
             services.AddTransient<IPatientRepository, EFPatientRepository>();
             services.AddTransient<INotesRepository, EFNotesRepository>();
             services.AddTransient<IMedicalFileRepository, EFMedicalFileRepository>();
-            services.AddTransient<IAppointmentsRepository, EFAppointmentRepository>();
             services.AddTransient<IEmployeeRepository, EFEmployeeRepository>();
 
             // Dependency injection Services.
@@ -95,7 +95,6 @@ namespace Fysio_WebApplication
             services.AddTransient<IPatientService, PatientService>();
             services.AddTransient<INotesService, NotesService>();
             services.AddTransient<IMedicalFileService, MedicalFileService>();
-            services.AddTransient<IAppointmentsService, AppointmentService>();
             services.AddTransient<IEmployeeService, EmployeeService>();
         }
 

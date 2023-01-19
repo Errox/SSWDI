@@ -18,12 +18,12 @@ namespace EFFysioData.Repositories
 
         public IEnumerable<MedicalFile> FindAll()
         {
-            return _context.MedicalFiles.Include(i => i.Notes).Include(i => i.TreatmentPlans);
+            return _context.MedicalFiles;
         }
 
         public MedicalFile GetMedicalFile(int id)
         {
-            return _context.MedicalFiles.Include(i => i.Notes).Include(i => i.TreatmentPlans).FirstOrDefault(i => i.Id == id);
+            return _context.MedicalFiles.FirstOrDefault(i => i.Id == id);
         }
 
         public void UpdateMedicalFile(int id, MedicalFile medicalFile)
@@ -42,9 +42,5 @@ namespace EFFysioData.Repositories
             _context.SaveChanges();
         }
 
-        public MedicalFile GetMedicalFileByEmail(string email)
-        {
-            return _context.MedicalFiles.FirstOrDefault(i => i.PatientEmail == email);
-        }
     }
 }
