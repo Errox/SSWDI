@@ -1,5 +1,6 @@
 ﻿using Core.DomainModel;
 using DomainServices.Repositories;
+using DomainServices.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,18 +10,18 @@ namespace Fysio_WebApplication.Controllers
     [Authorize]
     public class NoteController : Controller
     {
-        private INotesRepository _repo;
+        private INotesService _service;
 
-        public NoteController(INotesRepository repo)
+        public NoteController(INotesService service)
         {
-            _repo = repo;
+            _service = service;
         }
 
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
         // GET: NoteController
         public ActionResult Index()
         {
-            return View(_repo.GetAll());
+            return View(_service.GetAll());
         }
 
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
@@ -51,7 +52,7 @@ namespace Fysio_WebApplication.Controllers
         // GET: NoteController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View(_repo.GetNote(id));
+            return View(_service.GetNote(id));
         }
 
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
@@ -62,7 +63,7 @@ namespace Fysio_WebApplication.Controllers
         {
             try
             {
-                _repo.UpdateNote(id, note);
+                _service.UpdateNote(id, note);
                 return RedirectToAction(nameof(Index));
             }
             catch

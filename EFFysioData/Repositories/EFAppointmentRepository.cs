@@ -15,7 +15,7 @@ namespace EFFysioData.Repositories
         }
 
         // Find all after today. 
-        public IQueryable<Appointment> Appointments => _context.Appointments.Where(a => a.TimeSlot.StartAvailability >= DateTime.Now);
+        public IQueryable<Appointment> Appointments => _context.Appointments;
         public IEnumerable<Appointment> FindAll()
         {
             return _context.Appointments;
@@ -44,30 +44,5 @@ namespace EFFysioData.Repositories
             _context.SaveChanges();
         }
 
-        public IEnumerable<Appointment> GetAppointmentsByPatientId(string userId)
-        {
-            return _context.Appointments
-                .Include(x => x.Employee)
-                    .ThenInclude(x => x.ApplicationUser)
-                .Include(x => x.Patient)
-                    .ThenInclude(x => x.ApplicationUser)
-                .Include(x => x.Patient)
-                    .ThenInclude(x => x.MedicalFile)
-                .Include(x => x.TimeSlot)
-                .Where(a => a.Patient.PatientId == userId);
-        }
-
-        public IEnumerable<Appointment> GetAppointmentsByEmployeeId(string employeeId)
-        {
-            return _context.Appointments
-                .Include(x => x.Employee)
-                    .ThenInclude(x => x.ApplicationUser)
-                .Include(x => x.Patient)
-                    .ThenInclude(x => x.ApplicationUser)
-                .Include(x => x.Patient)
-                    .ThenInclude(x => x.MedicalFile)
-                .Include(x => x.TimeSlot)
-                .Where(a => a.Employee.EmployeeId == employeeId);
-        }
     }
 }

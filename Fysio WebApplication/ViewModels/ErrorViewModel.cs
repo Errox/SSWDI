@@ -1,4 +1,4 @@
-namespace Core.ViewModel
+namespace Fysio_WebApplication.ViewModels
 {
     public class ErrorViewModel
     {

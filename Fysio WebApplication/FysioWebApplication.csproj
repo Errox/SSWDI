@@ -29,10 +29,18 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Avans Fysio WebService\AvansFysioWebService.csproj" />
+    <ProjectReference Include="..\DomainServices\DomainServices.csproj" />
     <ProjectReference Include="..\EFFysioData\EFFysioData.csproj" />
     <ProjectReference Include="..\Fysio_Identity\Identity.csproj" />
+    <ProjectReference Include="..\Services\Services.csproj" />
   </ItemGroup>
   <PropertyGroup>
     <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702,CS8603</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702,CS8603</NoWarn>
   </PropertyGroup>
 </Project>

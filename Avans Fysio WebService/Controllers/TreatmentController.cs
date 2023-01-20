@@ -1,5 +1,5 @@
 ﻿using Core.DomainModel;
-using DomainServices.Repositories;
+using DomainServices.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -9,10 +9,10 @@ namespace Avans_Fysio_WebService.Controllers
     [ApiController]
     public class TreatmentController : ControllerBase
     {
-        private readonly ITreatmentRepository _treatmentRepository;
-        public TreatmentController(ITreatmentRepository treatmentRepository)
+        private readonly ITreatmentServices _treatmentService;
+        public TreatmentController(ITreatmentServices treatmentService)
         {
-            _treatmentRepository = treatmentRepository;
+            _treatmentService = treatmentService;
         }
 
         // GET: TreatmentController
@@ -20,14 +20,14 @@ namespace Avans_Fysio_WebService.Controllers
         public IEnumerable<Treatment> Get()
         {
             // Return everything
-            return _treatmentRepository.FindAll();
+            return _treatmentService.FindAll();
         }
 
         // GET: TreatmentController/5
         [HttpGet("{code}")]
         public Treatment GetById(string code)
         {
-            return _treatmentRepository.GetTreatment(code);
+            return _treatmentService.GetTreatment(code);
         }
     }
 }

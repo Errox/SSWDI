@@ -1,7 +1,7 @@
-﻿using Core.DomainModel;
-using Core.GraphQL.ResponseTypes;
-using Core.ViewModels;
-using DomainServices.Repositories;
+﻿using Avans_Fysio_WebService.GraphQL.ResponseTypes;
+using Avans_Fysio_WebService.ViewModels;
+using Core.DomainModel;
+using DomainServices.Services;
 using GraphQL;
 using GraphQL.Client.Abstractions;
 using Microsoft.AspNetCore.Authorization;
@@ -21,31 +21,31 @@ namespace Fysio_WebApplication.Controllers
     [Authorize]
     public class PatientController : Controller
     {
-        private IPatientRepository _patientRepo;
-        private IMedicalFileRepository _medicalFileRepo;
-        private IEmployeeRepository _employeeRepo;
-        private IAppointmentsRepository _appointmentRepo;
+        private IPatientService _patientService;
+        private IMedicalFileService _medicalFileService;
+        private IEmployeeService _employeeService;
+        private IAppointmentsService _appointmentService;
         private byte[] imgData;
         private readonly IGraphQLClient _client;
 
         public PatientController(
-            IPatientRepository repo,
-            IMedicalFileRepository medicalFile,
-            IEmployeeRepository employeeRepository,
-            IAppointmentsRepository appointmentRepository,
+            IPatientService service,
+            IMedicalFileService medicalFile,
+            IEmployeeService employeeService,
+            IAppointmentsService appointmentService,
             IGraphQLClient client)
         {
-            _patientRepo = repo;
-            _medicalFileRepo = medicalFile;
-            _employeeRepo = employeeRepository;
-            _appointmentRepo = appointmentRepository;
+            _patientService = service;
+            _medicalFileService = medicalFile;
+            _employeeService = employeeService;
+            _appointmentService = appointmentService;
             _client = client;
         }
 
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
         public ActionResult Index()
         {
-            return View(_patientRepo.Patients.Include(c1 => c1.MedicalFile));
+            return View(_patientService.Patients.Include(c1 => c1.MedicalFile));
         }
 
         [Authorize]
@@ -54,9 +54,9 @@ namespace Fysio_WebApplication.Controllers
         {
             // Get person who's logged in
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            Patient LoggedInPatient = _patientRepo.Patients.FirstOrDefault(f => f.PatientId == userId);
+            Patient LoggedInPatient = _patientService.Patients.FirstOrDefault(f => f.PatientId == userId);
             // If person who's logged in, is the same ID as the patient, then show the details
-            Patient patient = _patientRepo
+            Patient patient = _patientService
                 .Patients
                 .Include(c1 => c1.MedicalFile)
                     .ThenInclude(i => i.IntakeSupervision)
@@ -136,7 +136,7 @@ namespace Fysio_WebApplication.Controllers
                     ms.Close();
                     ms.Dispose();
                 }
-                _patientRepo.AddPatient(pool);
+                _patientService.AddPatient(pool);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -149,7 +149,7 @@ namespace Fysio_WebApplication.Controllers
         // GET: PatientController/Edit/5
         public ActionResult Edit(int id)
         {
-            Patient patient = _patientRepo.GetPatient(id);
+            Patient patient = _patientService.GetPatient(id);
             string imageDataURL;
             if (patient.ImgData == null)
             {
@@ -190,10 +190,10 @@ namespace Fysio_WebApplication.Controllers
                     else
                     {
                         // Because the model is empty. We need to fetch the old img photo to return it. 
-                        patient.ImgData = _patientRepo.Patients.FirstOrDefault(x => x.IdNumber == int.Parse(patient.Id)).ImgData;
+                        patient.ImgData = _patientService.Patients.FirstOrDefault(x => x.IdNumber == int.Parse(patient.Id)).ImgData;
                     }
 
-                    _patientRepo.UpdatePatient(id, patient);
+                    _patientService.UpdatePatient(id, patient);
 
 
 
@@ -247,12 +247,12 @@ namespace Fysio_WebApplication.Controllers
             //Create new plan because somehow it'll take the medicalFile ID and places it in the model instead of keeping it empty to insert in the DB
             MedicalFile medicalFile = new MedicalFile { Description = file.Description, DiagnosisCode = file.DiagnosisCode, DateOfDischarge = file.DateOfDischarge };
 
-            Employee employee = _employeeRepo.GetEmployee(userId);
+            Employee employee = _employeeService.GetEmployee(userId);
 
             if (employee.IsStudent)
             {
                 //First employee that's not a student. This is just the stage begeleider
-                medicalFile.IntakeSupervision = _employeeRepo.Employees.FirstOrDefault(i => i.IsStudent == false);
+                medicalFile.IntakeSupervision = _employeeService.Employees.FirstOrDefault(i => i.IsStudent == false);
                 // Then save the Student into the therapist. Only a employee that supervised over the patient is different when it's a student.
                 medicalFile.IntakeTherapistId = employee;
             }
@@ -262,12 +262,12 @@ namespace Fysio_WebApplication.Controllers
                 medicalFile.IntakeTherapistId = employee;
             }
 
-            _medicalFileRepo.AddMedicalFile(medicalFile);
+            _medicalFileService.AddMedicalFile(medicalFile);
 
             //Add the Treatmentplan to the medicalFile
-            Patient patient = _patientRepo.Patients.Include(i => i.MedicalFile).FirstOrDefault(i => i.IdNumber == id);
+            Patient patient = _patientService.Patients.Include(i => i.MedicalFile).FirstOrDefault(i => i.IdNumber == id);
             patient.MedicalFile = medicalFile;
-            _patientRepo.UpdatePatient(id, patient);
+            _patientService.UpdatePatient(id, patient);
 
             //Return view
             return Redirect("/MedicalFile/Details/" + medicalFile.Id);

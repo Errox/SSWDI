@@ -1,6 +1,6 @@
 ﻿using Core.Enums;
-using Core.ValidationAttributeExtentions;
 using Identity;
+using Core.ValidationAttributeExtentions;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 

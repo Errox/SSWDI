@@ -1,5 +1,5 @@
 ﻿using Core.DomainModel;
-using DomainServices.Repositories;
+using DomainServices.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -9,11 +9,11 @@ namespace Avans_Fysio_WebService.Controllers
     [ApiController]
     public class DiagnosisController : ControllerBase
     {
-        private readonly IDiagnosesRepository _diagnosesRepository;
+        private readonly IDiagnosesService _diagnosesService;
 
-        public DiagnosisController(IDiagnosesRepository diagnosesRepository)
+        public DiagnosisController(IDiagnosesService diagnosesService)
         {
-            _diagnosesRepository = diagnosesRepository;
+            _diagnosesService = diagnosesService;
         }
 
         // GET: DiagnosisController
@@ -21,7 +21,7 @@ namespace Avans_Fysio_WebService.Controllers
         public IEnumerable<Diagnosis> Get()
         {
             // Return everything
-            return _diagnosesRepository.FindAll();
+            return _diagnosesService.FindAll();
         }
 
         // GET: DiagnosisController/5
@@ -29,7 +29,7 @@ namespace Avans_Fysio_WebService.Controllers
         public Diagnosis GetById(int code)
         {
             //return just the found int
-            return _diagnosesRepository.GetDiagnosis(code);
+            return _diagnosesService.GetDiagnosis(code);
         }
     }
 }

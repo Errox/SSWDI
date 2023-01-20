@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Identity
 {
+    // Kept in Identity to fix circulair reference error
     public class ApplicationUser : IdentityUser
     {
         [MaxLength(250)]

@@ -18,17 +18,17 @@ namespace EFFysioData.Repositories
 
         public IEnumerable<Patient> FindAll()
         {
-            return _context.Patients.Include(c1 => c1.ApplicationUser);
+            return _context.Patients;
         }
 
         public Patient GetPatient(int id)
         {
-            return _context.Patients.Include(c1 => c1.ApplicationUser).FirstOrDefault(i => i.IdNumber == id);
+            return Patients.FirstOrDefault(i => i.IdNumber == id);
         }
 
         public void UpdatePatient(int id, Patient patient)
         {
-            Patient oldPatient = _context.Patients.Include(c1 => c1.ApplicationUser).FirstOrDefault(i => i.IdNumber == id);
+            Patient oldPatient = _context.Patients.FirstOrDefault(i => i.IdNumber == id);
             oldPatient.ImgData = patient.ImgData;
             oldPatient.DateOfBirth = patient.DateOfBirth;
             oldPatient.Gender = patient.Gender;

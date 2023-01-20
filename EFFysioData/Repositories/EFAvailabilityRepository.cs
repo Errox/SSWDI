@@ -14,7 +14,7 @@ namespace EFFysioData.Repositories
         }
 
 
-        public IQueryable<Availability> Availabilities => _context.Availabilties.Where(x => x.StartAvailability >= DateTime.Now.AddHours(1));
+        public IQueryable<Availability> Availabilities => _context.Availabilties;
 
 
         public Availability GetAvailability(int id)
