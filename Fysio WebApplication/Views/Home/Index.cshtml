@@ -63,10 +63,6 @@
         }else{
             <h5> No upcoming Appointments.</h5>
         }
-        @if (ViewBag.AppointmentsNextCount == 0 && ViewBag.AppointmentsNowCount == 0)
-        {
-            <p>U heeft geen afspraak.</p>
-        }
         @if (User.HasClaim("UserType", "Patient"))
         {
             @Html.ActionLink("Afspraak maken", "Create", "Appointment")

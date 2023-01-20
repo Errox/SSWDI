@@ -27,7 +27,7 @@ namespace Fysio_WebApplication.Controllers
         // GET: PracticeRoomController/Details/5
         public ActionResult Details(int id)
         {
-            return View(_service.PracticeRooms.FirstOrDefault(i => i.Id == id));
+            return View(_service.GetPracticeRoom(id));
         }
 
         [Authorize(Policy = "OnlyEmployeeAndStudent")]

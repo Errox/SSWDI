@@ -1,6 +1,7 @@
 ﻿using Core.DomainModel;
 using DomainServices.Repositories;
 using DomainServices.Services;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,6 +58,15 @@ namespace Services
         public void UpdateTreatmentPlan(int id, TreatmentPlan treatmentPlan)
         {
             _treatmentPlanRepository.UpdateTreatmentPlan(id, treatmentPlan);
+        }
+
+        public TreatmentPlan GetDetailedTreatmentPlan(int id)
+        {
+            return TreatmentPlans
+                .Include(c1 => c1.PracticeRoom)
+                .Include(c1 => c1.TreatmentPerformedBy)
+                    .ThenInclude(a => a.ApplicationUser)
+                .FirstOrDefault(i => i.Id == id); 
         }
     }
 }

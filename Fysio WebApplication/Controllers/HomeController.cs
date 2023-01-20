@@ -43,15 +43,7 @@ namespace Fysio_WebApplication.Controllers
 
             if (User.HasClaim("UserType", "Patient"))
             {
-                var appointments = _appointmentService.Appointments
-                    .Include(x => x.Employee)
-                        .ThenInclude(x => x.ApplicationUser)
-                    .Include(x => x.Patient)
-                        .ThenInclude(x => x.ApplicationUser)
-                    .Include(x => x.Patient)
-                        .ThenInclude(x => x.MedicalFile)
-                    .Include(x => x.TimeSlot)
-                    .Where(x => x.Patient.Id == userId || x.Patient.ApplicationUser.Id == userId).ToList();
+                var appointments = _appointmentService.GetPatientAppointmentsDynamically(userId);
 
                 List<Appointment> appointmentNow = appointments.Where(x => x.TimeSlot.StopAvailability.ToString("d") == System.DateTime.Now.ToString("d")).ToList();
                 List<Appointment> appointmentNext = appointments.Where(x => x.TimeSlot.StartAvailability > System.DateTime.Now.AddDays(1)).ToList();

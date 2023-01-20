@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,7 +21,7 @@ namespace Services
         }
 
 
-        public IQueryable<MedicalFile> MedicalFiles => _medicalFileRepository.MedicalFiles.Include(i => i.Notes).Include(i => i.TreatmentPlans);
+        public IQueryable<MedicalFile> MedicalFiles => _medicalFileRepository.MedicalFiles.Include(i => i.Notes).Include(i => i.TreatmentPlans).ThenInclude(x => x.PracticeRoom);
 
         public void Add(MedicalFile entity)
         {
@@ -66,5 +67,45 @@ namespace Services
         {
             _medicalFileRepository.UpdateMedicalFile(id, medicalFile);
         }
+
+        public IQueryable<MedicalFile> GetMedicalFilesWithIntakeUsers()
+        {
+            return MedicalFiles
+                .Include(i => i.IntakeSupervision)
+                    .ThenInclude(i => i.ApplicationUser)
+                .Include(i => i.IntakeTherapistId)
+                    .ThenInclude(i => i.ApplicationUser);
+        }
+        
+        public IQueryable<MedicalFile> GetMedicalFilesForIntakeSupervision(Employee Employee)
+        {
+            return MedicalFiles
+                .Include(i => i.IntakeSupervision)
+                    .ThenInclude(i => i.ApplicationUser)
+                .Include(i => i.IntakeTherapistId)
+                    .ThenInclude(i => i.ApplicationUser)
+                .Where(i => i.IntakeSupervision == Employee);
+        }
+
+        public IQueryable<MedicalFile> GetMedicalFilesForTherapist(Employee Employee)
+        {
+            return MedicalFiles
+                .Include(i => i.IntakeSupervision)
+                    .ThenInclude(i => i.ApplicationUser)
+                .Include(i => i.IntakeTherapistId)
+                    .ThenInclude(i => i.ApplicationUser)
+                .Where(i => i.IntakeTherapistId == Employee);
+        }
+
+        public MedicalFile GetDetailedMedicalFileById(int id)
+        {
+            return MedicalFiles
+            .Include(i => i.IntakeSupervision)
+                .ThenInclude(e => e.ApplicationUser)
+            .Include(i => i.IntakeTherapistId)
+                .ThenInclude(c => c.ApplicationUser)
+            .FirstOrDefault(i => i.Id == id);
+        }
+
     }
 }

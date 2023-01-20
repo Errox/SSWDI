@@ -17,21 +17,21 @@ namespace Fysio_WebApplication.Controllers
     [Authorize]
     public class AppointmentController : Controller
     {
-        private IAvailabilityRepository _availabilityRepository;
-        private IEmployeeRepository _employeeRepository;
-        private IPatientRepository _patientRepository;
+        private IAvailabilityService _availabilityService;
+        private IEmployeeService _employeeService;
+        private IPatientService _patientService;
         private IAppointmentsService _appointmentService;
 
         public AppointmentController(
-            IAvailabilityRepository availabilityRepository,
-            IEmployeeRepository employeeRepository,
-            IPatientRepository patientRepository,
-            IAppointmentsRepository appointmentRepository,
+            IAvailabilityService availabilityService,
+            IEmployeeService employeeService,
+            IPatientService patientService,
+            IAppointmentsService appointmentService,
             IAppointmentsService appointmentsService)
         {
-            _availabilityRepository = availabilityRepository;
-            _employeeRepository = employeeRepository;
-            _patientRepository = patientRepository;
+            _availabilityService = availabilityService;
+            _employeeService = employeeService;
+            _patientService = patientService;
             _appointmentService = appointmentsService;
         }
 
@@ -40,7 +40,7 @@ namespace Fysio_WebApplication.Controllers
         // GET: AppointmentController
         public ActionResult Index()
         {
-            return View(_appointmentService.Appointments.Include(c1 => c1.Patient).Include(c2 => c2.Employee));
+            return View(_appointmentService.Appointments);
         }
 
 
@@ -52,15 +52,8 @@ namespace Fysio_WebApplication.Controllers
             // Here we get the patient into making a appointment with the doctor. 
             string Patient = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            Patient currentlyLoggedIn = _patientRepository.Patients
-                .Include(x => x.MedicalFile)
-                    .ThenInclude(x => x.IntakeTherapistId)
-                        .ThenInclude(x => x.ApplicationUser)
-                .Include(x => x.MedicalFile)
-                    .ThenInclude(x => x.TreatmentPlans)
-                .FirstOrDefault(x => x.PatientId == Patient);
-
-
+            Patient currentlyLoggedIn = _patientService.GetPatientWithMedicalFile(Patient);
+            
             if (currentlyLoggedIn.MedicalFile is null)
             {
                 // access denied, no medicalfile yet. 
@@ -70,7 +63,8 @@ namespace Fysio_WebApplication.Controllers
             // Get all appointments from the patient. For this week. 
             List<Appointment> appointments = _appointmentService.GetAppointmentsByPatientId(currentlyLoggedIn.Id).ToList();
 
-            List<Appointment> app = _appointmentService.Appointments.Where(x => x.Patient.Id == currentlyLoggedIn.Id).ToList();
+            List<Appointment> app = _appointmentService.GetAllPatientsAppointments(currentlyLoggedIn.Id);
+
             // Count the amount of treatments combined all into a int 
             ICollection<TreatmentPlan> treatmentplans = currentlyLoggedIn.MedicalFile.TreatmentPlans;
             int treatmentsPerWeek = 0;
@@ -82,17 +76,11 @@ namespace Fysio_WebApplication.Controllers
             // Check if the amount of appointments that the patient has, are less then the treatmentplans prescribes.
             if (app.Count() <= treatmentsPerWeek)
             {
-                IEnumerable<Availability> availability = _availabilityRepository.Availabilities
-                    .Where(x => x.IsAvailable == true)
-                    .Where(x => x.StartAvailability >= DateTime.Now.AddHours(1))
-                    .Where(x => x.Employee == currentlyLoggedIn.MedicalFile.IntakeTherapistId);
+                IEnumerable<Availability> availability = _availabilityService.GetAvailabilityOfEmployee(currentlyLoggedIn.MedicalFile.IntakeTherapistId);
 
                 SelectList selectlist = new SelectList(availability, "Id", "StartAvailability");
 
-                ViewBag.Brands = new SelectList(_availabilityRepository.Availabilities
-                    .Where(x => x.IsAvailable == true)
-                    .Where(x => x.StartAvailability >= DateTime.Now.AddHours(1))
-                    .Where(x => x.Employee == currentlyLoggedIn.MedicalFile.IntakeTherapistId).ToList(), "Id", "StartAvailability");
+                ViewBag.Brands = new SelectList(_availabilityService.GetAvailabilityOfEmployee(currentlyLoggedIn.MedicalFile.IntakeTherapistId).ToList(), "Id", "StartAvailability");
 
                 ViewBag.Patient = currentlyLoggedIn;
                 ViewBag.Availability = availability;
@@ -115,20 +103,11 @@ namespace Fysio_WebApplication.Controllers
             // Check if it's a patient. If it's a employee/student. Then it will be redirected to the CreateEmployeeAppointment.
             // We fetch the patient's id. And let them choose which time is best. We'll need the ID of the 
             var Id = Convert.ToInt32(foFormCollection["id"]);
-            var availability = _availabilityRepository.Availabilities
-                .Include(x => x.Employee)
-                    .ThenInclude(x => x.ApplicationUser)
-                .FirstOrDefault(x => x.Id == Id);
+            var availability = _availabilityService.FindByID(Id);
 
             string patient = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            Patient currentlyLoggedIn = _patientRepository.Patients
-                .Include(x => x.MedicalFile)
-                    .ThenInclude(x => x.IntakeTherapistId)
-                        .ThenInclude(x => x.ApplicationUser)
-                .Include(x => x.MedicalFile)
-                    .ThenInclude(x => x.TreatmentPlans)
-                .FirstOrDefault(x => x.PatientId == patient);
 
+            Patient currentlyLoggedIn = _patientService.GetPatientWithMedicalFile(patient);
 
             IEnumerable<Appointment> appointments = _appointmentService.GetAppointmentsByPatientId(currentlyLoggedIn.Id);
             ICollection<TreatmentPlan> treatmentplans = currentlyLoggedIn.MedicalFile.TreatmentPlans;
@@ -155,7 +134,7 @@ namespace Fysio_WebApplication.Controllers
                 availability.Patient = currentlyLoggedIn;
                 availability.IsAvailable = false;
 
-                _availabilityRepository.UpdateAvailability(availability);
+                _availabilityService.UpdateAvailability(availability);
                 _appointmentService.AddAppointment(appointment);
 
 
@@ -200,18 +179,19 @@ namespace Fysio_WebApplication.Controllers
         {
             string PatientId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            Appointment patientAppointment = _appointmentService.Appointments
-                .Include(x => x.Patient)
-                    .ThenInclude(x => x.ApplicationUser)
-                .FirstOrDefault(x => x.Patient.PatientId == PatientId);
+            
+            Appointment appointment = _appointmentService.GetAppointment(id);
 
             if (User.HasClaim("UserType", "Patient"))
             {
                 // We need to check if the appointment is coming from the patient. 
-                if (patientAppointment is null)
+                if (appointment is null)
                 {
-                    // This aint the patient's appointment. Access Denied
-                    return RedirectToAction("AccessDenied", "Account");
+                    if(appointment.Patient.PatientId != PatientId)
+                    {
+                        // This aint the patient's appointment. Access Denied
+                        return RedirectToAction("AccessDenied", "Account");
+                    }
                 }
             }
 
@@ -225,14 +205,8 @@ namespace Fysio_WebApplication.Controllers
         public ActionResult Delete(int id, Appointment collection)
         {
             // Delete for a appointment. 
-            Appointment appointment = _appointmentService.
-                Appointments
-                .Include(x => x.TimeSlot)
-                .Include(x => x.Patient)
-                    .ThenInclude(x => x.ApplicationUser)
-                .Include(x => x.Employee)
-                    .ThenInclude(x => x.ApplicationUser)
-                .FirstOrDefault(x => x.Id == id);
+            Appointment appointment = _appointmentService.FindAppointmentByIdWithTimeSlot(id);
+
 
             DateTime now = DateTime.Now;
             if (appointment.TimeSlot.StartAvailability <= now.AddHours(-24) && User.HasClaim("UserType", "Patient"))
@@ -245,7 +219,7 @@ namespace Fysio_WebApplication.Controllers
             availability.Patient = null;
             availability.IsAvailable = true;
 
-            _availabilityRepository.UpdateAvailability(availability);
+            _availabilityService.UpdateAvailability(availability);
 
             _appointmentService.DeleteAppointment(appointment.Id);
 
@@ -256,22 +230,13 @@ namespace Fysio_WebApplication.Controllers
         [Authorize(Policy = "RequirePatientRole")]
         public ActionResult Details()
         {
-            List<Appointment> appointment = _appointmentService.Appointments
-                .Include(x => x.Patient)
-                    .ThenInclude(x => x.ApplicationUser)
-                .Include(x => x.TimeSlot)
-                .Include(x => x.Employee)
-                    .ThenInclude(x => x.ApplicationUser)
-                .Where(x => x.Patient.PatientId == this.User.FindFirstValue(ClaimTypes.NameIdentifier)).ToList();
+            List<Appointment> appointment = _appointmentService.GetAppointmentsByPatientId(this.User.FindFirstValue(ClaimTypes.NameIdentifier)).ToList();
 
-            if (appointment is null)
+            if (appointment is null || appointment.Count() == 0)
             {
                 return RedirectToAction("Create", "Appointment");
             }
-            if (appointment.Count() == 0)
-            {
-                return RedirectToAction("Create", "Appointment");
-            }
+
             if (appointment.Count() > 0)
             {
                 return RedirectToAction("Index", "Home");
@@ -296,7 +261,7 @@ namespace Fysio_WebApplication.Controllers
         public ActionResult Availability(AvailabilityModel model)
         {
             string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            Employee employee = _employeeRepository.GetEmployee(userId);
+            Employee employee = _employeeService.GetEmployee(userId);
 
             if (model.DateTimeStart.Hour > model.DateTimeStop.Hour)
             {
@@ -319,7 +284,7 @@ namespace Fysio_WebApplication.Controllers
                 {
                     DateTime CurrentDateTime = DateStart.AddHours(startHour.Hour).AddMinutes(startHour.Minute);
                     // add the availability to the database
-                    _availabilityRepository.AddAvailability(new Availability
+                    _availabilityService.AddAvailability(new Availability
                     {
                         Employee = employee,
                         StartAvailability = CurrentDateTime,

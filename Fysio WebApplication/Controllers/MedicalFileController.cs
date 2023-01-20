@@ -22,7 +22,7 @@ namespace Fysio_WebApplication.Controllers
     [Authorize]
     public class MedicalFileController : Controller
     {
-        private IMedicalFileService _repo;
+        private IMedicalFileService _service;
         private IEmployeeService _employeeService;
         private IPatientService _patientService;
         private ITreatmentPlanService _treatmentPlanService;
@@ -43,7 +43,7 @@ namespace Fysio_WebApplication.Controllers
             IAvailabilityService availabilityService,
             IPracticeRoomService practiceRoomService)
         {
-            _repo = service;
+            _service = service;
             _employeeService = employeeService;
             _patientService = patientService;
             _treatmentPlanService = treatmentPlanService;
@@ -58,15 +58,11 @@ namespace Fysio_WebApplication.Controllers
         // GET: MedicalFile
         public ActionResult Index()
         {
-            var files = _repo.MedicalFiles
-                .Include(i => i.IntakeSupervision)
-                    .ThenInclude(i => i.ApplicationUser)
-                .Include(i => i.IntakeTherapistId)
-                    .ThenInclude(i => i.ApplicationUser);
+            var files = _service.GetMedicalFilesWithIntakeUsers();
 
             if (User.HasClaim("UserType", "Patient"))
             {
-                Patient patient = _patientService.Patients.Include(m => m.MedicalFile).FirstOrDefault(x => x.PatientId == User.FindFirstValue(ClaimTypes.NameIdentifier));
+                Patient patient = _patientService.GetPatientWithMedicalFile(User.FindFirstValue(ClaimTypes.NameIdentifier));
                 if (patient.MedicalFile is not null)
                 {
                     return Redirect("/MedicalFile/Details/" + patient.MedicalFile.Id);
@@ -83,39 +79,22 @@ namespace Fysio_WebApplication.Controllers
         public ActionResult IndexPersonalSupervise()
         {
             string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return View(_repo.MedicalFiles
-                .Include(i => i.IntakeSupervision)
-                    .ThenInclude(i => i.ApplicationUser)
-                .Include(i => i.IntakeTherapistId)
-                    .ThenInclude(i => i.ApplicationUser)
-                .Where(i => i.IntakeSupervision == _employeeService.GetEmployee(userId)));
+
+            return View(_service.GetMedicalFilesForIntakeSupervision(_employeeService.GetEmployee(userId)));
         }
 
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
         public ActionResult IndexPersonalTherapist()
         {
             string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return View(_repo.MedicalFiles
-                .Include(i => i.IntakeSupervision)
-                    .ThenInclude(i => i.ApplicationUser)
-                .Include(i => i.IntakeTherapistId)
-                    .ThenInclude(i => i.ApplicationUser)
-                .Where(i => i.IntakeTherapistId == _employeeService.GetEmployee(userId)));
+            return View(_service.GetMedicalFilesForTherapist(_employeeService.GetEmployee(userId)));
         }
 
         [Authorize]
         // GET: MedicalFile/Details/5
         public async Task<ActionResult> DetailsAsync(int id)
         {
-            // Get the detailed medical File
-            MedicalFile medical = _repo.MedicalFiles
-            .Include(i => i.IntakeSupervision)
-                .ThenInclude(e => e.ApplicationUser)
-            .Include(i => i.IntakeTherapistId)
-                .ThenInclude(c => c.ApplicationUser)
-            .FirstOrDefault(i => i.Id == id);
-
-
+            MedicalFile medical = _service.GetDetailedMedicalFileById(id);
 
             //Fetch the diagnosis containing the code
             var client = new RestClient("https://fysiowebservice.azurewebsites.net/api");
@@ -127,16 +106,15 @@ namespace Fysio_WebApplication.Controllers
             ViewBag.BodyLocation = diagnosis.BodyLocation;
             ViewBag.Pathology = diagnosis.Pathology;
 
-            if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student")) return View(_repo.GetMedicalFile(id));
+            if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student")) return View(_service.GetMedicalFile(id));
 
 
             if (User.HasClaim("UserType", "Patient"))
             {
-                // Get the patient.
-                Patient patient = _patientService.Patients.Include(m => m.MedicalFile).FirstOrDefault(x => x.PatientId == User.FindFirstValue(ClaimTypes.NameIdentifier));
+                Patient patient = _patientService.GetPatientWithMedicalFile(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
                 // Check if the patient medicalfile is the same as the user
-                if (patient.MedicalFile.Id == id) return View(_repo.GetMedicalFile(id));
+                if (patient.MedicalFile.Id == id) return View(_service.GetMedicalFile(id));
             }
 
             return RedirectToAction("AccessDenied", "Error");
@@ -146,7 +124,7 @@ namespace Fysio_WebApplication.Controllers
         // GET: MedicalFile/Edit/5
         public async Task<ActionResult> EditAsync(int id)
         {
-            MedicalFile file = _repo.GetMedicalFile(id);
+            MedicalFile file = _service.GetMedicalFile(id);
             var query = new GraphQLRequest
             {
                 Query = @"
@@ -178,7 +156,7 @@ namespace Fysio_WebApplication.Controllers
         {
             try
             {
-                _repo.UpdateMedicalFile(id, collection);
+                _service.UpdateMedicalFile(id, collection);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -236,7 +214,7 @@ namespace Fysio_WebApplication.Controllers
                 medicalFile.IntakeTherapistId = employee;
             }
 
-            _repo.AddMedicalFile(medicalFile);
+            _service.AddMedicalFile(medicalFile);
 
             //Return view
             return Redirect("/MedicalFile/Details/" + medicalFile.Id);
@@ -249,12 +227,12 @@ namespace Fysio_WebApplication.Controllers
             // Check if the medicalfile from the patient has the same value as the userID. 
             if (User.HasClaim("UserType", "Patient"))
             {
-                Patient patient = _patientService.Patients.Include(m => m.MedicalFile).FirstOrDefault(x => x.PatientId == User.FindFirstValue(ClaimTypes.NameIdentifier));
+                Patient patient = _patientService.GetPatientWithMedicalFile(User.FindFirstValue(ClaimTypes.NameIdentifier));
                 if (patient.MedicalFile.Id != id) return RedirectToAction("AccessDenied", "Error");
             }
 
 
-            MedicalFile file = _repo.MedicalFiles.Include(c1 => c1.Notes).FirstOrDefault(i => i.Id == id);
+            MedicalFile file = _service.FindByID(id);
 
             if (User.HasClaim("UserType", "Patient") || User.HasClaim("UserType", "Student"))
             {
@@ -291,14 +269,10 @@ namespace Fysio_WebApplication.Controllers
             _notesService.AddNote(note);
 
             //Add the Treatmentplan to the medicalFile
-            MedicalFile medicalFile = _repo.MedicalFiles
-                .Include(i => i.Notes)
-                .Include(i => i.IntakeSupervision)
-                .Include(i => i.IntakeTherapistId)
-                .FirstOrDefault(i => i.Id == id);
+            MedicalFile medicalFile = _service.GetDetailedMedicalFileById(id);
 
             medicalFile.Notes.Add(note);
-            _repo.UpdateMedicalFile(id, medicalFile);
+            _service.UpdateMedicalFile(id, medicalFile);
 
             //Return view
             return Redirect("/MedicalFile/Notes/" + id);
@@ -312,16 +286,13 @@ namespace Fysio_WebApplication.Controllers
             // A patient can only watch it's own treatmentplans.
             if (User.HasClaim("UserType", "Patient"))
             {
-                Patient patient = _patientService.Patients
-                    .Include(m => m.MedicalFile)
-                        .ThenInclude(c2 => c2.TreatmentPlans)
-                    .FirstOrDefault(x => x.PatientId == User.FindFirstValue(ClaimTypes.NameIdentifier));
+                Patient patient = _patientService.GetPatientWithMedicalFile(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
                 if (patient.MedicalFile.Id != id) return RedirectToAction("AccessDenied", "Error");
             }
 
             // Return all TreatmentPlan for this medical File
-            MedicalFile file = _repo.MedicalFiles.Include(c1 => c1.TreatmentPlans).ThenInclude(i => i.PracticeRoom).FirstOrDefault(i => i.Id == id);
+            MedicalFile file = _service.GetDetailedMedicalFileById(id);
 
 
             ViewBag.Url = "/MedicalFile/" + file.Id + "/AddRoomTreatment/";
@@ -351,7 +322,7 @@ namespace Fysio_WebApplication.Controllers
             ViewBag.Treatments = selectlist;
             ViewBag.Url = "/MedicalFile/TreatmentPlanNew/" + id;
 
-            MedicalFile medicalFile = _repo.MedicalFiles.Include(i => i.TreatmentPlans).FirstOrDefault(i => i.Id == id);
+            MedicalFile medicalFile = _service.GetDetailedMedicalFileById(id);
 
             if (medicalFile.DateOfDischarge > DateTime.Now) return View();
 
@@ -368,7 +339,7 @@ namespace Fysio_WebApplication.Controllers
             Employee employee = _employeeService.GetEmployee(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
             TreatmentPlan NewPlan = new TreatmentPlan { Type = plan.Type, Description = plan.Description, Particularities = plan.Particularities, TreatmentPerformedBy = employee, TreatmentDate = plan.TreatmentDate, AmountOfTreatmentsPerWeek = plan.AmountOfTreatmentsPerWeek };
 
-            MedicalFile medicalFile = _repo.MedicalFiles.Include(i => i.TreatmentPlans).FirstOrDefault(i => i.Id == id);
+            MedicalFile medicalFile = _service.GetDetailedMedicalFileById(id);
             // check if medical file is beyond discharge date. 
             if (medicalFile.DateOfDischarge > DateTime.Now)
             {
@@ -376,7 +347,7 @@ namespace Fysio_WebApplication.Controllers
 
                 //Add the Treatmentplan to the medicalFile
                 medicalFile.TreatmentPlans.Add(NewPlan);
-                _repo.UpdateMedicalFile(id, medicalFile);
+                _service.UpdateMedicalFile(id, medicalFile);
                 //Return view
                 return Redirect("/MedicalFile/TreatmentPlan/" + id);
             }
@@ -400,7 +371,7 @@ namespace Fysio_WebApplication.Controllers
         public ActionResult AddRoomTreatment(int file, int treatment, PracticeRoom Room)
         {
             //Add the Room to the 
-            TreatmentPlan treatmentPlan = _treatmentPlanService.TreatmentPlans.FirstOrDefault(i => i.Id == treatment);
+            TreatmentPlan treatmentPlan = _treatmentPlanService.GetTreatmentPlan(treatment);
             PracticeRoom room = _practiceRoomService.GetPracticeRoom(Room.Id);
             treatmentPlan.PracticeRoom = room;
 
@@ -414,7 +385,7 @@ namespace Fysio_WebApplication.Controllers
         public ActionResult Appointment(int id)
         {
             // getting the appointment that might be set on this medical file.
-            Patient patient = _patientService.Patients.Include(x => x.MedicalFile).FirstOrDefault(x => x.MedicalFile.Id == id);
+            Patient patient = _patientService.GetPatientByMedicalFile(id);
 
             if (patient is null)
             {
@@ -422,13 +393,7 @@ namespace Fysio_WebApplication.Controllers
                 return Redirect("/Auth/RegisterPatient/");
             }
 
-            Appointment appointment = _appointmentsService.Appointments
-                .Include(x => x.Employee)
-                    .ThenInclude(x => x.ApplicationUser)
-                .Include(x => x.Patient)
-                    .ThenInclude(x => x.ApplicationUser)
-                .Include(x => x.TimeSlot)
-                .FirstOrDefault(x => x.Patient == patient);
+            Appointment appointment = _appointmentsService.GetAppointmentByPatient(patient);
 
             if (appointment is null)
             {
@@ -448,7 +413,7 @@ namespace Fysio_WebApplication.Controllers
         public ActionResult AppointmentNew(int id)
         {
             // A new appointment on this medical file / patient. 
-            Patient patient = _patientService.Patients.Include(x => x.MedicalFile).ThenInclude(x => x.TreatmentPlans).FirstOrDefault(x => x.MedicalFile.Id == id);
+            Patient patient = _patientService.GetPatientByMedicalFile(id);
             // Here we get the patient into making a appointment with the doctor. 
             // Get all appointments from the patient. For this week. 
             IEnumerable<Appointment> appointments = _appointmentsService.GetAppointmentsByPatientId(patient.Id);
@@ -463,16 +428,9 @@ namespace Fysio_WebApplication.Controllers
             // Check if the amount of appointments that the patient has, are less then the treatmentplans prescribes.
             if (appointments.Count() <= treatmentsPerWeek)
             {
-                Patient currentlyLoggedIn = _patientService.Patients
-                .Include(x => x.MedicalFile)
-                    .ThenInclude(x => x.IntakeTherapistId)
-                        .ThenInclude(x => x.ApplicationUser)
-                .FirstOrDefault(x => x.PatientId == patient.PatientId);
-
-                IEnumerable<Availability> availability = _availabilityService.Availabilities
-                    .Where(x => x.IsAvailable == true)
-                    .Where(x => x.StartAvailability >= DateTime.Now.AddHours(2))
-                    .Where(x => x.Employee == currentlyLoggedIn.MedicalFile.IntakeTherapistId);
+                Patient currentlyLoggedIn = _patientService.GetPatientWithMedicalFile(patient.PatientId);
+                
+                IEnumerable<Availability> availability = _availabilityService.GetAvailabilityOfEmployee(currentlyLoggedIn.MedicalFile.IntakeTherapistId);
 
                 SelectList selectlist = new SelectList(availability, "Id", "StartAvailability");
 
@@ -500,7 +458,7 @@ namespace Fysio_WebApplication.Controllers
         public ActionResult AppointmentNew(int medicalfileId, IFormCollection foFormCollection)
         {
             // A new appointment on this medical file / patient. 
-            Patient patient = _patientService.Patients.Include(x => x.MedicalFile).ThenInclude(x => x.TreatmentPlans).FirstOrDefault(x => x.MedicalFile.Id == medicalfileId);
+            Patient patient = _patientService.GetPatientByMedicalFile(medicalfileId);
             // Here we get the patient into making a appointment with the doctor. 
             // Get all appointments from the patient. For this week. 
             IEnumerable<Appointment> appointments = _appointmentsService.GetAppointmentsByPatientId(patient.Id);
@@ -509,23 +467,16 @@ namespace Fysio_WebApplication.Controllers
             int treatmentsPerWeek = 0;
             foreach (var treatmentplan in treatmentplans)
             {
-                treatmentsPerWeek = treatmentsPerWeek + treatmentplan.AmountOfTreatmentsPerWeek;
+                treatmentsPerWeek += treatmentplan.AmountOfTreatmentsPerWeek;
             }
 
             // Check if the amount of appointments that the patient has, are less then the treatmentplans prescribes.
             if (appointments.Count() <= treatmentsPerWeek)
             {
                 var Id = Convert.ToInt32(foFormCollection["id"]);
-                var availability = _availabilityService.Availabilities
-                    .Include(x => x.Employee)
-                        .ThenInclude(x => x.ApplicationUser)
-                    .FirstOrDefault(x => x.Id == Id);
+                Availability availability = _availabilityService.FindByID(Id);
 
-                Patient currentlyLoggedIn = _patientService.Patients
-                    .Include(x => x.MedicalFile)
-                        .ThenInclude(x => x.IntakeTherapistId)
-                            .ThenInclude(x => x.ApplicationUser)
-                    .FirstOrDefault(x => x.PatientId == patient.PatientId);
+                Patient currentlyLoggedIn = _patientService.GetPatientWithMedicalFile(patient.PatientId);
 
                 Appointment appointment = new Appointment();
 

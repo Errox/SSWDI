@@ -19,7 +19,10 @@ namespace Services
             _availabilityRepository= availabilityRepository;
         }
 
-        public IQueryable<Availability> Availabilities => _availabilityRepository.Availabilities.Where(x => x.StartAvailability >= DateTime.Now.AddHours(1));
+        public IQueryable<Availability> Availabilities => _availabilityRepository.Availabilities
+            .Where(x => x.StartAvailability >= DateTime.Now.AddHours(1))
+            .Include(x => x.Employee)
+                .ThenInclude(x => x.ApplicationUser);
 
         public void Add(Availability entity)
         {
@@ -49,6 +52,14 @@ namespace Services
         public Availability GetAvailability(int id)
         {
             return _availabilityRepository.GetAvailability(id);
+        }
+
+        public IEnumerable<Availability> GetAvailabilityOfEmployee(Employee employee)
+        {
+            return Availabilities
+                    .Where(x => x.IsAvailable == true)
+                    .Where(x => x.StartAvailability >= DateTime.Now.AddHours(1))
+                    .Where(x => x.Employee == employee);
         }
 
         public void Remove(Availability entity)

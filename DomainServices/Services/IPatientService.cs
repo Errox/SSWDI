@@ -5,5 +5,7 @@ namespace DomainServices.Services
 {
     public interface IPatientService : IPatientRepository
     {
+        public Patient GetPatientWithMedicalFile(string patientId);
+        Patient GetPatientByMedicalFile(int id);
     }
 }

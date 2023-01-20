@@ -42,11 +42,7 @@ namespace Fysio_WebApplication.Controllers
         // GET: TreatmentController/Details/5
         public async Task<ActionResult> DetailsAsync(int id)
         {
-            TreatmentPlan treatmentPlan = _treatmentPlanService.TreatmentPlans
-                .Include(c1 => c1.PracticeRoom)
-                .Include(c1 => c1.TreatmentPerformedBy)
-                    .ThenInclude(a => a.ApplicationUser)
-                .FirstOrDefault(i => i.Id == id);
+            TreatmentPlan treatmentPlan = _treatmentPlanService.GetDetailedTreatmentPlan(id);
 
             //Fetch the Treatment containing the code
             var client = new RestClient("https://fysiowebservice.azurewebsites.net/api");
@@ -93,7 +89,7 @@ namespace Fysio_WebApplication.Controllers
             try
             {
                 string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-                Employee employee = _employeeService.Employees.FirstOrDefault(i => i.Id.ToString() == userId);
+                Employee employee = _employeeService.GetEmployee(userId);
 
                 collection.TreatmentPerformedBy = employee;
 

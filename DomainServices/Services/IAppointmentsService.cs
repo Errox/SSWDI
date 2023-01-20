@@ -7,6 +7,10 @@ namespace DomainServices.Services
     {
         IEnumerable<Appointment> GetAppointmentsByPatientId(string patientId);
         IEnumerable<Appointment> GetAppointmentsByEmployeeId(string employeeId);
+        List<Appointment> GetAllPatientsAppointments(string patientId);
+        Appointment FindAppointmentByIdWithTimeSlot(int id);
+        List<Appointment> GetPatientAppointmentsDynamically(string userId);
+        Appointment GetAppointmentByPatient(Patient patient);
 
     }
 }

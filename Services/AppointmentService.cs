@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,14 +20,19 @@ namespace Services
             _appointmentsRepostory = appointmentRepository;
         }
 
-        public IQueryable<Appointment> Appointments => _appointmentsRepostory.Appointments.Where(a => a.TimeSlot.StartAvailability >= DateTime.Now);
+        public IQueryable<Appointment> Appointments => _appointmentsRepostory.Appointments
+                .Where(a => a.TimeSlot.StartAvailability >= DateTime.Now)
+                .Include(c1 => c1.Patient)
+                    .ThenInclude(c1 => c1.ApplicationUser)
+                .Include(c2 => c2.Employee)
+                    .ThenInclude(c1 => c1.ApplicationUser)
+                .Include(c3 => c3.TimeSlot);
 
         public void Add(Appointment appointment)
         {
             _appointmentsRepostory.Add(appointment);
         }
 
-        // TODO: remove in future for generic repo.
         public void AddAppointment(Appointment appointment)
         {
             _appointmentsRepostory.Add(appointment);
@@ -45,6 +51,11 @@ namespace Services
         public IEnumerable<Appointment> GetAll()
         {
             return _appointmentsRepostory.GetAll();
+        }
+
+        public List<Appointment> GetAllPatientsAppointments(string patientId)
+        {
+            return Appointments.Where(x => x.Patient.Id == patientId).ToList();
         }
 
         public Appointment GetAppointment(int id)
@@ -92,6 +103,36 @@ namespace Services
         public void UpdateAppointment(Appointment appointment)
         {
             _appointmentsRepostory.UpdateAppointment(appointment);
+        }
+
+        public Appointment FindAppointmentByIdWithTimeSlot(int id)
+        {
+            return Appointments
+                .Include(x => x.TimeSlot)
+                .Include(x => x.Patient)
+                    .ThenInclude(x => x.ApplicationUser)
+                .Include(x => x.Employee)
+                    .ThenInclude(x => x.ApplicationUser)
+                .FirstOrDefault(x => x.Id == id);
+        }
+
+        public List<Appointment> GetPatientAppointmentsDynamically(string userId)
+        {
+            return Appointments
+                    .Include(x => x.Employee)
+                        .ThenInclude(x => x.ApplicationUser)
+                    .Include(x => x.Patient)
+                        .ThenInclude(x => x.ApplicationUser)
+                    .Include(x => x.Patient)
+                        .ThenInclude(x => x.MedicalFile)
+                    .Include(x => x.TimeSlot)
+                    .Where(x => x.Patient.Id == userId || x.Patient.ApplicationUser.Id == userId).ToList();
+        }
+
+        public Appointment GetAppointmentByPatient(Patient patient)
+        {
+            return Appointments
+                .FirstOrDefault(x => x.Patient == patient);
         }
     }
 }

@@ -5,6 +5,7 @@ namespace DomainServices.Services
 {
     public interface IAvailabilityService : IAvailabilityRepository
     {
+        IEnumerable<Availability> GetAvailabilityOfEmployee(Employee employee);
 
     }
 }

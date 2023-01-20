@@ -60,5 +60,25 @@ namespace Services
         {
             _patientRepository.UpdatePatient(id, patient);
         }
+
+        public Patient GetPatientWithMedicalFile(string patientId)
+        {
+            return _patientRepository.Patients
+                .Include(x => x.MedicalFile)
+                    .ThenInclude(x => x.IntakeTherapistId)
+                        .ThenInclude(x => x.ApplicationUser)
+                .Include(x => x.MedicalFile)
+                    .ThenInclude(x => x.TreatmentPlans)
+                .FirstOrDefault(x => x.PatientId == patientId);
+        }
+
+        public Patient GetPatientByMedicalFile(int id)
+        {
+            return Patients
+                .Include(x => x.MedicalFile)
+                .ThenInclude(x => x.TreatmentPlans)
+                .FirstOrDefault(x => x.MedicalFile.Id == id);
+        }
+
     }
 }

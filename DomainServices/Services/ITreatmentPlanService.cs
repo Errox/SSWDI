@@ -5,5 +5,6 @@ namespace DomainServices.Services
 {
     public interface ITreatmentPlanService : ITreatmentPlanRepository
     {
+        TreatmentPlan GetDetailedTreatmentPlan(int id);
     }
 }
