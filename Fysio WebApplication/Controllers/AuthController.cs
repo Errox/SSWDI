@@ -1,5 +1,4 @@
 ﻿using Core.DomainModel;
-using DomainServices.Repositories;
 using Fysio_WebApplication.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -12,6 +11,7 @@ using System.Linq;
 using Identity;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using DomainServices.Services;
 
 namespace Fysio_WebApplication.Controllers
 {
@@ -19,24 +19,24 @@ namespace Fysio_WebApplication.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IEmployeeRepository _employeeRepo;
-        private readonly IPatientRepository _patientRepo;
-        private IMedicalFileRepository _medicalFileRepo;
+        private readonly IEmployeeService _employeeService;
+        private readonly IPatientService _patientService;
+        private readonly IMedicalFileService _medicalFileService;
         private readonly ILogger<LoginModel> _logger;
 
         public AuthController(
             UserManager<ApplicationUser> userManager,
-            IEmployeeRepository employeeRepo,
-            IPatientRepository patientRepo,
+            IEmployeeService employeeService,
+            IPatientService patientService,
             ILogger<LoginModel> logger,
-            IMedicalFileRepository medicalFileRepo,
+            IMedicalFileService medicalFileService,
             SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _employeeRepo = employeeRepo;
-            _patientRepo = patientRepo;
-            _medicalFileRepo = medicalFileRepo;
+            _employeeService = employeeService;
+            _patientService = patientService;
+            _medicalFileService = medicalFileService;
             _logger = logger;
         }
 
@@ -162,7 +162,7 @@ namespace Fysio_WebApplication.Controllers
                         await _userManager.AddClaimAsync(newUser, EmployeeUserClaim);
                     }
 
-                    _employeeRepo.AddEmployee(employee);
+                    _employeeService.AddEmployee(employee);
 
                     //await _userManager.AddClaimAsync(user, EmployeeUserClaim);
 
@@ -230,14 +230,14 @@ namespace Fysio_WebApplication.Controllers
                     }
 
                     // Check if there is a medical file with a email the same as applicationUser.Email. If so, combine it with the patient.
-                    MedicalFile medicalFile = _medicalFileRepo.GetMedicalFileByEmail(model.Email);
+                    MedicalFile medicalFile = _medicalFileService.GetMedicalFileByEmail(model.Email);
 
                     if (medicalFile != null)
                     {
                         patient.MedicalFile = medicalFile;
                     }
 
-                    _patientRepo.AddPatient(patient);
+                    _patientService.AddPatient(patient);
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -264,11 +264,11 @@ namespace Fysio_WebApplication.Controllers
             // If user is student or employee. Return normal view. 
             if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
             {
-                return View(_employeeRepo.Employees.FirstOrDefault(i => i.EmployeeId == userId));
+                return View(_employeeService.Employees.FirstOrDefault(i => i.EmployeeId == userId));
             }
             else
             {
-                Patient patient = _patientRepo.Patients.FirstOrDefault(i => i.PatientId == userId);
+                Patient patient = _patientService.Patients.FirstOrDefault(i => i.PatientId == userId);
                 // First application user -> patient. 
 
                 return RedirectToAction("Details", "Patient", new { id = patient.IdNumber });

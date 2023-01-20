@@ -1,7 +1,7 @@
 ﻿using Avans_Fysio_WebService.GraphQL.ResponseTypes;
 using Core.DomainModel;
 using Core.GraphQL.ResponseTypes;
-using DomainServices.Repositories;
+using DomainServices.Services;
 using GraphQL;
 using GraphQL.Client.Abstractions;
 using Microsoft.AspNetCore.Authorization;
@@ -22,36 +22,36 @@ namespace Fysio_WebApplication.Controllers
     [Authorize]
     public class MedicalFileController : Controller
     {
-        private IMedicalFileRepository _repo;
-        private IEmployeeRepository _employeeRepo;
-        private IPatientRepository _patientRepository;
-        private ITreatmentPlanRepository _treatmentPlanRepository;
-        private INotesRepository _notesRepository;
-        private IAppointmentsRepository _appointmentsRepository;
-        private IAvailabilityRepository _availabilityRepository;
+        private IMedicalFileService _repo;
+        private IEmployeeService _employeeService;
+        private IPatientService _patientService;
+        private ITreatmentPlanService _treatmentPlanService;
+        private INotesService _notesService;
+        private IAppointmentsService _appointmentsService;
+        private IAvailabilityService _availabilityService;
         private readonly IGraphQLClient _client;
-        private IPracticeRoomRepository _practiceRoomRepository;
+        private IPracticeRoomService _practiceRoomService;
 
         public MedicalFileController(
-            IMedicalFileRepository repo,
-            IEmployeeRepository employeeRepo,
-            IPatientRepository patientRepository,
-            ITreatmentPlanRepository treatmentPlanRepository,
-            INotesRepository notesRepository,
-            IAppointmentsRepository appointmentsRepository,
+            IMedicalFileService service,
+            IEmployeeService employeeService,
+            IPatientService patientService,
+            ITreatmentPlanService treatmentPlanService,
+            INotesService notesService,
+            IAppointmentsService appointmentsService,
             IGraphQLClient client,
-            IAvailabilityRepository availabilityRepository,
-            IPracticeRoomRepository practiceRoomRepository)
+            IAvailabilityService availabilityService,
+            IPracticeRoomService practiceRoomService)
         {
-            _repo = repo;
-            _employeeRepo = employeeRepo;
-            _patientRepository = patientRepository;
-            _treatmentPlanRepository = treatmentPlanRepository;
-            _notesRepository = notesRepository;
-            _appointmentsRepository = appointmentsRepository;
+            _repo = service;
+            _employeeService = employeeService;
+            _patientService = patientService;
+            _treatmentPlanService = treatmentPlanService;
+            _notesService = notesService;
+            _appointmentsService = appointmentsService;
             _client = client;
-            _availabilityRepository = availabilityRepository;
-            _practiceRoomRepository = practiceRoomRepository;
+            _availabilityService = availabilityService;
+            _practiceRoomService = practiceRoomService;
         }
 
         [Authorize]
@@ -66,7 +66,7 @@ namespace Fysio_WebApplication.Controllers
 
             if (User.HasClaim("UserType", "Patient"))
             {
-                Patient patient = _patientRepository.Patients.Include(m => m.MedicalFile).FirstOrDefault(x => x.PatientId == User.FindFirstValue(ClaimTypes.NameIdentifier));
+                Patient patient = _patientService.Patients.Include(m => m.MedicalFile).FirstOrDefault(x => x.PatientId == User.FindFirstValue(ClaimTypes.NameIdentifier));
                 if (patient.MedicalFile is not null)
                 {
                     return Redirect("/MedicalFile/Details/" + patient.MedicalFile.Id);
@@ -88,7 +88,7 @@ namespace Fysio_WebApplication.Controllers
                     .ThenInclude(i => i.ApplicationUser)
                 .Include(i => i.IntakeTherapistId)
                     .ThenInclude(i => i.ApplicationUser)
-                .Where(i => i.IntakeSupervision == _employeeRepo.GetEmployee(userId)));
+                .Where(i => i.IntakeSupervision == _employeeService.GetEmployee(userId)));
         }
 
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
@@ -100,7 +100,7 @@ namespace Fysio_WebApplication.Controllers
                     .ThenInclude(i => i.ApplicationUser)
                 .Include(i => i.IntakeTherapistId)
                     .ThenInclude(i => i.ApplicationUser)
-                .Where(i => i.IntakeTherapistId == _employeeRepo.GetEmployee(userId)));
+                .Where(i => i.IntakeTherapistId == _employeeService.GetEmployee(userId)));
         }
 
         [Authorize]
@@ -133,7 +133,7 @@ namespace Fysio_WebApplication.Controllers
             if (User.HasClaim("UserType", "Patient"))
             {
                 // Get the patient.
-                Patient patient = _patientRepository.Patients.Include(m => m.MedicalFile).FirstOrDefault(x => x.PatientId == User.FindFirstValue(ClaimTypes.NameIdentifier));
+                Patient patient = _patientService.Patients.Include(m => m.MedicalFile).FirstOrDefault(x => x.PatientId == User.FindFirstValue(ClaimTypes.NameIdentifier));
 
                 // Check if the patient medicalfile is the same as the user
                 if (patient.MedicalFile.Id == id) return View(_repo.GetMedicalFile(id));
@@ -221,12 +221,12 @@ namespace Fysio_WebApplication.Controllers
             //Create new plan because somehow it'll take the medicalFile ID and places it in the model instead of keeping it empty to insert in the DB
             MedicalFile medicalFile = new MedicalFile { Description = file.Description, DiagnosisCode = file.DiagnosisCode, DateOfDischarge = file.DateOfDischarge, DateOfCreation = DateTime.Now, PatientEmail = file.PatientEmail };
 
-            Employee employee = _employeeRepo.GetEmployee(userId);
+            Employee employee = _employeeService.GetEmployee(userId);
 
             if (employee.IsStudent)
             {
                 //First employee that's not a student. This is just the stage begeleider
-                medicalFile.IntakeSupervision = _employeeRepo.Employees.FirstOrDefault(i => i.IsStudent == false);
+                medicalFile.IntakeSupervision = _employeeService.Employees.FirstOrDefault(i => i.IsStudent == false);
                 // Then save the Student into the therapist. Only a employee that supervised over the patient is different when it's a student.
                 medicalFile.IntakeTherapistId = employee;
             }
@@ -249,7 +249,7 @@ namespace Fysio_WebApplication.Controllers
             // Check if the medicalfile from the patient has the same value as the userID. 
             if (User.HasClaim("UserType", "Patient"))
             {
-                Patient patient = _patientRepository.Patients.Include(m => m.MedicalFile).FirstOrDefault(x => x.PatientId == User.FindFirstValue(ClaimTypes.NameIdentifier));
+                Patient patient = _patientService.Patients.Include(m => m.MedicalFile).FirstOrDefault(x => x.PatientId == User.FindFirstValue(ClaimTypes.NameIdentifier));
                 if (patient.MedicalFile.Id != id) return RedirectToAction("AccessDenied", "Error");
             }
 
@@ -282,13 +282,13 @@ namespace Fysio_WebApplication.Controllers
             //Create new plan because somehow it'll take the medicalFile ID and places it in the model instead of keeping it empty to insert in the DB
             Note note = new Note
             {
-                Employee = _employeeRepo.GetEmployee(this.User.FindFirstValue(ClaimTypes.NameIdentifier)),
+                Employee = _employeeService.GetEmployee(this.User.FindFirstValue(ClaimTypes.NameIdentifier)),
                 Description = newNote.Description,
                 CreatedUtc = DateTime.Now,
                 OpenForPatient = newNote.OpenForPatient
             };
 
-            _notesRepository.AddNote(note);
+            _notesService.AddNote(note);
 
             //Add the Treatmentplan to the medicalFile
             MedicalFile medicalFile = _repo.MedicalFiles
@@ -312,7 +312,7 @@ namespace Fysio_WebApplication.Controllers
             // A patient can only watch it's own treatmentplans.
             if (User.HasClaim("UserType", "Patient"))
             {
-                Patient patient = _patientRepository.Patients
+                Patient patient = _patientService.Patients
                     .Include(m => m.MedicalFile)
                         .ThenInclude(c2 => c2.TreatmentPlans)
                     .FirstOrDefault(x => x.PatientId == User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -365,14 +365,14 @@ namespace Fysio_WebApplication.Controllers
         public ActionResult TreatmentPlanNew(int id, TreatmentPlan plan)
         {
             //Create new plan because somehow it'll take the medicalFile ID and places it in the model instead of keeping it empty to insert in the DB
-            Employee employee = _employeeRepo.GetEmployee(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            Employee employee = _employeeService.GetEmployee(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
             TreatmentPlan NewPlan = new TreatmentPlan { Type = plan.Type, Description = plan.Description, Particularities = plan.Particularities, TreatmentPerformedBy = employee, TreatmentDate = plan.TreatmentDate, AmountOfTreatmentsPerWeek = plan.AmountOfTreatmentsPerWeek };
 
             MedicalFile medicalFile = _repo.MedicalFiles.Include(i => i.TreatmentPlans).FirstOrDefault(i => i.Id == id);
             // check if medical file is beyond discharge date. 
             if (medicalFile.DateOfDischarge > DateTime.Now)
             {
-                _treatmentPlanRepository.AddTreatmentPlan(NewPlan);
+                _treatmentPlanService.AddTreatmentPlan(NewPlan);
 
                 //Add the Treatmentplan to the medicalFile
                 medicalFile.TreatmentPlans.Add(NewPlan);
@@ -390,7 +390,7 @@ namespace Fysio_WebApplication.Controllers
         public ActionResult AddRoomTreatment(int file, int id)
         {
             ViewBag.Url = "/MedicalFile/" + file + "/AddRoomTreatment/" + id;
-            ViewBag.Rooms = new SelectList(_practiceRoomRepository.GetAll(), "Id", "Name");
+            ViewBag.Rooms = new SelectList(_practiceRoomService.GetAll(), "Id", "Name");
             return View();
         }
 
@@ -400,11 +400,11 @@ namespace Fysio_WebApplication.Controllers
         public ActionResult AddRoomTreatment(int file, int treatment, PracticeRoom Room)
         {
             //Add the Room to the 
-            TreatmentPlan treatmentPlan = _treatmentPlanRepository.TreatmentPlans.FirstOrDefault(i => i.Id == treatment);
-            PracticeRoom room = _practiceRoomRepository.GetPracticeRoom(Room.Id);
+            TreatmentPlan treatmentPlan = _treatmentPlanService.TreatmentPlans.FirstOrDefault(i => i.Id == treatment);
+            PracticeRoom room = _practiceRoomService.GetPracticeRoom(Room.Id);
             treatmentPlan.PracticeRoom = room;
 
-            _treatmentPlanRepository.UpdateTreatmentPlan(treatmentPlan.Id, treatmentPlan);
+            _treatmentPlanService.UpdateTreatmentPlan(treatmentPlan.Id, treatmentPlan);
 
             //Return view
             return Redirect("/MedicalFile/TreatmentPlan/" + file);
@@ -414,7 +414,7 @@ namespace Fysio_WebApplication.Controllers
         public ActionResult Appointment(int id)
         {
             // getting the appointment that might be set on this medical file.
-            Patient patient = _patientRepository.Patients.Include(x => x.MedicalFile).FirstOrDefault(x => x.MedicalFile.Id == id);
+            Patient patient = _patientService.Patients.Include(x => x.MedicalFile).FirstOrDefault(x => x.MedicalFile.Id == id);
 
             if (patient is null)
             {
@@ -422,7 +422,7 @@ namespace Fysio_WebApplication.Controllers
                 return Redirect("/Auth/RegisterPatient/");
             }
 
-            Appointment appointment = _appointmentsRepository.Appointments
+            Appointment appointment = _appointmentsService.Appointments
                 .Include(x => x.Employee)
                     .ThenInclude(x => x.ApplicationUser)
                 .Include(x => x.Patient)
@@ -448,10 +448,10 @@ namespace Fysio_WebApplication.Controllers
         public ActionResult AppointmentNew(int id)
         {
             // A new appointment on this medical file / patient. 
-            Patient patient = _patientRepository.Patients.Include(x => x.MedicalFile).ThenInclude(x => x.TreatmentPlans).FirstOrDefault(x => x.MedicalFile.Id == id);
+            Patient patient = _patientService.Patients.Include(x => x.MedicalFile).ThenInclude(x => x.TreatmentPlans).FirstOrDefault(x => x.MedicalFile.Id == id);
             // Here we get the patient into making a appointment with the doctor. 
             // Get all appointments from the patient. For this week. 
-            IEnumerable<Appointment> appointments = _appointmentsRepository.GetAppointmentsByPatientId(patient.Id);
+            IEnumerable<Appointment> appointments = _appointmentsService.GetAppointmentsByPatientId(patient.Id);
             // Count the amount of treatments combined all into a int 
             ICollection<TreatmentPlan> treatmentplans = patient.MedicalFile.TreatmentPlans;
             int treatmentsPerWeek = 0;
@@ -463,13 +463,13 @@ namespace Fysio_WebApplication.Controllers
             // Check if the amount of appointments that the patient has, are less then the treatmentplans prescribes.
             if (appointments.Count() <= treatmentsPerWeek)
             {
-                Patient currentlyLoggedIn = _patientRepository.Patients
+                Patient currentlyLoggedIn = _patientService.Patients
                 .Include(x => x.MedicalFile)
                     .ThenInclude(x => x.IntakeTherapistId)
                         .ThenInclude(x => x.ApplicationUser)
                 .FirstOrDefault(x => x.PatientId == patient.PatientId);
 
-                IEnumerable<Availability> availability = _availabilityRepository.Availabilities
+                IEnumerable<Availability> availability = _availabilityService.Availabilities
                     .Where(x => x.IsAvailable == true)
                     .Where(x => x.StartAvailability >= DateTime.Now.AddHours(2))
                     .Where(x => x.Employee == currentlyLoggedIn.MedicalFile.IntakeTherapistId);
@@ -500,10 +500,10 @@ namespace Fysio_WebApplication.Controllers
         public ActionResult AppointmentNew(int medicalfileId, IFormCollection foFormCollection)
         {
             // A new appointment on this medical file / patient. 
-            Patient patient = _patientRepository.Patients.Include(x => x.MedicalFile).ThenInclude(x => x.TreatmentPlans).FirstOrDefault(x => x.MedicalFile.Id == medicalfileId);
+            Patient patient = _patientService.Patients.Include(x => x.MedicalFile).ThenInclude(x => x.TreatmentPlans).FirstOrDefault(x => x.MedicalFile.Id == medicalfileId);
             // Here we get the patient into making a appointment with the doctor. 
             // Get all appointments from the patient. For this week. 
-            IEnumerable<Appointment> appointments = _appointmentsRepository.GetAppointmentsByPatientId(patient.Id);
+            IEnumerable<Appointment> appointments = _appointmentsService.GetAppointmentsByPatientId(patient.Id);
             // Count the amount of treatments combined all into a int 
             ICollection<TreatmentPlan> treatmentplans = patient.MedicalFile.TreatmentPlans;
             int treatmentsPerWeek = 0;
@@ -516,12 +516,12 @@ namespace Fysio_WebApplication.Controllers
             if (appointments.Count() <= treatmentsPerWeek)
             {
                 var Id = Convert.ToInt32(foFormCollection["id"]);
-                var availability = _availabilityRepository.Availabilities
+                var availability = _availabilityService.Availabilities
                     .Include(x => x.Employee)
                         .ThenInclude(x => x.ApplicationUser)
                     .FirstOrDefault(x => x.Id == Id);
 
-                Patient currentlyLoggedIn = _patientRepository.Patients
+                Patient currentlyLoggedIn = _patientService.Patients
                     .Include(x => x.MedicalFile)
                         .ThenInclude(x => x.IntakeTherapistId)
                             .ThenInclude(x => x.ApplicationUser)
@@ -535,8 +535,8 @@ namespace Fysio_WebApplication.Controllers
 
                 availability.Patient = currentlyLoggedIn;
 
-                _availabilityRepository.UpdateAvailability(availability);
-                _appointmentsRepository.AddAppointment(appointment);
+                _availabilityService.UpdateAvailability(availability);
+                _appointmentsService.AddAppointment(appointment);
 
                 ViewBag.Success = "Appointment has been set.";
 

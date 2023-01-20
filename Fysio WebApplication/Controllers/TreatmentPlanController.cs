@@ -1,6 +1,6 @@
 ﻿using Core.DomainModel;
 using Core.GraphQL.ResponseTypes;
-using DomainServices.Repositories;
+using DomainServices.Services;
 using GraphQL;
 using GraphQL.Client.Abstractions;
 using Microsoft.AspNetCore.Authorization;
@@ -18,31 +18,31 @@ namespace Fysio_WebApplication.Controllers
     [Authorize]
     public class TreatmentPlanController : Controller
     {
-        private ITreatmentPlanRepository _treatmentPlanRepo;
-        private IEmployeeRepository _employeeRepo;
+        private ITreatmentPlanService _treatmentPlanService;
+        private IEmployeeService _employeeService;
         private readonly IGraphQLClient _client;
 
         public TreatmentPlanController(
-            ITreatmentPlanRepository treatmentPlanRepo,
-            IEmployeeRepository employee,
+            ITreatmentPlanService treatmentPlanService,
+            IEmployeeService employee,
             IGraphQLClient client)
         {
-            _treatmentPlanRepo = treatmentPlanRepo;
+            _treatmentPlanService = treatmentPlanService;
             _client = client;
-            _employeeRepo = employee;
+            _employeeService = employee;
         }
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
         // GET: TreatmentController
         public ActionResult Index()
         {
-            return View(_treatmentPlanRepo.GetAll());
+            return View(_treatmentPlanService.GetAll());
         }
 
         [Authorize]
         // GET: TreatmentController/Details/5
         public async Task<ActionResult> DetailsAsync(int id)
         {
-            TreatmentPlan treatmentPlan = _treatmentPlanRepo.TreatmentPlans
+            TreatmentPlan treatmentPlan = _treatmentPlanService.TreatmentPlans
                 .Include(c1 => c1.PracticeRoom)
                 .Include(c1 => c1.TreatmentPerformedBy)
                     .ThenInclude(a => a.ApplicationUser)
@@ -93,11 +93,11 @@ namespace Fysio_WebApplication.Controllers
             try
             {
                 string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-                Employee employee = _employeeRepo.Employees.FirstOrDefault(i => i.Id.ToString() == userId);
+                Employee employee = _employeeService.Employees.FirstOrDefault(i => i.Id.ToString() == userId);
 
                 collection.TreatmentPerformedBy = employee;
 
-                _treatmentPlanRepo.AddTreatmentPlan(collection);
+                _treatmentPlanService.AddTreatmentPlan(collection);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -110,7 +110,7 @@ namespace Fysio_WebApplication.Controllers
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
         public async Task<ActionResult> EditAsync(int id)
         {
-            TreatmentPlan file = _treatmentPlanRepo.GetTreatmentPlan(id);
+            TreatmentPlan file = _treatmentPlanService.GetTreatmentPlan(id);
 
             var query = new GraphQLRequest
             {
@@ -142,7 +142,7 @@ namespace Fysio_WebApplication.Controllers
         {
             try
             {
-                _treatmentPlanRepo.UpdateTreatmentPlan(id, collection);
+                _treatmentPlanService.UpdateTreatmentPlan(id, collection);
                 return RedirectToAction(nameof(Index));
             }
             catch

@@ -1,6 +1,7 @@
 using Avans_Fysio_WebService.GraphQL;
 using Avans_Fysio_WebService.GraphQL.Mutations;
 using DomainServices.Repositories;
+using DomainServices.Services;
 using EFFysioData.DAL;
 using EFFysioData.Repositories;
 using EFFysioData.SeedData;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
+using Services;
 
 namespace Avans_Fysio_WebService
 {
@@ -40,9 +42,13 @@ namespace Avans_Fysio_WebService
             //        Configuration["ConnectionStrings:AvansFysioWebServiceConnection"]);
             //});
 
-            // Dependency injection 
+            // Dependency injection Repository's
             services.AddTransient<IDiagnosesRepository, EFDiagnoseRepository>();
             services.AddTransient<ITreatmentRepository, EFTreatmentRepository>();
+
+            // Dependency injection for Services
+            services.AddTransient<IDiagnosesService, DiagnosesService>();
+            services.AddTransient<ITreatmentServices, TreatmentService>();
 
             //GraphQL 
             services

@@ -3,7 +3,7 @@ using DomainServices.Repositories;
 
 namespace DomainServices.Services
 {
-    public interface ITreatmentServices : ITreatmentPlanRepository
+    public interface ITreatmentServices : ITreatmentRepository
     {
     }
 }

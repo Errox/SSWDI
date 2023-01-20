@@ -1,5 +1,5 @@
 ﻿using Core.DomainModel;
-using DomainServices.Repositories;
+using DomainServices.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
@@ -9,25 +9,25 @@ namespace Fysio_WebApplication.Controllers
     [Authorize]
     public class PracticeRoomController : Controller
     {
-        private IPracticeRoomRepository _repo;
+        private IPracticeRoomService _service;
 
-        public PracticeRoomController(IPracticeRoomRepository repo)
+        public PracticeRoomController(IPracticeRoomService service)
         {
-            _repo = repo;
+            _service = service;
         }
 
         [Authorize]
         // GET: PracticeRoomController
         public ActionResult Index()
         {
-            return View(_repo.PracticeRooms);
+            return View(_service.PracticeRooms);
         }
 
         [Authorize]
         // GET: PracticeRoomController/Details/5
         public ActionResult Details(int id)
         {
-            return View(_repo.PracticeRooms.FirstOrDefault(i => i.Id == id));
+            return View(_service.PracticeRooms.FirstOrDefault(i => i.Id == id));
         }
 
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
@@ -45,7 +45,7 @@ namespace Fysio_WebApplication.Controllers
         {
             try
             {
-                _repo.AddPracticeRoom(practiceRoom);
+                _service.AddPracticeRoom(practiceRoom);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -58,7 +58,7 @@ namespace Fysio_WebApplication.Controllers
         // GET: PracticeRoomController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View(_repo.GetPracticeRoom(id));
+            return View(_service.GetPracticeRoom(id));
         }
 
         // POST: PracticeRoomController/Edit/5
@@ -69,7 +69,7 @@ namespace Fysio_WebApplication.Controllers
         {
             try
             {
-                _repo.UpdatePracticeRoom(id, practiceRoom);
+                _service.UpdatePracticeRoom(id, practiceRoom);
                 return RedirectToAction(nameof(Index));
             }
             catch

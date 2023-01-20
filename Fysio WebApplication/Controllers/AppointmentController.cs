@@ -20,7 +20,6 @@ namespace Fysio_WebApplication.Controllers
         private IAvailabilityRepository _availabilityRepository;
         private IEmployeeRepository _employeeRepository;
         private IPatientRepository _patientRepository;
-        private IAppointmentsRepository _appointmentRepository;
         private IAppointmentsService _appointmentService;
 
         public AppointmentController(
@@ -33,7 +32,6 @@ namespace Fysio_WebApplication.Controllers
             _availabilityRepository = availabilityRepository;
             _employeeRepository = employeeRepository;
             _patientRepository = patientRepository;
-            _appointmentRepository = appointmentRepository;
             _appointmentService = appointmentsService;
         }
 
@@ -42,7 +40,7 @@ namespace Fysio_WebApplication.Controllers
         // GET: AppointmentController
         public ActionResult Index()
         {
-            return View(_appointmentRepository.Appointments.Include(c1 => c1.Patient).Include(c2 => c2.Employee));
+            return View(_appointmentService.Appointments.Include(c1 => c1.Patient).Include(c2 => c2.Employee));
         }
 
 
@@ -72,14 +70,14 @@ namespace Fysio_WebApplication.Controllers
             // Get all appointments from the patient. For this week. 
             List<Appointment> appointments = _appointmentService.GetAppointmentsByPatientId(currentlyLoggedIn.Id).ToList();
 
-            List<Appointment> app = _appointmentRepository.Appointments.Where(x => x.Patient.Id == currentlyLoggedIn.Id).ToList();
+            List<Appointment> app = _appointmentService.Appointments.Where(x => x.Patient.Id == currentlyLoggedIn.Id).ToList();
             // Count the amount of treatments combined all into a int 
             ICollection<TreatmentPlan> treatmentplans = currentlyLoggedIn.MedicalFile.TreatmentPlans;
             int treatmentsPerWeek = 0;
 
             foreach (var treatmentplan in treatmentplans)
             {
-                treatmentsPerWeek = treatmentsPerWeek + treatmentplan.AmountOfTreatmentsPerWeek;
+                treatmentsPerWeek += treatmentplan.AmountOfTreatmentsPerWeek;
             }
             // Check if the amount of appointments that the patient has, are less then the treatmentplans prescribes.
             if (app.Count() <= treatmentsPerWeek)
@@ -132,7 +130,7 @@ namespace Fysio_WebApplication.Controllers
                 .FirstOrDefault(x => x.PatientId == patient);
 
 
-            IEnumerable<Appointment> appointments = _appointmentRepository.GetAppointmentsByPatientId(currentlyLoggedIn.Id);
+            IEnumerable<Appointment> appointments = _appointmentService.GetAppointmentsByPatientId(currentlyLoggedIn.Id);
             ICollection<TreatmentPlan> treatmentplans = currentlyLoggedIn.MedicalFile.TreatmentPlans;
             if (treatmentplans.Count() == 0)
             {
@@ -158,7 +156,7 @@ namespace Fysio_WebApplication.Controllers
                 availability.IsAvailable = false;
 
                 _availabilityRepository.UpdateAvailability(availability);
-                _appointmentRepository.AddAppointment(appointment);
+                _appointmentService.AddAppointment(appointment);
 
 
                 return RedirectToAction("Details", "Appointment");
@@ -174,7 +172,7 @@ namespace Fysio_WebApplication.Controllers
         // GET: AppointmentController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View(_appointmentRepository.GetAppointment(id));
+            return View(_appointmentService.GetAppointment(id));
         }
 
         [Authorize(Policy = "OnlyEmployeeAndStudent")]
@@ -185,9 +183,9 @@ namespace Fysio_WebApplication.Controllers
         {
             try
             {
-                Appointment appointment = _appointmentRepository.GetAppointment(id);
+                Appointment appointment = _appointmentService.GetAppointment(id);
                 //appointment.Date = collection.Date;
-                _appointmentRepository.UpdateAppointment(appointment);
+                _appointmentService.UpdateAppointment(appointment);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -202,7 +200,7 @@ namespace Fysio_WebApplication.Controllers
         {
             string PatientId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            Appointment patientAppointment = _appointmentRepository.Appointments
+            Appointment patientAppointment = _appointmentService.Appointments
                 .Include(x => x.Patient)
                     .ThenInclude(x => x.ApplicationUser)
                 .FirstOrDefault(x => x.Patient.PatientId == PatientId);
@@ -218,7 +216,7 @@ namespace Fysio_WebApplication.Controllers
             }
 
             // Redirect to medical file
-            return View(_appointmentRepository.GetAppointment(id));
+            return View(_appointmentService.GetAppointment(id));
         }
 
         // POST: AppointmentController/Delete/5
@@ -227,7 +225,7 @@ namespace Fysio_WebApplication.Controllers
         public ActionResult Delete(int id, Appointment collection)
         {
             // Delete for a appointment. 
-            Appointment appointment = _appointmentRepository.
+            Appointment appointment = _appointmentService.
                 Appointments
                 .Include(x => x.TimeSlot)
                 .Include(x => x.Patient)
@@ -249,7 +247,7 @@ namespace Fysio_WebApplication.Controllers
 
             _availabilityRepository.UpdateAvailability(availability);
 
-            _appointmentRepository.DeleteAppointment(appointment.Id);
+            _appointmentService.DeleteAppointment(appointment.Id);
 
             ViewBag.Success = "Appointment has been deleted.";
             return RedirectToAction("Index", "Home");
@@ -258,7 +256,7 @@ namespace Fysio_WebApplication.Controllers
         [Authorize(Policy = "RequirePatientRole")]
         public ActionResult Details()
         {
-            List<Appointment> appointment = _appointmentRepository.Appointments
+            List<Appointment> appointment = _appointmentService.Appointments
                 .Include(x => x.Patient)
                     .ThenInclude(x => x.ApplicationUser)
                 .Include(x => x.TimeSlot)
