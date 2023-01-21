@@ -236,7 +236,10 @@ namespace Fysio_WebApplication.Controllers
 
             if (User.HasClaim("UserType", "Patient") || User.HasClaim("UserType", "Student"))
             {
-                return View(file.Notes.Where(x => x.OpenForPatient == true));
+                if(file.Notes != null)
+                {
+                    return View(file.Notes.Where(x => x.OpenForPatient == true));
+                }
             }
 
             // Return all notes for this medical thing

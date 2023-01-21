@@ -7,41 +7,41 @@
 <h1>Notes</h1>
 
 <table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OpenForPatient)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-        @if (Model == null)
-        {
+    @if (Model == null)
+    {
         <p> Geen notes voor dit dossier </p>
-        }
-        else
+    }
+    else
+    {
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.OpenForPatient)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        @foreach (var item in Model)
         {
-            @foreach (var item in Model)
-            {
-            <tbody>
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Id)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Description)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.OpenForPatient)
-                    </td>
-                </tr>
-            </tbody>
-            }
+        <tbody>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OpenForPatient)
+                </td>
+            </tr>
+        </tbody>
         }
+    }
 </table>
