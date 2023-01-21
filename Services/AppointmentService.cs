@@ -92,6 +92,12 @@ namespace Services
 
         public void Remove(Appointment entity)
         {
+            DateTime now = DateTime.Now;
+            DateTime yesterday = now.AddDays(-1);
+            if (entity.TimeSlot.StartAvailability > yesterday && entity.TimeSlot.StartAvailability <= now)
+            {
+                throw new InvalidOperationException("Can't remove Appointment when it's 24 hours before appointment.");
+            }
             _appointmentsRepostory.Remove(entity);
         }
 

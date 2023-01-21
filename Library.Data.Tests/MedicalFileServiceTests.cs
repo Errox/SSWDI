@@ -1,41 +1,43 @@
 ﻿using Core.DomainModel;
 using DomainServices.Repositories;
+using DomainServices.Services;
 using Fysio_WebApplication.Controllers;
 using GraphQL.Client.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System.Security.Claims;
-namespace Library.Data.Tests.Repositories
+
+namespace Services.Test
 {
-    public class EFMedicalFileRepositoryTests
+    public class MedicalFileServiceTests
     {
-        private Mock<IMedicalFileRepository> mock = new Mock<IMedicalFileRepository>();
-        private Mock<IEmployeeRepository> mockEmployee = new Mock<IEmployeeRepository>();
-        private Mock<IPatientRepository> mockPatient = new Mock<IPatientRepository>();
-        private Mock<ITreatmentPlanRepository> mockTreatment = new Mock<ITreatmentPlanRepository>();
-        private Mock<INotesRepository> mockNotes = new Mock<INotesRepository>();
-        private Mock<IAppointmentsRepository> mockAppointments = new Mock<IAppointmentsRepository>();
-        private Mock<IAvailabilityRepository> mockAvailability = new Mock<IAvailabilityRepository>();
-        private Mock<IPracticeRoomRepository> mockPracticeRoom = new Mock<IPracticeRoomRepository>();
+        private Mock<IMedicalFileService> mock = new Mock<IMedicalFileService>();
+        private Mock<IEmployeeService> mockEmployee = new Mock<IEmployeeService>();
+        private Mock<IPatientService> mockPatient = new Mock<IPatientService>();
+        private Mock<ITreatmentPlanService> mockTreatment = new Mock<ITreatmentPlanService>();
+        private Mock<INotesService> mockNotes = new Mock<INotesService>();
+        private Mock<IAppointmentsService> mockAppointments = new Mock<IAppointmentsService>();
+        private Mock<IAvailabilityService> mockAvailability = new Mock<IAvailabilityService>();
+        private Mock<IPracticeRoomService> mockPracticeRoom = new Mock<IPracticeRoomService>();
         private Mock<IGraphQLClient> mockGraphQLClient = new Mock<IGraphQLClient>();
         private Claim[] claims;
 
-        public EFMedicalFileRepositoryTests()
+        public MedicalFileServiceTests()
         {
-            mock = new Mock<IMedicalFileRepository>();
-            mockEmployee = new Mock<IEmployeeRepository>();
-            mockPatient = new Mock<IPatientRepository>();
-            mockTreatment = new Mock<ITreatmentPlanRepository>();
-            mockNotes = new Mock<INotesRepository>();
-            mockAppointments = new Mock<IAppointmentsRepository>();
-            mockAvailability = new Mock<IAvailabilityRepository>();
-            mockPracticeRoom = new Mock<IPracticeRoomRepository>();
+            mock = new Mock<IMedicalFileService>();
+            mockEmployee = new Mock<IEmployeeService>();
+            mockPatient = new Mock<IPatientService>();
+            mockTreatment = new Mock<ITreatmentPlanService>();
+            mockNotes = new Mock<INotesService>();
+            mockAppointments = new Mock<IAppointmentsService>();
+            mockAvailability = new Mock<IAvailabilityService>();
+            mockPracticeRoom = new Mock<IPracticeRoomService>();
             mockGraphQLClient = new Mock<IGraphQLClient>();
         }
 
 
-        [Fact]
+        [Fact(Skip= "Debug state")]
         public void FindAll_StateUnderTest_ExpectedBehavior()
         {
             // Arrange

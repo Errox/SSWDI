@@ -1,17 +1,18 @@
 ﻿using Core.DomainModel;
 using DomainServices.Repositories;
+using DomainServices.Services;
 using Fysio_WebApplication.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
-namespace Library.Data.Tests.Repositories
+namespace Services.Test
 {
-    public class EFPracticeRoomRepositoryTests
+    public class PracticeRoomServiceTests
     {
-        private readonly Mock<IPracticeRoomRepository> mock;
-        public EFPracticeRoomRepositoryTests()
+        private readonly Mock<IPracticeRoomService> mock;
+        public PracticeRoomServiceTests()
         {
-            mock = new Mock<IPracticeRoomRepository>();
+            mock = new Mock<IPracticeRoomService>();
         }
 
         [Fact]

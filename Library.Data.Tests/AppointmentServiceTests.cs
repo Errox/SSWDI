@@ -1,25 +1,26 @@
 ﻿using Core.DomainModel;
 using Core.Enums;
 using DomainServices.Repositories;
+using DomainServices.Services;
 using Fysio_WebApplication.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
-namespace Library.Data.Tests.Repositories
+namespace Services.Test
 {
-    public class EFAppointmentRepositoryTests
+    public class AppointmentServiceTests
     {
-        private Mock<IAppointmentsRepository> mock = new Mock<IAppointmentsRepository>();
-        private Mock<IEmployeeRepository> mockEmployee = new Mock<IEmployeeRepository>();
-        private Mock<IPatientRepository> mockPatient = new Mock<IPatientRepository>();
-        private Mock<IAvailabilityRepository> mockAvailability = new Mock<IAvailabilityRepository>();
+        private Mock<IAppointmentsService> mock = new Mock<IAppointmentsService>();
+        private Mock<IEmployeeService> mockEmployee = new Mock<IEmployeeService>();
+        private Mock<IPatientService> mockPatient = new Mock<IPatientService>();
+        private Mock<IAvailabilityService> mockAvailability = new Mock<IAvailabilityService>();
 
-        public EFAppointmentRepositoryTests()
+        public AppointmentServiceTests()
         {
-            mock = new Mock<IAppointmentsRepository>();
-            mockEmployee = new Mock<IEmployeeRepository>();
-            mockPatient = new Mock<IPatientRepository>();
-            mockAvailability = new Mock<IAvailabilityRepository>();
+            mock = new Mock<IAppointmentsService>();
+            mockEmployee = new Mock<IEmployeeService>();
+            mockPatient = new Mock<IPatientService>();
+            mockAvailability = new Mock<IAvailabilityService>();
         }
 
 

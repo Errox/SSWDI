@@ -16,16 +16,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity", "Fysio_Identity\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FysioWebApplication.Test", "FysioWebApplication.Test\FysioWebApplication.Test.csproj", "{5C159AA6-C534-4A6E-B0B5-D17201425116}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.Data.Tests", "Library.Data.Tests\Library.Data.Tests.csproj", "{1530A60A-2675-4BCB-B749-22CF65EAF132}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Test", "Library.Data.Tests\Services.Test.csproj", "{1530A60A-2675-4BCB-B749-22CF65EAF132}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DomainServices", "DomainServices\DomainServices.csproj", "{C34CA25E-3FA7-4893-814B-ABCCDFE22E73}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DomainServices", "DomainServices\DomainServices.csproj", "{C34CA25E-3FA7-4893-814B-ABCCDFE22E73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{F23E3D43-61ED-4408-988A-2059925AA5F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{F23E3D43-61ED-4408-988A-2059925AA5F1}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Services.csproj", "{06C6DD58-A2E5-4FEA-A6AE-D6C62530B2FF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FysioWebApplication.Test", "FysioWebApplication.Test\FysioWebApplication.Test.csproj", "{8675A865-E9AA-4EE0-B667-44387E8D1AF3}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFFysioData.Test", "Library.Data.Tests\EFFysioData.Test.csproj", "{94D04B2E-A177-4EFD-B83B-3D00D8D6320A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessRules", "BusinessRules\BusinessRules.csproj", "{FE0DCB06-4F45-4AED-B7F0-3E13DF4B56B1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,22 +60,14 @@ Global
 		{F23E3D43-61ED-4408-988A-2059925AA5F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F23E3D43-61ED-4408-988A-2059925AA5F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F23E3D43-61ED-4408-988A-2059925AA5F1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{915C76AF-2655-4F29-900F-ADB0910E1894}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{915C76AF-2655-4F29-900F-ADB0910E1894}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{915C76AF-2655-4F29-900F-ADB0910E1894}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{915C76AF-2655-4F29-900F-ADB0910E1894}.Release|Any CPU.Build.0 = Release|Any CPU
 		{06C6DD58-A2E5-4FEA-A6AE-D6C62530B2FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{06C6DD58-A2E5-4FEA-A6AE-D6C62530B2FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06C6DD58-A2E5-4FEA-A6AE-D6C62530B2FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06C6DD58-A2E5-4FEA-A6AE-D6C62530B2FF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8675A865-E9AA-4EE0-B667-44387E8D1AF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8675A865-E9AA-4EE0-B667-44387E8D1AF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8675A865-E9AA-4EE0-B667-44387E8D1AF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8675A865-E9AA-4EE0-B667-44387E8D1AF3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{94D04B2E-A177-4EFD-B83B-3D00D8D6320A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{94D04B2E-A177-4EFD-B83B-3D00D8D6320A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{94D04B2E-A177-4EFD-B83B-3D00D8D6320A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{94D04B2E-A177-4EFD-B83B-3D00D8D6320A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE0DCB06-4F45-4AED-B7F0-3E13DF4B56B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE0DCB06-4F45-4AED-B7F0-3E13DF4B56B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE0DCB06-4F45-4AED-B7F0-3E13DF4B56B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE0DCB06-4F45-4AED-B7F0-3E13DF4B56B1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

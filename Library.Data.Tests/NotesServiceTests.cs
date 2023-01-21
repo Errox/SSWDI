@@ -1,22 +1,23 @@
 ﻿using Core.DomainModel;
 using DomainServices.Repositories;
+using DomainServices.Services;
 using EFFysioData.DAL;
 using Fysio_WebApplication.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
-namespace Library.Data.Tests.Repositories
+namespace Services.Test
 {
-    public class EFNotesRepositoryTests
+    public class NotesServiceTests
     {
         private MockRepository mockRepository;
 
         private Mock<ApplicationDbContext> mockApplicationDbContext;
-        private readonly Mock<INotesRepository> noteRepo;
+        private readonly Mock<INotesService> noteRepo;
 
-        public EFNotesRepositoryTests()
+        public NotesServiceTests()
         {
-            noteRepo = new Mock<INotesRepository>();
+            noteRepo = new Mock<INotesService>();
         }
 
         [Fact]

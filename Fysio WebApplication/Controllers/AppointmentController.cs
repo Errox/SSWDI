@@ -26,13 +26,12 @@ namespace Fysio_WebApplication.Controllers
             IAvailabilityService availabilityService,
             IEmployeeService employeeService,
             IPatientService patientService,
-            IAppointmentsService appointmentService,
-            IAppointmentsService appointmentsService)
+            IAppointmentsService appointmentService)
         {
             _availabilityService = availabilityService;
             _employeeService = employeeService;
             _patientService = patientService;
-            _appointmentService = appointmentsService;
+            _appointmentService = appointmentService;
         }
 
 
@@ -214,6 +213,7 @@ namespace Fysio_WebApplication.Controllers
                 // If the appointment is within 24 hours, we can't delete it. 
                 return RedirectToAction("IndexString", "Error", new { ErrorString = "You can't remove a appointment within 24 hours of the appointment." });
             }
+
             // Get the availability and reset it back to use it for another patient.
             Availability availability = appointment.TimeSlot;
             availability.Patient = null;
