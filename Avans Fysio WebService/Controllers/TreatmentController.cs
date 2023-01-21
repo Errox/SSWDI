@@ -9,8 +9,8 @@ namespace Avans_Fysio_WebService.Controllers
     [ApiController]
     public class TreatmentController : ControllerBase
     {
-        private readonly ITreatmentServices _treatmentService;
-        public TreatmentController(ITreatmentServices treatmentService)
+        private readonly ITreatmentService _treatmentService;
+        public TreatmentController(ITreatmentService treatmentService)
         {
             _treatmentService = treatmentService;
         }

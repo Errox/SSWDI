@@ -48,7 +48,7 @@ namespace Avans_Fysio_WebService
 
             // Dependency injection for Services
             services.AddTransient<IDiagnosesService, DiagnosesService>();
-            services.AddTransient<ITreatmentServices, TreatmentService>();
+            services.AddTransient<ITreatmentService, TreatmentService>();
 
             //GraphQL 
             services

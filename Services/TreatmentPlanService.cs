@@ -14,28 +14,29 @@ namespace Services
     public class TreatmentPlanService : ITreatmentPlanService
     {
         private readonly ITreatmentPlanRepository _treatmentPlanRepository;
-        private readonly ITreatmentRepository _treatmentRepository;
 
-        public TreatmentPlanService(ITreatmentPlanRepository treatmentPlanRepository, ITreatmentRepository treatmentRepository)
+        public TreatmentPlanService(ITreatmentPlanRepository treatmentPlanRepository)
         {
             _treatmentPlanRepository = treatmentPlanRepository;
-            _treatmentRepository = treatmentRepository;
         }
         public IQueryable<TreatmentPlan> TreatmentPlans => _treatmentPlanRepository.TreatmentPlans;
 
         public void Add(TreatmentPlan entity)
         {
-            // Check if treatmentplan has a treatment. 
-            Treatment treatment = _treatmentRepository.GetTreatment(entity.Type.ToString());
+            _treatmentPlanRepository.Add(entity);
+        }
 
+        public void AddTreatmentToTreatmentPlan(TreatmentPlan treatmentPlan, Treatment treatment)
+        {
+            // Check if treatmentplan has a treatment. 
             if (treatment.ExplanationRequired)
             {
-                if (entity.Description == null)
+                if (treatmentPlan.Description == null)
                 {
                     throw new InvalidOperationException("TreatmentPlan Needs a description when treatments ask for description.");
                 }
             }
-            _treatmentPlanRepository.Add(entity);
+            _treatmentPlanRepository.Add(treatmentPlan);
         }
 
         public void AddTreatmentPlan(TreatmentPlan treatmentPlan)

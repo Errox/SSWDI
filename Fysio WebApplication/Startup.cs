@@ -31,21 +31,21 @@ namespace Fysio_WebApplication
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //    options.UseSqlServer(
-            //        Configuration.GetConnectionString("ApplicationDevConnection")));
-
-            //services.AddDbContext<AppIdentityDbContext>(options =>
-            //    options.UseSqlServer(
-            //        Configuration.GetConnectionString("IdentityDevConnection")));
-
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("ApplicationConnection")));
+                    Configuration.GetConnectionString("ApplicationDevConnection")));
 
             services.AddDbContext<AppIdentityDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("IdentityConnection")));
+                    Configuration.GetConnectionString("IdentityDevConnection")));
+
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("ApplicationConnection")));
+
+            //services.AddDbContext<AppIdentityDbContext>(options =>
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("IdentityConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppIdentityDbContext>()
@@ -96,6 +96,7 @@ namespace Fysio_WebApplication
             services.AddTransient<INotesService, NotesService>();
             services.AddTransient<IMedicalFileService, MedicalFileService>();
             services.AddTransient<IEmployeeService, EmployeeService>();
+            services.AddMemoryCache();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -14,9 +14,9 @@ namespace BusinessRules
         {
             // arrange 
             Mock<ITreatmentPlanRepository> treatmentplanRepository = new Mock<ITreatmentPlanRepository>();
-            Mock<ITreatmentRepository> treatmentRepository = new Mock<ITreatmentRepository>();
+            Mock<ITreatmentService> treatmentService= new Mock<ITreatmentService>();
             // Get TreatmentPlan service
-            ITreatmentPlanService treatmentPlanService = new TreatmentPlanService(treatmentplanRepository.Object, treatmentRepository.Object);
+            ITreatmentPlanService treatmentPlanService = new TreatmentPlanService(treatmentplanRepository.Object);
             // Make a treatmentplan
 
             TreatmentPlan treatmentPlan = new TreatmentPlan
@@ -50,12 +50,10 @@ namespace BusinessRules
                 ExplanationRequired = true,
             };
 
-            treatmentRepository.Setup(e => e.GetTreatment(treatment.Code.ToString()))
-                .Returns(treatment);
 
 
             // Act
-            Action act = () => treatmentPlanService.Add(treatmentPlan);
+            Action act = () => treatmentPlanService.AddTreatmentToTreatmentPlan(treatmentPlan, treatment);
             // TreatmentPlan Service . add AddTreatmentPlan
 
             // Check for exception thrown
