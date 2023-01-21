@@ -11,6 +11,7 @@ namespace DomainServices.Services
         Appointment FindAppointmentByIdWithTimeSlot(int id);
         List<Appointment> GetPatientAppointmentsDynamically(string userId);
         Appointment GetAppointmentByPatient(Patient patient);
+        void AddNewAppointment(Patient patient, Appointment appointment);
 
     }
 }

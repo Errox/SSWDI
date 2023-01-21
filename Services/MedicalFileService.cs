@@ -14,10 +14,14 @@ namespace Services
     public class MedicalFileService : IMedicalFileService
     {
         private readonly IMedicalFileRepository _medicalFileRepository;
-
-        public MedicalFileService(IMedicalFileRepository medicalFileRepository)
+        private readonly ITreatmentPlanRepository _treatmentPlanRepository;
+        private readonly IAppointmentsRepository _appointmentsRepository;
+        
+        public MedicalFileService(IMedicalFileRepository medicalFileRepository, ITreatmentPlanRepository treatmentPlanRepository, IAppointmentsRepository appointmentsRepository)
         {
             _medicalFileRepository = medicalFileRepository;
+            _treatmentPlanRepository = treatmentPlanRepository;
+            _appointmentsRepository = appointmentsRepository;
         }
 
 
@@ -106,6 +110,21 @@ namespace Services
                 .ThenInclude(c => c.ApplicationUser)
             .FirstOrDefault(i => i.Id == id);
         }
+
+        public void AddTreatmentPlanToMedicalFile(int medicalFileId, TreatmentPlan treatmentplan)
+        {
+            MedicalFile file = _medicalFileRepository.GetMedicalFile(medicalFileId);
+
+            if (file.PatientEmail == null)
+            {
+                throw new InvalidOperationException("A treatment can only be set when the patient is registered in the system");
+            }
+            
+            file.TreatmentPlans.Add(treatmentplan);
+
+            _medicalFileRepository.UpdateMedicalFile(medicalFileId, file);
+        }
+
 
     }
 }

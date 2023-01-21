@@ -10,5 +10,6 @@ namespace DomainServices.Services
         IQueryable<MedicalFile> GetMedicalFilesForIntakeSupervision(Employee Employee);
         IQueryable<MedicalFile> GetMedicalFilesForTherapist(Employee Employee);
         MedicalFile GetDetailedMedicalFileById(int id);
+        void AddTreatmentPlanToMedicalFile(int medicalFileId, TreatmentPlan treatmentplan);
     }
 }

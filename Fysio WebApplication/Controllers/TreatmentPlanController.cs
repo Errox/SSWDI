@@ -88,7 +88,6 @@ namespace Fysio_WebApplication.Controllers
         {
             try
             {
-                // TODO: Send my Addtreatmentplan a extra piece of what the diagnose code is. This way we can check if there is a description needed.
                 string userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                 Employee employee = _employeeService.GetEmployee(userId);
 

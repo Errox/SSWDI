@@ -117,7 +117,7 @@ namespace Fysio_WebApplication.Controllers
             int treatmentsPerWeek = 0;
             foreach (var treatmentplan in treatmentplans)
             {
-                treatmentsPerWeek = treatmentsPerWeek + treatmentplan.AmountOfTreatmentsPerWeek;
+                treatmentsPerWeek += treatmentplan.AmountOfTreatmentsPerWeek;
             }
 
             // Check if the amount of appointments that the patient has, are less then the treatmentplans prescribes.

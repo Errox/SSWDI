@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Services
@@ -13,15 +14,27 @@ namespace Services
     public class TreatmentPlanService : ITreatmentPlanService
     {
         private readonly ITreatmentPlanRepository _treatmentPlanRepository;
+        private readonly ITreatmentRepository _treatmentRepository;
 
-        public TreatmentPlanService(ITreatmentPlanRepository treatmentPlanRepository)
+        public TreatmentPlanService(ITreatmentPlanRepository treatmentPlanRepository, ITreatmentRepository treatmentRepository)
         {
             _treatmentPlanRepository = treatmentPlanRepository;
+            _treatmentRepository = treatmentRepository;
         }
         public IQueryable<TreatmentPlan> TreatmentPlans => _treatmentPlanRepository.TreatmentPlans;
 
         public void Add(TreatmentPlan entity)
         {
+            // Check if treatmentplan has a treatment. 
+            Treatment treatment = _treatmentRepository.GetTreatment(entity.Type.ToString());
+
+            if (treatment.ExplanationRequired)
+            {
+                if (entity.Description == null)
+                {
+                    throw new InvalidOperationException("TreatmentPlan Needs a description when treatments ask for description.");
+                }
+            }
             _treatmentPlanRepository.Add(entity);
         }
 

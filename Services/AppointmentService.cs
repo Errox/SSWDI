@@ -131,6 +131,7 @@ namespace Services
                         .ThenInclude(x => x.ApplicationUser)
                     .Include(x => x.Patient)
                         .ThenInclude(x => x.MedicalFile)
+                        .ThenInclude(x => x.TreatmentPlans)
                     .Include(x => x.TimeSlot)
                     .Where(x => x.Patient.Id == userId || x.Patient.ApplicationUser.Id == userId).ToList();
         }
@@ -139,6 +140,34 @@ namespace Services
         {
             return Appointments
                 .FirstOrDefault(x => x.Patient == patient);
+        }
+
+        public void AddNewAppointment(Patient patient, Appointment appointment)
+        {
+            // Get all appointments from the patient.
+            Appointment appointments = _appointmentsRepostory.GetAppointment(appointment.Id);
+
+            if (patient.MedicalFile.TreatmentPlans.Count() == 0)
+            {
+                throw new InvalidOperationException("You don't have any treatmentplans. You can't make a appointment yet.");
+            }
+
+            // count all treatments that are combined with the medicalfile.
+            int treatmentsPerWeek = 0;
+            foreach (var treatmentplan in patient.MedicalFile.TreatmentPlans)
+            {
+                treatmentsPerWeek += treatmentplan.AmountOfTreatmentsPerWeek;
+            }
+
+            // Check if the amount of appointments that the patient has, are less then the treatmentplans prescribes.
+            if (2 <= treatmentsPerWeek)
+            {
+                _appointmentsRepostory.Add(appointment);
+            }
+            else
+            {
+                throw new InvalidOperationException("You can't create more appointments then the treatment prescribes.");
+            }
         }
     }
 }

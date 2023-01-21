@@ -26,6 +26,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Servic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessRules", "BusinessRules\BusinessRules.csproj", "{FE0DCB06-4F45-4AED-B7F0-3E13DF4B56B1}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFFysioData", "EFFysioData\EFFysioData.csproj", "{79B65EB8-8333-4B49-82EC-03FBF759CB5B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,6 +70,10 @@ Global
 		{FE0DCB06-4F45-4AED-B7F0-3E13DF4B56B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE0DCB06-4F45-4AED-B7F0-3E13DF4B56B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE0DCB06-4F45-4AED-B7F0-3E13DF4B56B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79B65EB8-8333-4B49-82EC-03FBF759CB5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79B65EB8-8333-4B49-82EC-03FBF759CB5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79B65EB8-8333-4B49-82EC-03FBF759CB5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79B65EB8-8333-4B49-82EC-03FBF759CB5B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

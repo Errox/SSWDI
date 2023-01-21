@@ -28,6 +28,7 @@ namespace Services
 
         public void AddPatient(Patient patient)
         {
+            
             _patientRepository.AddPatient(patient);
         }
 
