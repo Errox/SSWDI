@@ -4,157 +4,148 @@
     ViewData["Title"] = "View Patient";
 }
 
-<h1>View</h1>
+<h1 class="text-center">Patient's details</h1>
+<hr/>
 
-<div>
-    <h4>Patient</h4>
-    <hr />
+  <div class="container py-5">
     <div class="row">
-        <div class="card col-md-6" >
-            <img class="card-img-top" src="@ViewBag.ImageDataUrl" alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-title">@Html.DisplayFor(model => model.FirstName) @Html.DisplayFor(model => model.SurName)</h5>
-                <dl class="row">
-                    <dt class="col-sm-6">
-                        @Html.DisplayNameFor(model => model.IdNumber)
-                    </dt>
-                    <dd class="col-sm-6">
-                        @Html.DisplayFor(model => model.IdNumber)
-                    </dd>
-                    <dt class="col-sm-6">
-                        @Html.DisplayNameFor(model => model.ApplicationUser.FirstName)
-                    </dt>
-                    <dd class="col-sm-6">
-                        @Html.DisplayFor(model => model.ApplicationUser.FirstName)
-                    </dd>
-                    <dt class="col-sm-6">
-                        @Html.DisplayNameFor(model => model.ApplicationUser.SurName)
-                    </dt>
-                    <dd class="col-sm-6">
-                        @Html.DisplayFor(model => model.ApplicationUser.SurName)
-                    </dd>
-                    <dt class="col-sm-6">
-                        @Html.DisplayNameFor(model => model.ApplicationUser.Email)
-                    </dt>
-                    <dd class="col-sm-6">
-                        @Html.DisplayFor(model => model.ApplicationUser.Email)
-                    </dd>
-                    <dt class="col-sm-6">
-                        @Html.DisplayNameFor(model => model.DateOfBirth)
-                    </dt>
-                    <dd class="col-sm-6">
-                        @Html.DisplayFor(model => model.DateOfBirth)
-                    </dd>
-                    <dt class="col-sm-6">
-                        @Html.DisplayNameFor(model => model.Gender)
-                    </dt>
-                    <dd class="col-sm-6">
-                        @Html.DisplayFor(model => model.Gender)
-                    </dd>
-                    <dt class="col-sm-6">
-                        @Html.DisplayNameFor(model => model.IsStudent)
-                    </dt>
-                    <dd class="col-sm-6">
-                        @Html.DisplayFor(model => model.IsStudent)
-                    </dd>
-                </dl>
-
-                @if(@Model.MedicalFile is null){
+      <div class="col-lg-4">
+        <div class="card mb-4">
+          <div class="card-body text-center">
+            <img src="@ViewBag.ImageDataUrl" alt="avatar"
+              class="rounded-circle img-fluid" style="width: 150px;">
+            <h5 class="my-3"> @Html.DisplayFor(model => model.ApplicationUser.FirstName) @Html.DisplayFor(model => model.ApplicationUser.SurName)</h5>
+            <p class="text-muted mb-4">@Html.DisplayNameFor(model => model.IdNumber) <br/> @Html.DisplayFor(model => model.IdNumber) </p>
+            <p class="text-muted mb-4">@Html.DisplayNameFor(model => model.ApplicationUser.Email) <br/> @Html.DisplayFor(model => model.ApplicationUser.Email)</p>
+            <p class="text-muted mb-4">@Html.DisplayNameFor(model => model.DateOfBirth) <br/> @Html.DisplayFor(model => model.DateOfBirth)</p>
+            <p class="text-muted mb-4">@Html.DisplayNameFor(model => model.Gender) <br/> @Html.DisplayFor(model => model.Gender)</p>
+            <p class="text-muted mb-4">@Html.DisplayNameFor(model => model.IsStudent) <br/> @Html.DisplayFor(model => model.IsStudent)</p>
+            
+            
+            @if(@Model.MedicalFile is null){
+                @if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
+                {
+                    @* TODO: IF THERE IS ALREADY A MEDICAL FILE, DON'T MAKE A NEW ONE. *@
+                    @Html.ActionLink("Add File | ", "MedicalFileNew", new { id = Model.IdNumber})
+                    <a class="btn btn-primary" href="javascript:history.go(-1)">Back</a>
+                }
+            }
+          </div>
+        </div>
+      </div>
+      @if (Model.MedicalFile != null)
+      {
+      <div class="col-lg-8">
+        <div class="card mb-4">
+            <br>
+          <h5 class="card-title text-center">Medical File</h5>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">@Html.DisplayNameFor(model => model.MedicalFile.Description)</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0">@Html.DisplayFor(model => model.MedicalFile.Description)</p>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">Body Location</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0">@ViewBag.BodyLocation</p>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">Pathology</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0">@ViewBag.Pathology</p>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">Therapist</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0">@Html.DisplayFor(model => model.MedicalFile.IntakeTherapistId.ApplicationUser.FirstName) @Html.DisplayFor(model => model.MedicalFile.IntakeTherapistId.ApplicationUser.SurName)</p>
+              </div>
+            </div>
+            <hr/>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">Supervision</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0">@Html.DisplayFor(model => model.MedicalFile.IntakeSupervision.ApplicationUser.FirstName) @Html.DisplayFor(model => model.MedicalFile.IntakeSupervision.ApplicationUser.SurName)</p>
+              </div>
+            </div>
+            <hr/>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">@Html.DisplayNameFor(model => model.MedicalFile.DateOfCreation)</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0">@Html.DisplayFor(model => model.MedicalFile.DateOfCreation)</p>
+              </div>
+            </div>
+            <hr/>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">@Html.DisplayNameFor(model => model.MedicalFile.DateOfDischarge)</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0">@Html.DisplayFor(model => model.MedicalFile.IntakeTherapistId.ApplicationUser.FirstName) @Html.DisplayFor(model => model.MedicalFile.IntakeTherapistId.ApplicationUser.SurName)</p>
+              </div>
+            </div>
+            <hr/>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">Notes</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0">
+                    @Html.ActionLink("All Notes", "Notes", "MedicalFile", new { id = Model.MedicalFile.Id })
                     @if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
                     {
-                        @* TODO: IF THERE IS ALREADY A MEDICAL FILE, DON'T MAKE A NEW ONE. *@
-                        @Html.ActionLink("Add File | ", "MedicalFileNew", new { id = Model.IdNumber})
-                        <a href="javascript:history.go(-1)">Back</a>
+                        <b> | </b>
+                        @Html.ActionLink("Add Note", "NotesNew", "MedicalFile", new { id = Model.MedicalFile.Id })
                     }
+                </p>
+              </div>
+            </div>
+            <hr/>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">TreatmentPlan</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0">
+                    @Html.ActionLink("All Treatmentplans", "Treatmentplan", "MedicalFile", new { id = Model.MedicalFile.Id})
+                    @if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
+                    {
+                        @Html.ActionLink("| Add treatmentplan", "TreatmentplanNew", "MedicalFile", new { id = Model.Id })
+                    }
+                </p>
+              </div>
+            </div>
+            <hr/>
+            @if(@Model.MedicalFile is null){
+                @if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
+                {
+                    @* TODO: IF THERE IS ALREADY A MEDICAL FILE, DON'T MAKE A NEW ONE. *@
+                    @Html.ActionLink("Add File | ", "MedicalFileNew", new { id = Model.IdNumber})
+                    <a href="javascript:history.go(-1)">Back</a>
                 }
-            </div>
+            }
+          </div>
         </div>
-        @if (Model.MedicalFile != null)
-        {
-            <div class="card col-md-6">
-                <div class="card-body">
-                    <h5 class="card-title">Medical File</h5>
-                    <dl class="row">
-                        <dt class="col-sm-6">
-                            @Html.DisplayNameFor(model => model.MedicalFile.Description)
-                        </dt>
-                        <dd class="col-sm-6">
-                            @Html.DisplayFor(model => model.MedicalFile.Description)
-                        </dd>
-                        <dt class="col-sm-6">
-                            @Html.DisplayNameFor(model => model.MedicalFile.DiagnosisCode)
-                        </dt>
-                        <dd class="col-sm-6">
-                            @ViewBag.Diagnosis
-                        </dd>
-                        <dt class="col-sm-6">
-                            Body Location
-                        </dt>
-                        <dd class="col-sm-6">
-                            @ViewBag.BodyLocation
-                        </dd>
-                        <dt class="col-sm-6">
-                            Pathology
-                        </dt>
-                        <dd class="col-sm-6">
-                            @ViewBag.Pathology
-                        </dd>
-                        <dt class="col-sm-6">
-                            Therapist
-                        </dt>
-                        <dd class="col-sm-6">
-                            @Html.DisplayFor(model => model.MedicalFile.IntakeTherapistId.ApplicationUser.FirstName) @Html.DisplayFor(model => model.MedicalFile.IntakeTherapistId.ApplicationUser.SurName)
-                        </dd>
-                        <dt class="col-sm-6">
-                            Supervision
-                        </dt>
-                        <dd class="col-sm-6">
-                            @Html.DisplayFor(model => model.MedicalFile.IntakeSupervision.ApplicationUser.FirstName) @Html.DisplayFor(model => model.MedicalFile.IntakeSupervision.ApplicationUser.SurName)
-                        </dd>
-                        <dt class="col-sm-6">
-                            @Html.DisplayNameFor(model => model.MedicalFile.DateOfCreation)
-                        </dt>
-                        <dd class="col-sm-6">
-                            @Html.DisplayFor(model => model.MedicalFile.DateOfCreation)
-                        </dd>
-                        <dt class="col-sm-6">
-                            @Html.DisplayNameFor(model => model.MedicalFile.DateOfDischarge)
-                        </dt>
-                        <dd class="col-sm-6">
-                            @Html.DisplayFor(model => model.MedicalFile.DateOfDischarge)
-                        </dd>
-                        <dt class="col-sm-6">
-                            Notes
-                        </dt>
-                        <dd class="col-sm-6">
-                            @Html.ActionLink("All Notes", "Notes", "MedicalFile", new { id = Model.MedicalFile.Id })
-                            @if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
-                            {
-                                <b> | </b>
-                                  @Html.ActionLink("Add Note", "NotesNew", "MedicalFile", new { id = Model.MedicalFile.Id })
-                            }
-                        </dd>
-                        <dt class="col-sm-6">
-                            TreatmentPlan
-                        </dt>
-                        <dd class="col-sm-6">
-                            @Html.ActionLink("All Treatmentplans", "Treatmentplan", "MedicalFile", new { id = Model.MedicalFile.Id})
-                            @if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
-                            {
-                                @Html.ActionLink("| Add treatmentplan", "TreatmentplanNew", "MedicalFile", new { id = Model.Id })
-                            }
-                        </dd>
-                    </dl>
-                    @if(@Model.MedicalFile is null){
-                        @if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
-                        {
-                            @* TODO: IF THERE IS ALREADY A MEDICAL FILE, DON'T MAKE A NEW ONE. *@
-                            @Html.ActionLink("Add File | ", "MedicalFileNew", new { id = Model.IdNumber})
-                            <a href="javascript:history.go(-1)">Back</a>
-                        }
-                    }
-            </div>
-        </div>
-        }
+      </div>
+      }
     </div>
-</div>
+  </div>
+  </div>

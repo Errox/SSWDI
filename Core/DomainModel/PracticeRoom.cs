@@ -8,7 +8,7 @@ namespace Core.DomainModel
         public int Id { get; set; }
 
         [MaxLength(250)]
-        [Display(Name = "Name of the practice room.")]
+        [Display(Name = "Practice room name")]
         public string Name { get; set; }
 
     }

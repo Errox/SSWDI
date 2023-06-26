@@ -21,17 +21,17 @@ namespace Core.DomainModel
         [Required]
         public string Particularities { get; set; }
 
-        [Display(Name = "Treatment is performed by")]
+        [Display(Name = "Performed by")]
         [Required]
         public Employee TreatmentPerformedBy { get; set; }
 
-        [Display(Name = "The date the treatment should be treated.")]
+        [Display(Name = "Treatment Date.")]
         [Required]
         [AfterToday]
         public DateTime TreatmentDate { get; set; }
 
         [Required]
-        [Display(Name = "The amount of times the treatment should be treated.")]
+        [Display(Name = "Amount of treatments per week.")]
         [Range(0, 14, ErrorMessage = "Please enter valid Number between 0 and 14.")]
         public int AmountOfTreatmentsPerWeek { get; set; }
     }

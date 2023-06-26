@@ -3,81 +3,86 @@
     ViewData["Title"] = "Register new Patient";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h1 class="text-center">@ViewData["Title"]</h1>
 
+<hr />
 
-<form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" enctype="multipart/form-data">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <div class="row">
-        <div class="col-md-6">
-            <h2>Account details.</h2>
-            <hr />
-            <div class="form-group">
-                <label asp-for="@Model.Email"></label>
-                <input asp-for="@Model.Email" class="form-control" autocomplete="username" aria-required="true" />
-                <span asp-validation-for="@Model.Email" class="text-danger"></span>
+<div class="card">
+    <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="container">
+            <div class="row">
+                <br />
+                <div class="col-md-6">
+                    <br/>
+                    <h2>Account details</h2>
+                    <div class="form-group">
+                        <label asp-for="@Model.Email"></label>
+                        <input asp-for="@Model.Email" class="form-control" autocomplete="username" aria-required="true" />
+                        <span asp-validation-for="@Model.Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col">
+                        <label asp-for="@Model.Password"></label>
+                        <input asp-for="@Model.Password" class="form-control" autocomplete="new-password" aria-required="true" />
+                        <span asp-validation-for="@Model.Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col">
+                        <label asp-for="@Model.ConfirmPassword"></label>
+                        <input asp-for="@Model.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" />
+                        <span asp-validation-for="@Model.ConfirmPassword" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="@Model.PhoneNumber"></label>
+                        <input asp-for="@Model.PhoneNumber" class="form-control" autocomplete="tel" aria-required="true" />
+                        <span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
+                    </div>
+                    <div class="form-group" style="padding-bottom:15px">
+                            <label asp-for="@Model.Gender" class="control-label"></label>
+                            <select class="form-control">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <span asp-validation-for="@Model.Gender" class="text-danger"></span>
+                    </div>
+                    <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary form-control" style="padding-top:5px">Register</button>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group" style="padding-top:71px">
+                        <label asp-for="@Model.FirstName"></label>
+                        <input asp-for="@Model.FirstName" class="form-control" autocomplete="given-name" aria-required="true" />
+                        <span asp-validation-for="@Model.FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="@Model.SurName"></label>
+                        <input asp-for="@Model.SurName" class="form-control" autocomplete="family-name" aria-required="true" />
+                        <span asp-validation-for="@Model.SurName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ImgData" class="control-label"></label>
+                        <input type="file" id="file1"
+                            name="file1"
+                            multiple="multiple"
+                            class="form-control" 
+                            accept="image/*" />
+                        <span asp-validation-for="ImgData" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="@Model.DateOfBirth"></label>
+                        <input asp-for="@Model.DateOfBirth" class="form-control" aria-required="true" />
+                        <span asp-validation-for="@Model.DateOfBirth" class="text-danger"></span>
+                    </div>
+                    <div class="form-group" style="padding-top:5px; padding-bottom:10px;">
+                        <label asp-for="@Model.IsStudent"></label><br />
+                        <input asp-for="@Model.IsStudent" aria-required="true" />
+                        <span asp-validation-for="@Model.IsStudent" class="text-danger"></span>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="@Model.Password"></label>
-                <input asp-for="@Model.Password" class="form-control" autocomplete="new-password" aria-required="true" />
-                <span asp-validation-for="@Model.Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="@Model.ConfirmPassword"></label>
-                <input asp-for="@Model.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" />
-                <span asp-validation-for="@Model.ConfirmPassword" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="@Model.PhoneNumber"></label>
-                <input asp-for="@Model.PhoneNumber" class="form-control" autocomplete="tel" aria-required="true" />
-                <span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                    <label asp-for="@Model.Gender" class="control-label"></label>
-                    <select class="form-control">
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                        <option value="Other">Other</option>
-                    </select>
-                    <span asp-validation-for="@Model.Gender" class="text-danger"></span>
-             </div>
+                    <br/>
         </div>
-        <div class="col-md-6">
-            <h3>Patient details.</h3>
-            <hr />
-            <div class="form-group">
-                <label asp-for="@Model.FirstName"></label>
-                <input asp-for="@Model.FirstName" class="form-control" autocomplete="given-name" aria-required="true" />
-                <span asp-validation-for="@Model.FirstName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="@Model.SurName"></label>
-                <input asp-for="@Model.SurName" class="form-control" autocomplete="family-name" aria-required="true" />
-                <span asp-validation-for="@Model.SurName" class="text-danger"></span>
-            </div>
-             <div class="form-group">
-                <label asp-for="ImgData" class="control-label"></label>
-                <input type="file" id="file1"
-                       name="file1"
-                       multiple="multiple"
-                       class="form-control" 
-                       accept="image/*" />
-                <span asp-validation-for="ImgData" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="@Model.DateOfBirth"></label>
-                <input asp-for="@Model.DateOfBirth" class="form-control" aria-required="true" />
-                <span asp-validation-for="@Model.DateOfBirth" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="@Model.IsStudent"></label><br />
-                <input asp-for="@Model.IsStudent" aria-required="true" />
-                <span asp-validation-for="@Model.IsStudent" class="text-danger"></span>
-            </div>
-        </div>
-    </div>
-    <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
-</form>
+    </form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

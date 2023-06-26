@@ -24,10 +24,10 @@ namespace EFFysioData.SeedData
                 .CreateScope().ServiceProvider
                 .GetRequiredService<AppIdentityDbContext>();
 
-            if (context.Database.GetPendingMigrations().Any())
-            {
-                context.Database.Migrate();
-            }
+            //if (context.Database.GetPendingMigrations().Any())
+            //{
+            //    context.Database.Migrate();
+            //}
 
             UserManager<ApplicationUser> userManager = app.ApplicationServices
                 .CreateScope().ServiceProvider

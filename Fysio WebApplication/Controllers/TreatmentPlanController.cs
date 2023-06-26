@@ -45,7 +45,7 @@ namespace Fysio_WebApplication.Controllers
             TreatmentPlan treatmentPlan = _treatmentPlanService.GetDetailedTreatmentPlan(id);
 
             //Fetch the Treatment containing the code
-            var client = new RestClient("https://fysiowebservice.azurewebsites.net/api");
+            var client = new RestClient("https://localhost:44353/api");
             var request = new RestRequest("/Treatment/" + treatmentPlan.Type, Method.Get);
             RestResponse response = await client.ExecuteAsync(request);
             Treatment treatment = JsonConvert.DeserializeObject<Treatment>(response.Content);

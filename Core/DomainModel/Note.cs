@@ -8,16 +8,16 @@ namespace Core.DomainModel
         public int Id { get; set; }
 
         [MaxLength(250)]
-        [Display(Name = "Description of the note.")]
+        [Display(Name = "Description.")]
         public string Description { get; set; }
 
-        [Display(Name = "The date the note was created.")]
+        [Display(Name = "Creation date.")]
         public DateTime CreatedUtc { get; set; }
 
-        [Display(Name = "The employee that created the note.")]
+        [Display(Name = "Employee.")]
         public Employee Employee { get; set; }
 
-        [Display(Name = "Checked if the patient can see the note.")]
+        [Display(Name = "Open for patient.")]
         public bool OpenForPatient { get; set; }
     }
 

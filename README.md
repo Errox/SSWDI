@@ -33,9 +33,9 @@ This piece of software is made for the fysio project. This project includes a we
 | Application | URL | 
 |:-|:-:|
 | Fysio Web Appliction  | https://fysiowebapplication.azurewebsites.net/ |
-| Fysio Web Service   |  https://fysiowebservice.azurewebsites.net/  |  
-| Fysio Web service GraphQL  | https://fysiowebservice.azurewebsites.net/graphql/ |  
-| Fysio Web Service Swagger   | https://fysiowebservice.azurewebsites.net/swagger/index.html |  
+| Fysio Web Service   |  https://localhost:44353/  |  
+| Fysio Web service GraphQL  | https://localhost:44353/graphql/ |  
+| Fysio Web Service Swagger   | https://localhost:44353/swagger/index.html |  
 
 
 

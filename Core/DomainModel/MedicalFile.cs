@@ -14,23 +14,23 @@ namespace Core.DomainModel
         [Display(Name = "Diagnose Code")]
         public int DiagnosisCode { get; set; }
 
-        [Display(Name = "Intake being performed by a therapist. Can be a student or therapist.")]
+        [Display(Name = "Intake therapist")]
         public Employee IntakeTherapistId { get; set; }// Behandeld door //UserID That is either a student or therapist
 
-        [Display(Name = "The employee that supervisions this medical file.")]
+        [Display(Name = "Intake Supervisor")]
         public Employee IntakeSupervision { get; set; }// ondertoezicht, Also a UserId from Identity
 
-        [Display(Name = "The date the the medical file was created.")]
+        [Display(Name = "Date of creation.")]
         public DateTime DateOfCreation { get; set; }
 
         [Display(Name = "Date of discharge")]
         public DateTime? DateOfDischarge { get; set; }
 
-        [Display(Name = "Patient's email. ")]
+        [Display(Name = "Patient's email.")]
         [EmailAddress]
         public string? PatientEmail { get; set; }
 
-        [Display(Name = "Notes of the medical file")]
+        [Display(Name = "Notes of medical file")]
         public ICollection<Note> Notes { get; set; }
 
         [Display(Name = "Treatment Plans")]

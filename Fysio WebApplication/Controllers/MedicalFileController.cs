@@ -97,7 +97,7 @@ namespace Fysio_WebApplication.Controllers
             MedicalFile medical = _service.GetDetailedMedicalFileById(id);
 
             //Fetch the diagnosis containing the code
-            var client = new RestClient("https://fysiowebservice.azurewebsites.net/api");
+            var client = new RestClient("https://localhost:44353/api");
             var request = new RestRequest("/Diagnosis/" + medical.DiagnosisCode, Method.Get);
             RestResponse response = await client.ExecuteAsync(request);
             Diagnosis diagnosis = JsonConvert.DeserializeObject<Diagnosis>(response.Content);
