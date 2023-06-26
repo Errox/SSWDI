@@ -4,12 +4,16 @@
     ViewData["Title"] = "Notes";
 }
 
-<h1>Notes</h1>
 
+<h1 class="text-center">All notes</h1>
+<hr/>
+
+<div class="card" >
+    <div class="card-body">
 <table class="table">
     @if (Model == null)
     {
-        <p> Geen notes voor dit dossier </p>
+        <p> No notes on this medial file </p>
     }
     else
     {
@@ -45,3 +49,6 @@
         }
     }
 </table>
+
+    </div>
+</div>

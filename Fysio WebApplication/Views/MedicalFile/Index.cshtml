@@ -4,11 +4,20 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1 class="text-center">MedicalFiles</h1>
+<hr/>
 <p>
-    <a asp-action="IndexPersonalSupervise">Go to your Supervise files</a> | <a asp-action="IndexPersonalTherapist">Go to your medicalfiles</a> | <a asp-action="Create">Create MedicalFile</a> 
-</p>
-<table class="table">
+    </p>
+
+<div class="card">
+    <div class="card-body">	
+    <div class="text-center">
+        <a asp-action="IndexPersonalSupervise">Go to your Supervise files</a> | <a asp-action="IndexPersonalTherapist">Go to your medicalfiles</a>
+    </div>
+    <div class="text-left">
+        <a asp-action="Create" class="btn btn-primary">Create MedicalFile</a> 
+    </div>
+<table class="table table-striped">
     <thead>
         <tr>
             <th>
@@ -54,10 +63,12 @@
                 @Html.DisplayFor(modelItem => item.DateOfDischarge)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.Id}) |
+                @Html.ActionLink("Edit", "Edit", new { id=item.Id}) 
                 @Html.ActionLink("Details", "Details", new { id = item.Id })
             </td>
         </tr>
 }
     </tbody>
 </table>
+</div>
+</div>

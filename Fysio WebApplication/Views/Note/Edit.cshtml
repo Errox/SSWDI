@@ -4,13 +4,13 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
-
-<h4>Note</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
+<h1 class="text-center">Edit notes</h1>
+<hr/>
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+            <form asp-action="Edit">
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
                 <input asp-for="Description" class="form-control" />
@@ -25,11 +25,13 @@
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
+            </div>
+        </div>
+        <br/>
+        <div>
+            <a href="javascript:history.go(-1)">Back</a>
+        </div>
     </div>
-</div>
-
-<div>
-    <a href="javascript:history.go(-1)">Back</a>
 </div>
 
 @section Scripts {

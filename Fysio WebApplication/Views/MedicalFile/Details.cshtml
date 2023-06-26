@@ -3,13 +3,11 @@
 @{
     ViewData["Title"] = "Detail";
 }
-
-<h1>Detail</h1>
+<h1 class="text-center">Detailed medical file</h1>
+<hr/>
 
 <div>
-    <h4>MedicalFile</h4>
-    <hr />
-    <dl class="row">
+    <dl class="row card col-md-8">
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Description)
         </dt>

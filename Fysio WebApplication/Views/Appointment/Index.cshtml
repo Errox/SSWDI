@@ -1,11 +1,12 @@
 ﻿@model IEnumerable<Core.DomainModel.Appointment>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "All appointments";
 }
 
-<h1>Index</h1>
+<h1 class="text-center">@ViewData["Title"]</h1>
 
+<hr />
 <p>
     <a asp-action="Create">Create New</a>
 </p>
