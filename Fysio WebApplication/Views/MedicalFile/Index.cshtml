@@ -6,9 +6,6 @@
 
 <h1 class="text-center">MedicalFiles</h1>
 <hr/>
-<p>
-    </p>
-
 <div class="card">
     <div class="card-body">	
     <div class="text-center">
@@ -22,9 +19,6 @@
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DiagnosisCode)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.IntakeTherapistId)
@@ -48,9 +42,6 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DiagnosisCode)
-            </td>
-            <td>
                     @Html.Raw(item.IntakeTherapistId.ApplicationUser.FirstName) @Html.Raw(item.IntakeTherapistId.ApplicationUser.SurName)
             </td>
             <td>
@@ -63,7 +54,7 @@
                 @Html.DisplayFor(modelItem => item.DateOfDischarge)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.Id}) 
+                @Html.ActionLink("Edit", "Edit", new { id=item.Id}) |
                 @Html.ActionLink("Details", "Details", new { id = item.Id })
             </td>
         </tr>

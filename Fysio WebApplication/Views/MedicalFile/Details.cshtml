@@ -6,62 +6,73 @@
 <h1 class="text-center">Detailed medical file</h1>
 <hr/>
 
+
+<div class="card col-md-7">
+    <div class="card-body">
 <div>
-    <dl class="row card col-md-8">
-        <dt class="col-sm-2">
+    <dl class="row">
+        <dt class="col-md-3">
             @Html.DisplayNameFor(model => model.Description)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-md-9">
             @Html.DisplayFor(model => model.Description)
         </dd>
-        <dt class="col-sm-2">
+                <hr />
+        <dt class="col-md-3">
             @Html.DisplayNameFor(model => model.DiagnosisCode)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-md-9">
             @Html.DisplayFor(model => model.DiagnosisCode)
         </dd>
-        <dt class="col-sm-2">
+                <hr/>
+        <dt class="col-md-3">
             Body Location
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-md-9">
             @Html.Raw(ViewBag.BodyLocation)
         </dd>
-        <dt class="col-sm-2">
+                <hr />
+        <dt class="col-md-3">
             Pathology
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-md-9">
             @Html.Raw(ViewBag.Pathology)
         </dd>
+                <hr />
         @*Maybe in the future the therapist can be linked towards his viewable acocunt?*@
-        <dt class="col-sm-2">
+        <dt class="col-md-3">
             Therapist
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-md-9">
             @Html.DisplayFor(model => model.IntakeTherapistId.ApplicationUser.FirstName) @Html.DisplayFor(model => model.IntakeTherapistId.ApplicationUser.SurName)
         </dd>
-        <dt class="col-sm-2">
+                <hr />
+        <dt class="col-md-3">
             Supervision
         </dt>
         @*Maybe in the future the Superivsion can be linked towards his viewable acocunt?*@
-        <dd class="col-sm-10">
+        <dd class="col-md-9">
             @Html.DisplayFor(model => model.IntakeSupervision.ApplicationUser.FirstName) @Html.DisplayFor(model => model.IntakeSupervision.ApplicationUser.SurName)
         </dd>
-        <dt class="col-sm-2">
+                <hr />
+        <dt class="col-md-3">
             @Html.DisplayNameFor(model => model.DateOfCreation)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-md-9">
             @Html.DisplayFor(model => model.DateOfCreation)
         </dd>
-        <dt class="col-sm-2">
+                <hr />
+        <dt class="col-sm-3">
             @Html.DisplayNameFor(model => model.DateOfDischarge)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-9">
             @Html.DisplayFor(model => model.DateOfDischarge)
         </dd>
-        <dt class="col-sm-2">
+                <hr />
+        <dt class="col-md-3">
             Notes
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-md-9">
             @if(Model.Notes.Count() > 0){
                 @Html.ActionLink("All Notes", "Notes", new { id = Model.Id })
             }
@@ -71,10 +82,11 @@
                 @Html.ActionLink("Add Note", "NotesNew", new { id = Model.Id })
             }
         </dd>
-        <dt class="col-sm-2">
+                <hr />
+        <dt class="col-md-3">
             TreatmentPlan
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-md-9">
             @if (Model.TreatmentPlans.Count() > 0)
             {
                 @Html.ActionLink("All Treatmentplans", "Treatmentplan", new { id = Model.Id })
@@ -85,10 +97,11 @@
                 @Html.ActionLink("Add treatmentplan", "TreatmentplanNew", new { id = Model.Id })
             }
         </dd>
-        <dt class="col-sm-2">
+                <hr />
+        <dt class="col-md-3">
             Appointment
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-md-9">
             @if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
             {
                 @Html.ActionLink("Details", "Appointment", new { id = Model.Id })
@@ -97,7 +110,7 @@
             }else{
                 @Html.ActionLink("Afspraak maken", "Create", "Appointment")
             }
-        </dd>
+        </dd>        <hr/>
     </dl>
 </div>
 <div>
@@ -108,4 +121,6 @@
         <a href="javascript:history.go(-1)">Back</a>
     }
     
+</div>
+</div>
 </div>

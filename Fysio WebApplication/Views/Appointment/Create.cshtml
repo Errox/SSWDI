@@ -7,8 +7,12 @@
 <h1 class="text-center">@ViewData["Title"]</h1>
 
 <hr />
-<div class="row">
-    <div class="col-md-6">
+
+
+<div class="card col-md-6">
+    <div class="card-body">
+        <div class="row">
+    <div>
         <form asp-action="Create">
             <p>Make a appointment with your therapist : @ViewBag.Patient.MedicalFile.IntakeTherapistId.ApplicationUser.FirstName @ViewBag.Patient.MedicalFile.IntakeTherapistId.ApplicationUser.SurName</p>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -17,7 +21,8 @@
                 <!--Not for edit:-->
                 <option disabled selected>Please select one</option>
             </select>
-            <p></p>
+            <br />
+            <br/>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -25,10 +30,12 @@
     </div>
 </div>
 
+        <br />
 <div>
     <a href="javascript:history.go(-1)">Back</a>
 </div>
-
+</div>
+</div>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

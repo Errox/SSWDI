@@ -6,12 +6,15 @@
 
 <h1 class="text-center">Create appointment</h1>
 <hr/>
+
+<div class="card col-md-5">
+    <div class="card-body">
 <div class="row">
-    <div class="col-md-6">
+    <div class="">
         <form action="@ViewBag.PostUrl" method="post">
             <p>Make a appointment with your Patient : @ViewBag.Patient.ApplicationUser.FirstName @ViewBag.Patient.ApplicationUser.SurName</p>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <p>Please pick a TimeSlot.</p>
+            <p>Please pick a time slot.</p>
             <select asp-for="Id" asp-items="@(ViewBag.Brands)">
                 <!--Not for edit:-->
                 <option disabled selected>Please select one</option>
@@ -23,11 +26,12 @@
         </form>
     </div>
 </div>
-
+<br/>
 <div>
     <a href="javascript:history.go(-1)">Back</a>
 </div>
-
+</div>
+</div>
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

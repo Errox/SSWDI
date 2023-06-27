@@ -7,47 +7,58 @@
 
 <h1 class="text-center">Create treatmentplan</h1>
 <hr/>
-<div class="row">
-    <div class="col-md-4">
-        <form action="@Html.Raw(ViewBag.Url)" method="post" novalidate="novalidate">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label class="control-label">Treatments</label>
-                <select class="form-control" asp-for="Type" asp-items="@(ViewBag.Treatments)">
-                    <!--Not for edit:-->
-                    <option disabled selected>Please select one</option>
-                </select>
-                <span asp-validation-for="Type" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Particularities" class="control-label"></label>
-                <input asp-for="Particularities" class="form-control" />
-                <span asp-validation-for="Particularities" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TreatmentDate" class="control-label"></label>
-                <input asp-for="TreatmentDate" class="form-control" />
-                <span asp-validation-for="TreatmentDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AmountOfTreatmentsPerWeek" class="control-label"></label>
-                <input asp-for="AmountOfTreatmentsPerWeek" class="form-control" />
-                <span asp-validation-for="AmountOfTreatmentsPerWeek" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
 
-<div>
-    <a href="javascript:history.go(-1)">Back</a>
+<div class="card col-md-4">
+    <div class="card-body">
+        <div class="row">
+            <div class="">
+                <form action="@Html.Raw(ViewBag.Url)" method="post" novalidate="novalidate">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label class="control-label">Treatments</label>
+                        <select class="form-control" asp-for="Type" asp-items="@(ViewBag.Treatments)">
+                            <!--Not for edit:-->
+                            <option disabled selected>Please select one</option>
+                        </select>
+                        <span asp-validation-for="Type" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label"></label>
+                        <input asp-for="Description" class="form-control" />
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <div class="form-group">
+                        <label asp-for="Particularities" class="control-label"></label>
+                        <input asp-for="Particularities" class="form-control" />
+                        <span asp-validation-for="Particularities" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <div class="form-group">
+                        <label asp-for="TreatmentDate" class="control-label"></label>
+                        <input asp-for="TreatmentDate" class="form-control" />
+                        <span asp-validation-for="TreatmentDate" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <div class="form-group">
+                        <label asp-for="AmountOfTreatmentsPerWeek" class="control-label"></label>
+                        <input asp-for="AmountOfTreatmentsPerWeek" class="form-control" />
+                        <span asp-validation-for="AmountOfTreatmentsPerWeek" class="text-danger"></span>
+                    </div>
+                    <br/>
+                    <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+        <br/>
+
+        <div>
+            <a href="javascript:history.go(-1)">Back</a>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
