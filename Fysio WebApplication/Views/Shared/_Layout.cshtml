@@ -38,29 +38,30 @@
                     <ul class="navbar-nav flex-grow-1">
                         @if (SignInManager.IsSignedIn(User))
                         {
-                            <li class="nav-item">
-                                <div class="dropdown">
-                                    <a class="nav-link dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Menu
-                                    </a>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" href="/PracticeRoom">Practice Room</a>
-                                        @if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
-                                        {
-                                            <a class="dropdown-item" href="/Patient">Patient</a>
-                                            <a class="dropdown-item" href="/MedicalFile">MedicalFile</a>
-                                            @*<a class="dropdown-item" href="/Auth/RegisterEmployee">Register Employee</a>*@
-                                            <a class="dropdown-item" href="/Auth/RegisterPatient">Register Patient</a>
-                                            <a class="dropdown-item" href="/Appointment/Availability">Availability</a>
-                                        }
-                                        @if (User.HasClaim("UserType", "Patient"))
-                                        {
-                                            <a class="dropdown-item" href="/MedicalFile">My Medical File</a>
-                                            <a class="dropdown-item" href="/Account/Index">Profile</a>
-                                        }
-                                    </div>
-                                </div>
-                            </li>
+                            
+    <li class="nav-item">
+                            <a class="nav-link" href="/PracticeRoom">Practice Room</a></li>
+                            @if (User.HasClaim("UserType", "Employee") || User.HasClaim("UserType", "Student"))
+                            {
+                                
+    <li class="nav-item">
+                                <a class="nav-link" href="/Patient">Patient</a></li>
+    <li class="nav-item">
+                                <a class="nav-link" href="/MedicalFile">MedicalFile</a></li>
+                                @*<a class="nav-item" href="/Auth/RegisterEmployee">Register Employee</a>*@
+    <li class="nav-item">
+                                <a class="nav-link" href="/Auth/RegisterPatient">Register Patient</a></li>
+    <li class="nav-item">
+                                <a class="nav-link" href="/Appointment/Availability">Availability</a></li>
+                            }
+                            @if (User.HasClaim("UserType", "Patient"))
+                            {
+    <li class="nav-item">
+                                <a class="nav-link" href="/MedicalFile">My Medical File</a></li>
+    <li class="nav-item">
+                                <a class="nav-link" href="/Account/Index">Profile</a>
+    </li>
+                            }
                         }
                     </ul>
                 </div>
