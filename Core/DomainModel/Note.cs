@@ -8,16 +8,16 @@ namespace Core.DomainModel
         public int Id { get; set; }
 
         [MaxLength(250)]
-        [Display(Name = "Description.")]
+        [Display(Name = "Description")]
         public string Description { get; set; }
 
-        [Display(Name = "Creation date.")]
+        [Display(Name = "Creation date")]
         public DateTime CreatedUtc { get; set; }
 
-        [Display(Name = "Employee.")]
+        [Display(Name = "Employee")]
         public Employee Employee { get; set; }
 
-        [Display(Name = "Open for patient.")]
+        [Display(Name = "Open for patient")]
         public bool OpenForPatient { get; set; }
     }
 

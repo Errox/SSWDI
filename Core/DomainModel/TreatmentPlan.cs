@@ -10,11 +10,11 @@ namespace Core.DomainModel
 
         //This is the type of treatment from the Vektis list
         public int Type { get; set; }
-        [Display(Name = "Description of the treament plan.")]
+        [Display(Name = "Description of the treament plan")]
         [MaxLength(500)]
         public string Description { get; set; }
 
-        [Display(Name = "Practice room.")]
+        [Display(Name = "Practice room")]
         public PracticeRoom? PracticeRoom { get; set; }
 
         [Display(Name = "Particularities")]
@@ -25,14 +25,14 @@ namespace Core.DomainModel
         [Required]
         public Employee TreatmentPerformedBy { get; set; }
 
-        [Display(Name = "Treatment Date.")]
+        [Display(Name = "Treatment Date")]
         [Required]
         [AfterToday]
         public DateTime TreatmentDate { get; set; }
 
         [Required]
-        [Display(Name = "Amount of treatments per week.")]
-        [Range(0, 14, ErrorMessage = "Please enter valid Number between 0 and 14.")]
+        [Display(Name = "Amount of treatments per week")]
+        [Range(0, 14, ErrorMessage = "Please enter valid Number between 0 and 14")]
         public int AmountOfTreatmentsPerWeek { get; set; }
     }
 }
